@@ -44,21 +44,30 @@ App de rutines de gimnàs (una sola pàgina HTML) amb:
 ## 5. Pujar l'app a GitHub (GitHub Pages)
 
 1. Crea un repositori nou a GitHub (públic o privat — **privat** si no vols que ningú més veja el codi; GitHub Pages funciona igual).
-2. Puja aquests fitxers al repositori:
+2. Puja **tots** aquests fitxers al repositori (són necessaris per a l'app i per a poder instal·lar-la com a PWA):
    - `index.html`
    - `supabase-config.js`
+   - `manifest.json`
+   - `sw.js`
+   - `icon-192.png`
+   - `icon-512.png`
+   - `icon-maskable-512.png`
+   - `apple-touch-icon.png`
+   - `imatges/` (la carpeta sencera)
    - `supabase.sql`
    - `README.md`
    (si estàs des de terminal:
    ```
    git init
-   git add index.html supabase-config.js supabase.sql README.md
+   git add index.html supabase-config.js manifest.json sw.js icon-192.png icon-512.png icon-maskable-512.png apple-touch-icon.png imatges supabase.sql README.md
    git commit -m "FERRO amb login i núvol"
    git branch -M main
    git remote add origin https://github.com/EL-TEU-USUARI/EL-REPO.git
    git push -u origin main
    ```
    )
+
+   > **Important**: si no hi ha `manifest.json`, `sw.js` i les icones al servidor, el navegador **no podrà instal·lar l'app** (el botó «Instal·lar» et dirà que no es pot). Tots aquests fitxers s'han de pujar junts.
 3. Activa GitHub Pages: repositori → **Settings** → **Pages** → *Deploy from a branch* → `main` / root → **Save**.
 4. Espera 1–2 minuts. L'app estarà a: `https://EL-TEU-USUARI.github.io/EL-REPO/`
 
