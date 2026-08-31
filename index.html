@@ -2156,8 +2156,20 @@ button.f-info:hover b{color:var(--accent);}
 .cmp-medal-cell span{font-size:9px; font-weight:700; line-height:1.2; width:100%; overflow:hidden; text-overflow:ellipsis; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;}
 .cmp-medal-cell.locked{opacity:.4;}
 .cmp-medal-cell.locked .medal-icon{filter:grayscale(1);}
+.cmp-medal-cell.earned .medal-icon{color:var(--gold);}
+.cmp-medal-cell.earned[data-rang="bronze"] .medal-icon{color:var(--bronze);}
+.cmp-medal-cell.earned[data-rang="plata"] .medal-icon{color:var(--plata);}
+.cmp-medal-cell.earned[data-rang="or"] .medal-icon{color:var(--or);}
+.cmp-medal-cell.earned[data-rang="diamant"] .medal-icon{color:var(--diamant);}
+.cmp-medal-cell.earned[data-rang="llegenda"] .medal-icon{color:var(--legend);}
 .cmp-medal-section-title{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin:14px 0 6px; grid-column:1 / -1;}
 .cmp-medal-owner{font-size:10px; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-dim); text-align:center; margin-bottom:2px;}
+
+/* En mòbil, la pantalla Compara amaga la fila superior del calaix (títol i botons). */
+@media (max-width:720px){
+  .drawer#friendsDrawer.cmp-full .drawer-head{ display:none !important; }
+  .drawer#friendsDrawer.cmp-full .drawer-body{ padding-top:12px; }
+}
 
 .chat-view{flex:1; min-height:0; display:flex; flex-direction:column; gap:0;}
 .chat-log{flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding:10px 18px;}
@@ -2265,6 +2277,7 @@ body.modal-open-mobile .bottom-nav{ display:none !important; }
   body.session-active header.top .header-actions{ display:none !important; }
   body.session-active{ padding-bottom:0 !important; }
   body.session-active .ce-nav{ display:none !important; }
+  body.session-active:not(.rest-active).session-last-ex .ce-nav{ display:flex !important; }
   body.session-active .current-exercise{ touch-action: pan-y; user-select:none; }
 }
 
@@ -3910,8 +3923,13 @@ function recordSetTiming(rutinaId, exerciciId, setIndex, seconds){
   scheduleCloudSync();
 }
 function updateSessionFullscreen(){
-  if(activeSession){ document.body.classList.add('session-active'); }
-  else { document.body.classList.remove('session-active'); }
+  if(activeSession){
+    document.body.classList.add('session-active');
+    document.body.classList.toggle('session-last-ex', activeSession.currentIndex === activeSession.exercicis.length-1);
+  } else {
+    document.body.classList.remove('session-active');
+    document.body.classList.remove('session-last-ex');
+  }
 }
 
 let state = {
@@ -4166,6 +4184,7 @@ const I18N = {
     "(propi)":"(propio)",
     "Sense descripció disponible.":"Sin descripción disponible.",
     "Entrenament acabat 💪":"Entrenamiento terminado 💪",
+    "Entrenament acabat?":"¿Entrenamiento terminado?",
     "Notes de la sessió":"Notas de la sesión",
     "Com t'has sentit? Alguna observació?":"¿Cómo te has sentido? ¿Alguna observación?",
     "Desa i finalitza":"Guardar y finalizar",
@@ -6666,7 +6685,6 @@ $('#obLaterBtn').addEventListener('click', ()=>{
 
 function maybeShowOnboarding(){
   if(!currentUser) return;
-  if(config.onboardingDismissed) return;
   if(!hasCompleteProfile() && !$('#onboardingModal').classList.contains('open')){
     setTimeout(()=> openOnboarding(), 300);
   }
@@ -9279,6 +9297,7 @@ function renderSession(){
   const cur = activeSession.exercicis[activeSession.currentIndex];
   const ex = exerciseById(cur.exerciciId);
   const cardio = ex && ex.grupMuscular === 'cardio';
+  document.body.classList.toggle('session-last-ex', activeSession.currentIndex === activeSession.exercicis.length-1);
 
   shell.innerHTML = `
     <div class="session-header">
@@ -9757,8 +9776,16 @@ function openFinishModal(){
     <div class="stat" style="flex:1; text-align:center;"><b class="num" style="font-size:22px; display:block;">${vol}</b><span style="font-size:11px; color:var(--text-dim);">${t('VOLUM (KG)')}</span></div>
   `;
   $('#sessionNotes').value = '';
+  const reason = anticheatReason(buildSessionRecord());
+  const valid = !reason;
+  const titleEl = document.querySelector('#finishModal .modal-head h3');
+  if(titleEl){
+    const key = valid ? 'Entrenament acabat 💪' : 'Entrenament acabat?';
+    titleEl.textContent = t(key);
+    titleEl.setAttribute('data-i18n', key);
+  }
   openModal('finishModal');
-  fireFinishConfetti();
+  if(valid) fireFinishConfetti();
   try{ refreshFinishAntiCheat(); }catch(e){}
 }
 
@@ -12845,7 +12872,7 @@ const friendDataCacheMap = {};
 let drawerNavLevel = null;
 
 function showDrawerBack(show){
-  if(friendsBackBtn) friendsBackBtn.style.display = (show || isMobile()) ? '' : 'none';
+  if(friendsBackBtn) friendsBackBtn.style.display = (show && !isMobile()) ? '' : 'none';
 }
 // Sols en mode escriptori: dins del xat d'un amic, substitueix el botó X per una fletxa d'arrere.
 function setChatDesktopBackMode(on){
@@ -13120,6 +13147,7 @@ function renderFriendAvatars(){
 }
 
 async function renderFriendsList(){
+  if(friendsDrawer) friendsDrawer.classList.remove('cmp-full');
   if(friendsDrawer) friendsDrawer.classList.remove('chat-open');
   setChatDesktopBackMode(false);
   if(!supabaseClient || !currentUser){
@@ -13443,11 +13471,11 @@ function friendMedalSets(data){
 function compareMedalEntries(myPlats, thPlats){
   const year = currentYear();
   const entries = [];
-  const push = (id, icon, nom, desc)=> entries.push({ id, icon, nom, desc });
-  compteMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc));
-  anualMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc));
-  llegendaMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc));
-  push('platino-compte', platinumIcon(t('C')), t('Diamant de compte'), t('Aconsegueix totes les medalles de compte'));
+  const push = (id, icon, nom, desc, rang, section)=> entries.push({ id, icon, nom, desc, rang, section });
+  compteMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc, m.rang, m.section));
+  anualMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc, m.rang, m.section));
+  llegendaMedals().forEach(m=> push(m.id, m.icon, m.nom, m.desc, m.rang, m.section));
+  push('platino-compte', platinumIcon(t('C')), t('Diamant de compte'), t('Aconsegueix totes les medalles de compte'), 'diamant');
   const years = new Set();
   [myPlats, thPlats].forEach(set=>{
     set.forEach(id=>{
@@ -13458,12 +13486,13 @@ function compareMedalEntries(myPlats, thPlats){
     });
   });
   years.add(year);
-  [...years].sort((a,b)=> a-b).forEach(y=> push('platino-' + y, platinumIcon(y), t('Diamant {1}', y), t('Aconsegueix totes les medalles l\u2019any {1}', y)));
+  [...years].sort((a,b)=> a-b).forEach(y=> push('platino-' + y, platinumIcon(y), t('Diamant {1}', y), t('Aconsegueix totes les medalles l\u2019any {1}', y), 'diamant'));
   return entries;
 }
 
 function cmpMedalCellHTML(entry, earned, owner){
-  return `<div class="cmp-medal-cell ${earned ? 'earned' : 'locked'}" data-medal-id="${escapeHtml(entry.id)}" data-owner="${owner}">
+  const rang = entry.rang || (entry.section === 'llegenda' ? 'llegenda' : '');
+  return `<div class="cmp-medal-cell ${earned ? 'earned' : 'locked'}" data-rang="${rang}" data-medal-id="${escapeHtml(entry.id)}" data-owner="${owner}">
     <div class="medal-icon">${entry.icon}</div>
     <span>${escapeHtml(t(entry.nom))}</span>
   </div>`;
@@ -13497,7 +13526,12 @@ function openMedalDescPopup(entry){
   const iconEl = $('#medalDescIcon');
   const textEl = $('#medalDescText');
   if(titleEl) titleEl.textContent = t(entry.nom);
-  if(iconEl) iconEl.textContent = entry.icon;
+  if(iconEl){
+    const rang = entry.rang || (entry.section === 'llegenda' ? 'llegenda' : '');
+    const color = rang === 'bronze' ? 'var(--bronze)' : rang === 'plata' ? 'var(--plata)' : rang === 'or' ? 'var(--or)' : rang === 'diamant' ? 'var(--diamant)' : rang === 'llegenda' ? 'var(--legend)' : 'var(--gold)';
+    iconEl.style.color = color;
+    iconEl.innerHTML = entry.icon;
+  }
   if(textEl) textEl.textContent = t(entry.desc);
   openModal('medalDescModal');
 }
@@ -13582,6 +13616,7 @@ function friendProfileContent(friend, data){
 
 async function renderFriendProfile(friend){
   activeFriend = friend;
+  if(friendsDrawer) friendsDrawer.classList.remove('cmp-full');
   if(friendsDrawer) friendsDrawer.classList.remove('chat-open');
   setChatDesktopBackMode(false);
   drawerTitle.textContent = t('Perfil · {1}', friendName(friend));
@@ -13634,6 +13669,7 @@ function friendMedalsContent(friend, data){
 
 async function renderFriendMedals(friend){
   activeFriend = friend;
+  if(friendsDrawer) friendsDrawer.classList.remove('cmp-full');
   if(friendsDrawer) friendsDrawer.classList.remove('chat-open');
   setChatDesktopBackMode(false);
   drawerTitle.textContent = t('Medalles · {1}', friendName(friend));
@@ -13658,6 +13694,7 @@ let compareTabIdx = 0;
 
 async function renderFriendCompare(friend){
   activeFriend = friend;
+  if(friendsDrawer) friendsDrawer.classList.add('cmp-full');
   if(friendsDrawer) friendsDrawer.classList.remove('chat-open');
   setChatDesktopBackMode(false);
   drawerTitle.textContent = t('Compara - {1}', friendName(friend));
