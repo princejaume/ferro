@@ -497,6 +497,8 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .wizard-step{display:none;}
 .wizard-step.active{display:block; animation:pop .2s ease;}
 .wizard-title{font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:.03em; margin-bottom:14px;}
+.wizard-title-sm{font-size:15px; margin-top:20px; margin-bottom:10px; letter-spacing:.05em; color:var(--text-dim);}
+.wizard-options + .wizard-title-sm{margin-top:22px;}
 .wizard-sub{font-size:12px; color:var(--text-dim); margin-bottom:12px;}
 .wizard-options{display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:10px;}
 .wizard-options.multi{grid-template-columns:repeat(auto-fill, minmax(150px,1fr));}
@@ -529,6 +531,7 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 
 /* ============ MODAL IA ============ */
 .ia-explanation{background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:10px; padding:12px 14px; font-size:13px; margin-bottom:16px;}
+.ia-template-btn{margin-bottom:14px;}
 .ia-result-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 0 8px; flex-wrap:wrap;}
 .ia-result-head h4{font-family:'Bebas Neue',sans-serif; font-size:18px; letter-spacing:.04em;}
 .ia-routine{border:1px solid var(--line); border-radius:12px; margin-bottom:14px; overflow:hidden;}
@@ -2999,7 +3002,7 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 
     <div class="wizard-progress" id="wizardProgress"></div>
 
-    <!-- Pas 1: Objectiu -->
+    <!-- Pas 1: Objectiu + Nivell + Dies -->
     <div class="wizard-step" data-step="1">
       <p class="wizard-title" data-i18n="Quin és l'objectiu de la rutina?">Quin és l'objectiu de la rutina?</p>
       <div class="wizard-options" data-single="obj">
@@ -3009,21 +3012,15 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
         <button class="w-opt" data-value="definicio" data-i18n="Definició">Definició</button>
         <button class="w-opt" data-value="tonificacio" data-i18n="Tonificació">Tonificació</button>
       </div>
-    </div>
 
-    <!-- Pas 2: Nivell -->
-    <div class="wizard-step" data-step="2">
-      <p class="wizard-title" data-i18n="Quin és el teu nivell?">Quin és el teu nivell?</p>
+      <p class="wizard-title wizard-title-sm" data-i18n="Quin és el teu nivell?">Quin és el teu nivell?</p>
       <div class="wizard-options" data-single="nivell">
         <button class="w-opt" data-value="principiant" data-i18n="Principiant">Principiant</button>
         <button class="w-opt" data-value="intermedi" data-i18n="Intermedi">Intermedi</button>
         <button class="w-opt" data-value="avancat" data-i18n="Avançat">Avançat</button>
       </div>
-    </div>
 
-    <!-- Pas 3: Dies per setmana -->
-    <div class="wizard-step" data-step="3">
-      <p class="wizard-title" data-i18n="Quants dies entrenaràs a la setmana?">Quants dies entrenaràs a la setmana?</p>
+      <p class="wizard-title wizard-title-sm" data-i18n="Quants dies entrenaràs a la setmana?">Quants dies entrenaràs a la setmana?</p>
       <div class="wizard-options" data-single="dies">
         <button class="w-opt" data-value="2" data-i18n="2 dies">2 dies</button>
         <button class="w-opt" data-value="3" data-i18n="3 dies">3 dies</button>
@@ -3033,8 +3030,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
       </div>
     </div>
 
-    <!-- Pas 4: Durada per sessió -->
-    <div class="wizard-step" data-step="4">
+    <!-- Pas 2: Durada + Equipament -->
+    <div class="wizard-step" data-step="2">
       <p class="wizard-title" data-i18n="Quina durada tindrà cada sessió?">Quina durada tindrà cada sessió?</p>
       <div class="wizard-options" data-single="durada">
         <button class="w-opt" data-value="30" data-i18n="30 min">30 min</button>
@@ -3042,25 +3039,10 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
         <button class="w-opt" data-value="60" data-i18n="60 min">60 min</button>
         <button class="w-opt" data-value="90" data-i18n="90 min">90 min</button>
       </div>
-    </div>
 
-    <!-- Pas 5: Equipament (multiselecció) -->
-    <div class="wizard-step" data-step="5">
-      <p class="wizard-title" data-i18n="De quin equipament disposes?">De quin equipament disposes?</p>
-      <p class="wizard-sub" data-i18n="Selecciona tot el que tinguis disponible.">Selecciona tot el que tinguis disponible.</p>
-      <div class="wizard-options multi" data-multi="equip">
-        <button class="w-opt" data-value="barra" data-i18n="Barra">Barra</button>
-        <button class="w-opt" data-value="mancuernes" data-i18n="Mancuernes">Mancuernes</button>
-        <button class="w-opt" data-value="polea" data-i18n="Corriola">Corriola</button>
-        <button class="w-opt" data-value="kettlebell" data-i18n="Kettlebells">Kettlebells</button>
-        <button class="w-opt" data-value="pes corporal" data-i18n="Pes corporal">Pes corporal</button>
-        <button class="w-opt" data-value="gomes elàstiques" data-i18n="Banda elàstica">Banda elàstica</button>
-        <button class="w-opt" data-value="maquines" data-sub="1" data-i18n="Màquines">Màquines</button>
-        <button class="w-opt" data-value="banc" data-i18n="Banc">Banc</button>
-        <button class="w-opt" data-value="cardio" data-sub="1" data-i18n="Cardio">Cardio</button>
-        <button class="w-opt" data-value="barres" data-i18n="Barres de fons">Barres de fons</button>
-        <button class="w-opt" data-value="calistenia" data-sub="1" data-i18n="Calistènia">Calistènia</button>
-      </div>
+      <p class="wizard-title wizard-title-sm" data-i18n="De quin equipament disposes?">De quin equipament disposes?</p>
+      <p class="wizard-sub" data-i18n="Selecciona tot el que tinguis disponible. Els canvis es desaran al teu compte.">Selecciona tot el que tinguis disponible. Els canvis es desaran al teu compte.</p>
+      <div class="equip-chips" id="wizardEquipChips"></div>
     </div>
 
     <div class="modal-foot">
@@ -3116,7 +3098,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
       <button class="icon-btn" id="iaCloseBtn">✕</button>
     </div>
     <div id="iaIntro">
-      <p class="ia-explanation" data-i18n="Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents.">Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents.</p>
+      <p class="ia-explanation" data-i18n="Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format.">Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format.</p>
+      <button type="button" class="btn btn-block ia-template-btn" id="iaTemplateBtn" data-i18n="📋 Copiar plantilla per a la IA">📋 Copiar plantilla per a la IA</button>
       <div class="field">
         <textarea id="iaText" rows="12" placeholder="Dilluns - Pit i tríceps
 1. Press de banca: 4 sèries x 8 reps
@@ -4980,6 +4963,30 @@ const I18N = {
     "Afegeix els exercicis un per un tu mateix.":"Añade los ejercicios uno a uno tú mismo.",
     "Respon un qüestionari i el sistema generarà una rutina per a tu.":"Responde un cuestionario y el sistema generará una rutina para ti.",
     "Pega un text generat per una IA i extrau les rutines automàticament.":"Pega un texto generado por una IA y extrae las rutinas automáticamente.",
+    "Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format.":"Pega aquí la rutina o rutinas semanales generadas por una IA. El sistema analizará el texto, extraerá los ejercicios y creará las rutinas correspondientes. Si aún no tienes el texto, toca «Copiar plantilla», pégala en cualquier IA y pídele que te genere la rutina en este formato.",
+    "📋 Copiar plantilla per a la IA":"📋 Copiar plantilla para la IA",
+    "Plantilla copiada al portapapeles":"Plantilla copiada al portapapeles",
+    "Ets un preparador físic expert. Crea una rutina d'entrenament setmanal personalitzada amb aquests paràmetres:":"Eres un preparador físico experto. Crea una rutina de entrenamiento semanal personalizada con estos parámetros:",
+    "Dies per setmana":"Días por semana",
+    "Durada per sessió":"Duración por sesión",
+    "minuts":"minutos",
+    "Equipament disponible":"Equipamiento disponible",
+    "Dades personals":"Datos personales",
+    "anys":"años",
+    "sexe":"sexo",
+    "freqüència d'entrenament":"frecuencia de entrenamiento",
+    "Asídua":"Asidua",
+    "Puntual":"Puntual",
+    "Ocasional":"Ocasional",
+    "La rutina ha de ser equilibrada i adequada al meu nivell.":"La rutina debe ser equilibrada y adecuada a mi nivel.",
+    "FORMAT DE SORTIDA (segueix-lo exactament):":"FORMATO DE SALIDA (síguelo exactamente):",
+    "1. Escriu un bloc per a cada dia, començant per la capçalera del dia: «Dilluns — Pit i tríceps» (o «Dia 1», «Dia 2»...).":"1. Escribe un bloque para cada día, empezando por el encabezado del día: «Lunes — Pecho y tríceps» (o «Día 1», «Día 2»...).",
+    "2. Sota cada capçalera, llista els exercicis numerats així: «1. Nom de l'exercici: X sèries x Y repeticions». Per exemple: «1. Press de banca: 4 sèries x 8 repeticions».":"2. Debajo de cada encabezado, lista los ejercicios numerados así: «1. Nombre del ejercicio: X series x Y repeticiones». Por ejemplo: «1. Press de banca: 4 series x 8 repeticiones».",
+    "3. Els exercicis de cardio indica'ls amb minuts: «15 minuts».":"3. Los ejercicios de cardio indícalos con minutos: «15 minutos».",
+    "4. Usa noms d'exercici habituals de gimnàs i tingues en compte només l'equipament que tinc.":"4. Usa nombres de ejercicio habituales de gimnasio y ten en cuenta solo el equipamiento que tengo.",
+    "5. No afegeixis cap text ni explicació fora de la llista de dies i exercicis.":"5. No añadas ningún texto ni explicación fuera de la lista de días y ejercicios.",
+    "6. Respecta exactament els dies per setmana indicats.":"6. Respeta exactamente los días por semana indicados.",
+    "Selecciona tot el que tinguis disponible. Els canvis es desaran al teu compte.":"Selecciona todo lo que tengas disponible. Los cambios se guardarán en tu cuenta.",
     "Rutina a mesura":"Rutina a medida",
     "Quin és l'objectiu de la rutina?":"¿Cuál es el objetivo de la rutina?",
     "Hipertrofia":"Hipertrofia",
@@ -8554,7 +8561,7 @@ function exById(id){ return state.exercicis.find(e=>e.id===id) || null; }
    PES BASE PER EXERCICI (segons les dades de l'usuari i el tipus d'activitat)
    =========================================================================
    Estima un pes inicial de treball per a cada exercici a partir de:
-     - pes corporal, sexe, edat, freqüència d'esport i dies per setmana
+     - pes corporal, sexe, edat, altura, freqüència d'esport i dies per setmana
      - tipus d'exercici (moviment gran/petit, pes lliure/màquina, etc.)
    Es basa en els estàndards de força reals (multipliquen el pes corporal),
    passats de 1RM a pes de treball segons les repeticions de la sèrie.
@@ -8576,6 +8583,13 @@ function strengthLevelMult(profile){
   const edat = currentAge();
   if(edat > 0 && edat < 18) m *= 0.8;
   if(edat > 55) m *= 0.85;
+  // Ajust per altura: una altura més gran sol anar acompanyada de més massa
+  // i més potència absoluta. Ajust suau per no distorsionar l'estimació.
+  const altura = parseFloat(profile.altura)||0;
+  if(altura > 0){
+    const hf = Math.max(0.85, Math.min(1.1, 0.95 + (altura - 168)/300));
+    m *= hf;
+  }
   return m;
 }
 
@@ -8671,7 +8685,7 @@ function baseWeightForExercise(ex, reps){
 /* =========================================================================
    RUTINA PREDEFINIDA — QÜESTIONARI PAS A PAS (WIZARD)
    ========================================================================= */
-const PREDEF_STEPS = 5;
+const PREDEF_STEPS = 2;
 let predefState = { step:1, obj:'', nivell:'', dies:0, durada:0, equip:[] };
 
 function buildPredefRoutine(answers){
@@ -8684,6 +8698,16 @@ function buildPredefRoutine(answers){
     tonificacio:  { series:3, reps:15, descans:45,  grups:['cames','esquena','core','braços'] },
   };
   const g = GOAL[answers.obj] || GOAL.hipertrofia;
+
+  // El nivell triat al qüestionari ajusta els pesos inicials proposats
+  const NIVEL_FACTOR = { principiant:1.0, intermedi:1.15, avancat:1.3 };
+  const lvlMul = NIVEL_FACTOR[answers.nivell] || 1.0;
+  const predefPes = (ex, reps)=>{
+    const base = baseWeightForExercise(ex, reps);
+    if(base <= 0) return 0;
+    const step = config.pesStep || 0.5;
+    return Math.max(step, Math.round(base*lvlMul/step)*step);
+  };
 
   // Equipament seleccionat; si cap, per defecte pes corporal
   // El pes corporal està sempre disponible (no cal "tindre'l"); el cardio de
@@ -8720,7 +8744,7 @@ function buildPredefRoutine(answers){
       if(pool.length){
         const ex = pool[Math.floor(Math.random()*pool.length)];
         used.add(ex.id);
-        chosen.push({ exerciciId:ex.id, series:g.series, repeticions:g.reps, descans:g.descans, pes: baseWeightForExercise(ex, g.reps) });
+        chosen.push({ exerciciId:ex.id, series:g.series, repeticions:g.reps, descans:g.descans, pes: predefPes(ex, g.reps) });
       }
     });
     // Omple fins a count amb qualsevol exercici del grup principal
@@ -8730,7 +8754,7 @@ function buildPredefRoutine(answers){
       if(!pool.length) break;
       const ex = pool[Math.floor(Math.random()*pool.length)];
       used.add(ex.id);
-      chosen.push({ exerciciId:ex.id, series:g.series, repeticions:g.reps, descans:g.descans, pes: baseWeightForExercise(ex, g.reps) });
+      chosen.push({ exerciciId:ex.id, series:g.series, repeticions:g.reps, descans:g.descans, pes: predefPes(ex, g.reps) });
     }
     return chosen;
   }
@@ -8778,6 +8802,7 @@ function openPredefWizard(){
   if(Array.isArray(config.equipament)) predefState.equip = config.equipament.slice();
   renderWizardProgress();
   renderWizardStep();
+  renderWizardEquipChips();
   openModal('predefModal');
 }
 function renderWizardProgress(){
@@ -8795,53 +8820,72 @@ function renderWizardStep(){
   });
   // Marca les opcions ja seleccionades
   document.querySelectorAll('#predefModal .wizard-options').forEach(optBox=>{
-    const key = optBox.dataset.single || optBox.dataset.multi;
+    const key = optBox.dataset.single;
+    if(!key) return;
     optBox.querySelectorAll('.w-opt').forEach(b=>{
-      if(optBox.dataset.multi){
-        b.classList.toggle('on', predefState.equip.includes(b.dataset.value));
-      } else {
-        b.classList.toggle('on', predefState[key]===b.dataset.value);
-      }
+      b.classList.toggle('on', predefState[key]===b.dataset.value);
     });
   });
   $('#predefBackBtn').style.visibility = predefState.step>1 ? 'visible' : 'hidden';
   $('#predefNextBtn').textContent = predefState.step<PREDEF_STEPS ? t('Següent') : t('Generar');
+}
+
+/* Rendeix els chips d'equipament del wizard amb el mateix estil que ajustos.
+   L'equipament es sincronitza amb config.equipament (el compte), de manera que
+   els canvis fets ací es desen i es reflecteixen als ajustos i viceversa. */
+function renderWizardEquipChips(){
+  const box = $('#wizardEquipChips');
+  if(!box) return;
+  box.innerHTML = '';
+  const subsLast = [...EQUIPMENTS].sort((a,b)=> (!!EQUIP_SUBS[a.id]?1:0) - (!!EQUIP_SUBS[b.id]?1:0));
+  subsLast.forEach(eq=>{
+    const locked = config.equipMode === 'casa' && eq.id === 'pes corporal';
+    const on = config.equipament.includes(eq.id) || locked;
+    const hasSub = !!EQUIP_SUBS[eq.id];
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'equip-chip' + (on ? ' on' : '') + (hasSub ? ' has-sub' : '') + (locked ? ' locked' : '');
+    b.setAttribute('aria-pressed', on);
+    b.innerHTML = `<span class="equip-chip-name">${eq.icon} ${t(eq.label)}${hasSub ? equipSubDetail(eq) : ''}</span>${hasSub ? '<span class="equip-chip-arrow">›</span>' : ''}`;
+    b.addEventListener('click', e=>{
+      if(locked){
+        toast(t('Sempre disponible a casa'));
+        return;
+      }
+      if(hasSub && e.target.closest('.equip-chip-arrow')){
+        openEquipSubModal(eq.id, ()=>{
+          predefState.equip = config.equipament.slice();
+          config.equipAll = config.equipament.length === EQUIPMENTS.length;
+          saveConfig();
+          renderWizardEquipChips();
+        });
+        return;
+      }
+      const i = config.equipament.indexOf(eq.id);
+      if(i >= 0) config.equipament.splice(i, 1);
+      else {
+        config.equipament.push(eq.id);
+        if(hasSub && (!config.equipSub || !config.equipSub[eq.id] || config.equipSub[eq.id].length === 0)){
+          if(!config.equipSub) config.equipSub = {};
+          config.equipSub[eq.id] = ['gimnas'];
+        }
+      }
+      predefState.equip = config.equipament.slice();
+      config.equipAll = config.equipament.length === EQUIPMENTS.length;
+      saveConfig();
+      renderWizardEquipChips();
+    });
+    box.appendChild(b);
+  });
 }
 // Selecció d'opcions del wizard
 document.querySelectorAll('#predefModal .wizard-options').forEach(optBox=>{
   optBox.addEventListener('click', e=>{
     const btn = e.target.closest('.w-opt');
     if(!btn) return;
-    const key = optBox.dataset.single || optBox.dataset.multi;
-    if(optBox.dataset.multi){
-      const v = btn.dataset.value;
-      if(btn.dataset.sub){
-        // Categories amb sub-llistat: assegura que està activada i obri la finestra
-        if(!predefState.equip.includes(v)) predefState.equip.push(v);
-        if(!config.equipament.includes(v)) config.equipament.push(v);
-        config.equipAll = config.equipament.length === EQUIPMENTS.length;
-        saveConfig();
-        openEquipSubModal(v, ()=>{
-          // El botó "Fet" ja sincronitza config.equipament/equipSub; reflecteix-ho al wizard
-          predefState.equip = config.equipament.slice();
-          config.equipAll = config.equipament.length === EQUIPMENTS.length;
-          saveConfig();
-          renderWizardStep();
-        });
-        renderWizardStep();
-        return;
-      }
-      const idx = predefState.equip.indexOf(v);
-      if(idx===-1) predefState.equip.push(v); else predefState.equip.splice(idx,1);
-      // Sincronitza amb ajustos
-      const ci = config.equipament.indexOf(v);
-      if(ci===-1 && predefState.equip.includes(v)) config.equipament.push(v);
-      else if(ci>=0 && !predefState.equip.includes(v)) config.equipament.splice(ci,1);
-      config.equipAll = config.equipament.length === EQUIPMENTS.length;
-      saveConfig();
-    } else {
-      predefState[key] = btn.dataset.value;
-    }
+    const key = optBox.dataset.single;
+    if(!key) return;
+    predefState[key] = btn.dataset.value;
     renderWizardStep();
   });
 });
@@ -8850,10 +8894,14 @@ $('#predefBackBtn').addEventListener('click', ()=>{
 });
 $('#predefNextBtn').addEventListener('click', ()=>{
   const cur = predefState.step;
-  const key = cur===1?'obj':cur===2?'nivell':cur===3?'dies':cur===4?'durada':'equip';
-  const val = predefState[key];
-  const valid = cur===5 ? (val.length>0) : (val!=='' && val!==0);
-  if(!valid){ toast(t('Selecciona una opció per continuar')); return; }
+  // Cal una selecció vàlida per a TOTES les preguntes de la pantalla actual
+  let ok;
+  if(cur===1){
+    ok = predefState.obj!=='' && predefState.nivell!=='' && predefState.dies>0;
+  } else {
+    ok = predefState.durada>0 && (predefState.equip.length>0 || config.equipMode === 'casa');
+  }
+  if(!ok){ toast(t('Selecciona una opció per continuar')); return; }
   if(cur < PREDEF_STEPS){ predefState.step++; renderWizardProgress(); renderWizardStep(); }
   else {
     const rutines = buildPredefRoutine(predefState);
@@ -9004,6 +9052,60 @@ function openIAModal(){
   openModal('iaModal');
 }
 $('#iaCloseBtn').addEventListener('click', ()=> closeModal('iaModal'));
+
+/* Nivell deduït del perfil del compte (freqüència + dies per setmana). */
+function profileNivell(){
+  const p = config.profile;
+  if(!p) return 'intermedi';
+  const dies = parseInt(p.diesSetmana)||0;
+  if(p.frequencia === 'asidua') return dies >= 5 ? 'avancat' : 'intermedi';
+  if(p.frequencia === 'puntual') return 'intermedi';
+  return 'principiant';
+}
+/* Plantilla per a les rutines generades per una IA externa. Es copia al
+   portapapeles i la persona l'enganxa a qualsevol IA. El format de sortida
+   indicat és el que el parser (parseIARoutines) sap interpretar. */
+function buildIATemplate(){
+  const p = config.profile || {};
+  const nivell = ({ principiant:t('Principiant'), intermedi:t('Intermedi'), avancat:t('Avançat') })[profileNivell()] || t('Intermedi');
+  const freq = p.frequencia ? ({ asidua:t('Asídua'), puntual:t('Puntual'), cap:t('Ocasional') })[p.frequencia] || p.frequencia : '—';
+  const sexe = p.sexe ? ({ home:t('Home'), dona:t('Dona'), altre:t('Altre') })[p.sexe] || p.sexe : '—';
+  const dies = (p && parseInt(p.diesSetmana)) || 3;
+  const edat = (p && (currentAge() || parseInt(p.edat))) || '—';
+  const altura = (p && p.altura) || '—';
+  const pes = (p && p.pes) || '—';
+  const equip = (Array.isArray(config.equipament) && config.equipament.length)
+    ? config.equipament.map(id=> equipLabel(id)).join(', ')
+    : t('Pes corporal');
+  const L = [
+    t('Ets un preparador físic expert. Crea una rutina d\'entrenament setmanal personalitzada amb aquests paràmetres:'),
+    '',
+    '- ' + t('Nivell') + ': ' + nivell,
+    '- ' + t('Dies per setmana') + ': ' + dies,
+    '- ' + t('Durada per sessió') + ': 45-60 ' + t('minuts'),
+    '- ' + t('Equipament disponible') + ': ' + equip,
+    '- ' + t('Dades personals') + ': ' + edat + ' ' + t('anys') + ', ' + altura + ' cm, ' + pes + ' kg, ' + t('sexe') + ' ' + sexe + ', ' + t('freqüència d\'entrenament') + ' ' + freq.toLowerCase(),
+    '',
+    t('La rutina ha de ser equilibrada i adequada al meu nivell.'),
+    '',
+    t('FORMAT DE SORTIDA (segueix-lo exactament):'),
+    t('1. Escriu un bloc per a cada dia, començant per la capçalera del dia: «Dilluns — Pit i tríceps» (o «Dia 1», «Dia 2»...).'),
+    t('2. Sota cada capçalera, llista els exercicis numerats així: «1. Nom de l\'exercici: X sèries x Y repeticions». Per exemple: «1. Press de banca: 4 sèries x 8 repeticions».'),
+    t('3. Els exercicis de cardio indica\'ls amb minuts: «15 minuts».'),
+    t('4. Usa noms d\'exercici habituals de gimnàs i tingues en compte només l\'equipament que tinc.'),
+    t('5. No afegeixis cap text ni explicació fora de la llista de dies i exercicis.'),
+    t('6. Respecta exactament els dies per setmana indicats.')
+  ];
+  return L.join('\n');
+}
+function copyIATemplate(){
+  const txt = buildIATemplate();
+  const done = ()=> toast(t('Plantilla copiada al portapapeles'));
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>{ fallbackCopy(txt); done(); });
+  } else { fallbackCopy(txt); done(); }
+}
+$('#iaTemplateBtn').addEventListener('click', copyIATemplate);
 let iaParsedRutines = [];
 
 $('#iaAnalyzeBtn').addEventListener('click', ()=>{
