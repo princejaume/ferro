@@ -1775,7 +1775,7 @@ button.nph-item{width:100%; background:none; border:none; text-align:left; color
 .rewc-track{
   display:flex; gap:12px; overflow-x:auto;
   scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
-  scrollbar-width:none; padding:20px calc(50% - 80px) 12px;
+  scrollbar-width:none; padding:30px calc(50% - 80px) 12px;
 }
 .rewc-track::-webkit-scrollbar{display:none;}
 .rewc-card{
@@ -1785,9 +1785,9 @@ button.nph-item{width:100%; background:none; border:none; text-align:left; color
   padding:14px 10px 14px; text-align:center; position:relative;
   transition:border-color .4s ease, box-shadow .4s ease, transform .4s ease;
 }
-.rewc-card.active{border-color:var(--gold); box-shadow:0 0 0 2px rgba(255,194,77,.28), 0 4px 16px rgba(0,0,0,.18); transform:scale(1.04);}
+.rewc-card.active{border-color:var(--gold); box-shadow:0 0 0 2px rgba(255,194,77,.28), 0 4px 16px rgba(0,0,0,.18); transform:scale(1.02);}
 .rewc-next{
-  position:absolute; top:-10px; left:50%; transform:translateX(-50%);
+  position:absolute; top:-24px; left:50%; transform:translateX(-50%);
   background:var(--gold); color:var(--bg); font-size:9px; font-weight:800;
   letter-spacing:0.08em; text-transform:uppercase; padding:4px 10px; border-radius:999px;
   white-space:nowrap; box-shadow:0 2px 8px rgba(255,194,77,.4);
@@ -1843,7 +1843,7 @@ button.nph-item{width:100%; background:none; border:none; text-align:left; color
 .rewc-card.multi .claimed-tag{width:19px; height:19px; font-size:10px;}
 @media(max-width:360px){
   .rewc-card{width:140px; padding:12px 8px 12px;}
-  .rewc-track{padding:8px calc(50% - 70px) 12px; gap:10px;}
+  .rewc-track{padding:30px calc(50% - 70px) 12px; gap:10px;}
   .rewc-card.multi .rewc-unit{width:56px;}
   .rewc-card.multi .rewc-box{width:56px; height:56px;}
 }
@@ -2270,6 +2270,8 @@ body.session-active .bottom-nav{ display:none !important; }
 body.session-active .entrenar-tabs-head{ display:none !important; }
 /* Mentre el formulari de dades/rutines està obert en mòbil, amaga la barra inferior */
 body.modal-open-mobile .bottom-nav{ display:none !important; }
+body:has(#onboardingModal.open) .bottom-nav{ display:none !important; }
+body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
 @media (max-width:720px){
   body.session-active .bottom-nav{ display:none !important; }
   body.session-active #view-entrenar > .entrenar-tabs{ display:none !important; }
@@ -2363,11 +2365,12 @@ body.modal-open-mobile .bottom-nav{ display:none !important; }
   }
 
   /* Pantalles completes: cap aparença de finestra (sense fons fosc darrere) */
-  .modal-overlay:not(#confirmModal),
+  .modal-overlay:not(#confirmModal):not(#medalDescModal),
   .drawer-overlay, .notif-overlay{ background:transparent; }
 
   /* Finestres de diàleg (verificació) conserven fons fosc i espai */
-  #confirmModal.modal-overlay{ padding:24px 16px; }
+  #confirmModal.modal-overlay,
+  #medalDescModal.modal-overlay{ padding:24px 16px; }
 
   /* Amaga la "X" de tancar a les pantalles completes */
   .modal-head .icon-btn[data-close],
@@ -3129,10 +3132,9 @@ body.modal-open-mobile .bottom-nav{ display:none !important; }
 </div>
 
 <div class="modal-overlay" id="medalDescModal">
-  <div class="modal" style="max-width:360px;">
+  <div class="modal modal-small" style="max-width:360px;">
     <div class="modal-head">
       <h3 id="medalDescTitle"></h3>
-      <button class="icon-btn" data-close="medalDescModal">✕</button>
     </div>
     <div style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:6px 4px 14px;">
       <div id="medalDescIcon" class="medal-icon" style="width:64px; height:64px; font-size:34px;"></div>
@@ -4978,10 +4980,11 @@ const I18N = {
     "Pes (kg)":"Peso (kg)",
     "Edat":"Edad",
     "Dies a la setmana d'entrenament":"Días a la semana de entrenamiento",
-    "Fas esport de manera...":"¿Haces deporte de manera...?",
-    "Asídua":"Asidua",
-    "Puntual":"Puntual",
-    "No en fas":"No haces",
+    "Tria el teu nivell":"Elige tu nivel",
+    "I ara què?":"¿Y ahora qué?",
+    "Ja tens el teu compte a punt. Vols crear ara alguna rutina d'entrenament?":"Ya tienes tu cuenta lista. ¿Quieres crear ahora alguna rutina de entrenamiento?",
+    "Crea una rutina":"Crea una rutina",
+    "Més avant":"Más adelante",
     "Sexe":"Sexo",
     "Imatge de perfil":"Imagen de perfil",
     "Color":"Color",
@@ -6535,6 +6538,11 @@ function obGoTo(step){
   dots.forEach((d,i)=> d.classList.toggle('on', i < step));
 }
 $('#obNextBtn').addEventListener('click', ()=>{
+  const alias = ($('#obAlias')?.value || '').trim();
+  if(!alias){ toast(t('Posa un alias')); return; }
+  if(alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
+  if(alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
+  if(!obData.sexe){ toast(t('Tria el sexe')); return; }
   const naix = ($('#obNaix')?.value || '').trim();
   if(!naix){ toast(t('Introdueix la data de naixement')); return; }
   if(!parseBirth(naix)){ toast(t('Data de naixement no vàlida')); return; }
@@ -6639,7 +6647,7 @@ $('#onboardingSaveBtn').addEventListener('click', async ()=>{
   }
   if(!(obData.edat>0)){ toast(t('Posa la teua edat')); return; }
   if(!obData.dies){ toast(t('Tria els dies per setmana')); return; }
-  if(!obData.frequencia){ toast(t('Tria la freqüència d\'esport')); return; }
+  if(!obData.frequencia){ toast(t('Tria el teu nivell')); return; }
   if(!obData.sexe){ toast(t('Tria el sexe')); return; }
   if(await aliasIsTaken(obData.alias)){ toast(t('Este alias ja està en ús')); return; }
   config.profile = Object.assign({}, obData, { diesSetmana: obData.dies });
@@ -6804,6 +6812,7 @@ function applyScreenBack(root){
   if(id === 'confirmModal') return;
   if(id === 'onboardingModal') return;
   if(id === 'routineModal') return;
+  if(id === 'finishModal') return;
   if(root.querySelector('.modal-small')) return;
   const head = root.querySelector('.drawer-head, .notif-panel-head, .modal-head');
   if(!head || head.querySelector('.screen-back')) return;
@@ -9399,19 +9408,30 @@ function renderSession(){
     }
   });
 
-  // Swipe gestures per a desplaçar-se entre exercicis en mòbil
+  // Swipe gestures per a desplaçar-se entre exercicis en mòbil (estil galeria)
   const exerciseCard = document.querySelector('.current-exercise');
   if(exerciseCard && window.matchMedia('(max-width:720px)').matches){
     let touchStartX = 0;
     let touchStartY = 0;
     let touchDragging = false;
     let touchIsHorizontal = null;
+    const SWIPE_MS = 280;
+    function slideInCard(dir){
+      const newCe = document.querySelector('.current-exercise');
+      if(!newCe) return;
+      newCe.style.transition = 'none';
+      newCe.style.transform = `translateX(${dir * 100}%)`;
+      newCe.getBoundingClientRect();
+      newCe.style.transition = `transform ${SWIPE_MS}ms ease`;
+      newCe.style.transform = '';
+    }
     exerciseCard.addEventListener('touchstart', (e)=>{
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
       touchDragging = true;
       touchIsHorizontal = null;
       exerciseCard.style.transition = 'none';
+      exerciseCard.style.transform = '';
     }, {passive:true});
     exerciseCard.addEventListener('touchmove', (e)=>{
       if(!touchDragging) return;
@@ -9421,64 +9441,48 @@ function renderSession(){
         touchIsHorizontal = Math.abs(dx) > Math.abs(dy);
       }
       if(!touchIsHorizontal) return;
-      // No permetre arrossegar més enllà del primer/últim exercici
-      if((dx > 0 && activeSession.currentIndex === 0) || (dx < 0 && activeSession.currentIndex === activeSession.exercicis.length-1)){
-        exerciseCard.style.transform = `translateX(${dx*0.25}px)`;
-        exerciseCard.style.opacity = 1 - Math.min(Math.abs(dx)/400, 0.3);
-      } else {
-        exerciseCard.style.transform = `translateX(${dx}px)`;
-        exerciseCard.style.opacity = 1 - Math.min(Math.abs(dx)/300, 0.6);
-      }
+      // La targeta segueix el dit com en una galeria de fotos;
+      // només frena suaument al primer/últim exercici
+      const atEdge = (dx > 0 && activeSession.currentIndex === 0) || (dx < 0 && activeSession.currentIndex === activeSession.exercicis.length-1);
+      const x = atEdge ? dx * 0.25 : dx;
+      exerciseCard.style.transform = `translateX(${x}px)`;
     }, {passive:true});
     exerciseCard.addEventListener('touchend', (e)=>{
       touchDragging = false;
       const dx = e.changedTouches[0].screenX - touchStartX;
       const dy = e.changedTouches[0].screenY - touchStartY;
-      exerciseCard.style.transition = 'opacity .3s ease, transform .3s ease';
-      if(Math.abs(dx) < 50 || Math.abs(dy) > Math.abs(dx)){
-        exerciseCard.style.transform = '';
-        exerciseCard.style.opacity = '';
-        return;
-      }
-      const goingRight = dx > 0;
       const goingLeft = dx < 0;
-      if(isRestActive()){
-        exerciseCard.style.transform = '';
-        exerciseCard.style.opacity = '';
-        return;
-      }
-      if(goingLeft && activeSession.currentIndex < activeSession.exercicis.length-1){
-        exerciseCard.classList.add('slide-out');
-        exerciseCard.style.transform = 'translateX(-30px)';
-        exerciseCard.style.opacity = '0';
+      const goingRight = dx > 0;
+      const canPrev = activeSession.currentIndex > 0;
+      const canNext = activeSession.currentIndex < activeSession.exercicis.length-1;
+      const shouldChange = Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) && !isRestActive();
+      const goNext = shouldChange && goingLeft && canNext;
+      const goPrev = shouldChange && goingRight && canPrev;
+      exerciseCard.style.transition = `transform ${SWIPE_MS}ms ease`;
+      if(goNext){
         stopCardioTimer(); cardioRemaining = 0;
+        exerciseCard.style.transform = 'translateX(-100%)';
         setTimeout(()=>{
           activeSession.currentIndex++;
           renderSession(); saveActiveSession();
-          const newCe = document.querySelector('.current-exercise');
-          if(newCe) newCe.classList.add('slide-in');
-        }, 300);
-      } else if(goingRight && activeSession.currentIndex > 0){
-        exerciseCard.classList.add('slide-out-right');
-        exerciseCard.style.transform = 'translateX(30px)';
-        exerciseCard.style.opacity = '0';
+          slideInCard(1);
+        }, SWIPE_MS);
+      } else if(goPrev){
         stopCardioTimer(); cardioRemaining = 0;
+        exerciseCard.style.transform = 'translateX(100%)';
         setTimeout(()=>{
           activeSession.currentIndex--;
           renderSession(); saveActiveSession();
-          const newCe = document.querySelector('.current-exercise');
-          if(newCe) newCe.classList.add('slide-in-left');
-        }, 300);
+          slideInCard(-1);
+        }, SWIPE_MS);
       } else {
         exerciseCard.style.transform = '';
-        exerciseCard.style.opacity = '';
       }
     }, {passive:true});
     exerciseCard.addEventListener('touchcancel', ()=>{
       touchDragging = false;
-      exerciseCard.style.transition = 'opacity .3s ease, transform .3s ease';
+      exerciseCard.style.transition = `transform ${SWIPE_MS}ms ease`;
       exerciseCard.style.transform = '';
-      exerciseCard.style.opacity = '';
     }, {passive:true});
   }
 
@@ -12517,11 +12521,13 @@ function renderProfileMedals(){
 function expositorSlots(){ return 5; }
 function expositorSlotIds(){
   if(!Array.isArray(config.expositor)) config.expositor = [];
-  // Compacta sempre les medalles cap a l'esquerra: evita que quede un buit inicial
-  // i que noves medalles s'acaben col·locant a partir del segon espai en avant.
-  const packed = config.expositor.filter(Boolean).slice(0, expositorSlots());
+  // Només compten les medalles que ja s'han aconseguit: compacta sempre cap a l'esquerra.
+  // Evita que un id obsolet ocupe un espai i que les noves medalles comencen pel segon expositor.
+  const earnedSet = earnedExpositorSet();
+  const valid = id => !!id && earnedSet.has(id);
+  const packed = config.expositor.filter(valid).slice(0, expositorSlots());
   const current = config.expositor.slice(0, expositorSlots());
-  let changed = packed.length !== current.filter(Boolean).length;
+  let changed = packed.length !== current.filter(valid).length;
   if(!changed){
     for(let i=0; i<expositorSlots(); i++){ if((current[i] || null) !== (packed[i] || null)){ changed = true; break; } }
   }
