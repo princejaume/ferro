@@ -174,6 +174,8 @@ header.top{
 main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .view{display:none; animation:fadein .25s ease;}
 .view.active{display:block;}
+@keyframes tabInRight{from{opacity:0; transform:translateX(28px);} to{opacity:1; transform:translateX(0);}}
+@keyframes tabInLeft{from{opacity:0; transform:translateX(-28px);} to{opacity:1; transform:translateX(0);}}
 @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
 
 .view-head{display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-bottom:20px; flex-wrap:wrap;}
@@ -1859,6 +1861,8 @@ button.nph-item{width:100%; background:none; border:none; text-align:left; color
 
 /* ============ OBERTURA DE REGAL DINS LA CAPSA DE RECOMPENSA ============ */
 .modal-small{max-width:420px;}
+/* La finestra de descripció de medalla apareix centrada a la pantalla */
+#medalDescModal.modal-overlay{ align-items:center; }
 .rew-gift-scene{
   position:relative; width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
@@ -2268,10 +2272,11 @@ button.f-info:hover b{color:var(--accent);}
 /* ============ SESSION FULLSCREEN EN MÒBIL ============ */
 body.session-active .bottom-nav{ display:none !important; }
 body.session-active .entrenar-tabs-head{ display:none !important; }
-/* Mentre el formulari de dades/rutines està obert en mòbil, amaga la barra inferior */
-body.modal-open-mobile .bottom-nav{ display:none !important; }
-body:has(#onboardingModal.open) .bottom-nav{ display:none !important; }
-body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
+/* En el formulari inicial (registre) en mòbil s'amaga la barra inferior;
+   en el formulari d'edició de dades la barra es manté visible. */
+body.ob-first-time .bottom-nav{ display:none !important; }
+body.ob-first-time .modal:not(.modal-small){ padding-bottom:24px; }
+body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bottom:calc(46px + 24px); }
 @media (max-width:720px){
   body.session-active .bottom-nav{ display:none !important; }
   body.session-active #view-entrenar > .entrenar-tabs{ display:none !important; }
@@ -2281,6 +2286,10 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
   body.session-active .ce-nav{ display:none !important; }
   body.session-active:not(.rest-active).session-last-ex .ce-nav{ display:flex !important; }
   body.session-active .current-exercise{ touch-action: pan-y; user-select:none; }
+  /* Evita que el navegador ajuste el scroll quan es re-rend l'exercici actual
+     durant un canvi ràpid (els salts visuals de tota la pantalla). */
+  body.session-active .current-exercise,
+  body.session-active .session-shell{ overflow-anchor:none; }
 }
 
 /* mobile */
@@ -2357,6 +2366,13 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
   .drawer.chat-open .drawer-body{ flex:1; min-height:0; overflow:hidden; }
   .drawer.chat-open .chat-view{ flex:1; min-height:0; overflow:hidden; }
 
+  /* xat en mòbil: sense botó d'arrere i sense la barra superior amb el logo,
+     el xat ocupa tota la pantalla */
+  .drawer.chat-open #friendsBackBtn,
+  .drawer.chat-open #friendsCloseBtn{ display:none !important; }
+  body:has(.drawer.chat-open) header.top{ transform:translateY(-100%); }
+  body:has(.drawer.chat-open) .drawer.chat-open{ top:0; }
+
   /* formularis / finestres a pantalla completa */
   .modal-overlay{padding:0;}
   .modal:not(.modal-small){
@@ -2370,7 +2386,10 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
 
   /* Finestres de diàleg (verificació) conserven fons fosc i espai */
   #confirmModal.modal-overlay,
-  #medalDescModal.modal-overlay{ padding:24px 16px; }
+  #medalDescModal.modal-overlay{ padding:24px 16px; align-items:center; }
+
+  /* En el selector de l'expositor en mòbil no es mostra el peu (botó Cancel·la) */
+  #expositorModal .expositor-picker-foot{ display:none; }
 
   /* Amaga la "X" de tancar a les pantalles completes */
   .modal-head .icon-btn[data-close],
@@ -2813,8 +2832,8 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
           <input type="text" id="obAlias" placeholder="Ex. Ferro" data-i18n="Ex. Ferro">
         </div>
         <div class="field f-naix-col">
-          <label for="obNaix" data-i18n="Data de naixement (dd/mm/aaaa)">Data de naixement (dd/mm/aaaa)</label>
-          <input type="text" id="obNaix" placeholder="dd/mm/aaaa" inputmode="numeric" maxlength="10" autocomplete="off" data-i18n="dd/mm/aaaa">
+          <label for="obNaix" data-i18n="Data de naixement">Data de naixement</label>
+          <input type="date" id="obNaix" data-i18n="dd/mm/aaaa">
         </div>
         <div class="field f-sexe-col">
           <label data-i18n="Sexe">Sexe</label>
@@ -2869,13 +2888,12 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
       <p class="ob-step3-hint" data-i18n="Ja tens el teu compte a punt. Vols crear ara alguna rutina d'entrenament?">Ja tens el teu compte a punt. Vols crear ara alguna rutina d'entrenament?</p>
       <div class="ob-step3-actions">
         <button type="button" class="btn btn-primary btn-block" id="obCreateRoutineBtn" data-i18n="Crea una rutina">Crea una rutina</button>
-        <button type="button" class="btn btn-block" id="obLaterBtn" data-i18n="Més avant">Més avant</button>
       </div>
     </div>
     <div class="modal-foot" id="obFoot">
       <button class="btn" id="obPrevBtn" style="display:none;" data-i18n="Enrere">Enrere</button>
       <button class="btn btn-primary" id="obNextBtn" data-i18n="Continua">Continua</button>
-      <button class="btn btn-primary" id="onboardingSaveBtn" style="display:none;" data-i18n="Desa les meues dades">Desa les meues dades</button>
+      <button class="btn btn-primary" id="onboardingSaveBtn" style="display:none;" data-i18n="Desar">Desar</button>
     </div>
   </div>
 </div>
@@ -3139,9 +3157,6 @@ body.modal-open-mobile .modal:not(.modal-small){ padding-bottom:24px; }
     <div style="display:flex; flex-direction:column; align-items:center; gap:10px; padding:6px 4px 14px;">
       <div id="medalDescIcon" class="medal-icon" style="width:64px; height:64px; font-size:34px;"></div>
       <p id="medalDescText" style="font-size:13px; color:var(--text-dim); text-align:center; line-height:1.5;"></p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-primary" data-close="medalDescModal" data-i18n="Tanca">Tanca</button>
     </div>
   </div>
 </div>
@@ -4993,7 +5008,9 @@ const I18N = {
     "Home":"Hombre",
     "Dona":"Mujer",
     "Altre":"Otro",
+    "Data de naixement":"Fecha de nacimiento",
     "Desa les meues dades":"Guarda mis datos",
+    "Desar":"Guardar",
     "Posa un alias":"Pon un alias",
     "L\'alias ha de tindre almenys 3 caràcters":"El alias debe tener al menos 3 caracteres",
     "L\'alias no pot superar els 11 caràcters":"El alias no puede superar los 11 caracteres",
@@ -5174,6 +5191,7 @@ const I18N = {
     "Fet":"Hecho",
     "Les teues medalles aconseguides":"Tus medallas conseguidas",
     "Encara no has aconseguit cap medalla":"Aún no has conseguido ninguna medalla",
+    "Encara no tens medalles disponibles per a l\u2019expositor":"Aún no tienes medallas disponibles para el expositor",
     "Tria les medalles que vols mostrar":"Elige las medallas que quieres mostrar",
     "Afig una medalla":"Añadir una medalla",
     "Màxim {1} medalles a l\u2019expositor":"Máximo {1} medallas en el expositor",
@@ -5265,6 +5283,7 @@ let editingRoutineId = null;
 let lastRoutineHora = '07:00';
 let clockTouched = false;
 let activeSession = null; // {rutinaId, startedAt, currentIndex, exercicis:[{exerciciId, sets:[{pes,repeticions,completed}], targetSets, targetReps}]}
+let swipeBusy = false;
 let restTimerInterval = null;
 let sessionClockInterval = null;
 let setStartTimestamp = null; // Timestamp de quan es va iniciar la sèrie actual
@@ -5630,6 +5649,7 @@ function buildObSeg(id, options, onPick){
 let obData = { alias:'', altura:'', pes:'', edat:'', dies:0, frequencia:'', sexe:'', avatar:'', equipMode:'gimnas', dataNaix:'' };
 let obMandatoryOpen = false;
 let obFirstTimeFlow = false;
+let obCurrentStep = 1;
 
 const AVATAR_SHAPES = {
   person: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5z"/></svg>',
@@ -6407,6 +6427,28 @@ function parseBirth(s){
   if(dt.getFullYear() !== y || dt.getMonth() !== mo-1 || dt.getDate() !== d) return null;
   return dt;
 }
+/* Converteix dd/mm/aaaa (format intern) a aaaa-mm-dd (valor de l'input type=date) */
+function ddmmyyyyToIso(v){
+  const m = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/.exec(String(v||'').trim());
+  if(!m) return '';
+  const d = parseInt(m[1],10), mo = parseInt(m[2],10), y = parseInt(m[3],10);
+  if(mo < 1 || mo > 12 || d < 1 || d > 31) return '';
+  const dt = new Date(y, mo-1, d);
+  if(dt.getFullYear() !== y || dt.getMonth() !== mo-1 || dt.getDate() !== d) return '';
+  const dd = String(d).padStart(2,'0'), mm = String(mo).padStart(2,'0');
+  return y + '-' + mm + '-' + dd;
+}
+/* Converteix aaaa-mm-dd (valor de l'input type=date) a dd/mm/aaaa (format intern) */
+function isoToDdmmyyyy(v){
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v||'').trim());
+  if(!m) return '';
+  const y = parseInt(m[1],10), mo = parseInt(m[2],10), d = parseInt(m[3],10);
+  if(mo < 1 || mo > 12 || d < 1 || d > 31) return '';
+  const dt = new Date(y, mo-1, d);
+  if(dt.getFullYear() !== y || dt.getMonth() !== mo-1 || dt.getDate() !== d) return '';
+  const dd = String(d).padStart(2,'0'), mm = String(mo).padStart(2,'0');
+  return dd + '/' + mm + '/' + y;
+}
 function ageFromBirth(s){
   const dt = parseBirth(s);
   if(!dt) return 0;
@@ -6446,7 +6488,7 @@ function openOnboarding(){
   const closeBtn = $('#onboardingCloseBtn');
   if(closeBtn) closeBtn.style.display = obMandatoryOpen ? 'none' : '';
   const dot3 = $('#obDot3');
-  if(dot3) dot3.style.display = obFirstTimeFlow ? '' : 'none';
+  if(dot3) dot3.style.display = '';
   if(config.profile) obData = Object.assign({}, config.profile);
   if(!obData.dies) obData.dies = parseInt(obData.diesSetmana)||0;
   const av = parseObAvatar(obData.avatar);
@@ -6467,10 +6509,10 @@ function openOnboarding(){
   buildObStepper('#obEdatStepper', obData.edat, 1, 13, v=> obData.edat = v, 99, true);
   const naixInput = $('#obNaix');
   if(naixInput){
-    naixInput.value = obData.dataNaix || '';
+    naixInput.max = new Date().toISOString().slice(0,10);
+    naixInput.value = ddmmyyyyToIso(obData.dataNaix || '') || '';
     naixInput.addEventListener('input', ()=>{
-      obData.dataNaix = formatBirthInput(naixInput.value);
-      naixInput.value = obData.dataNaix;
+      obData.dataNaix = isoToDdmmyyyy(naixInput.value) || '';
       const edat = ageFromBirth(obData.dataNaix);
       if(edat > 0 && edat !== obData.edat){
         obData.edat = edat;
@@ -6518,37 +6560,84 @@ function openOnboarding(){
   obGoTo(1);
   openModal('onboardingModal');
   document.body.classList.add('modal-open-mobile');
+  document.body.classList.toggle('ob-first-time', !!obFirstTimeFlow);
 }
-function closeOnboarding(){ closeModal('onboardingModal'); document.body.classList.remove('modal-open-mobile'); }
+function closeOnboarding(){ closeModal('onboardingModal'); document.body.classList.remove('modal-open-mobile'); document.body.classList.remove('ob-first-time'); }
 
-function obGoTo(step){
+function obGoTo(step, dir){
+  obCurrentStep = step;
   const s1 = $('#obStep1');
   const s2 = $('#obStep2');
   const s3 = $('#obStep3');
-  if(s1) s1.style.display = step === 1 ? '' : 'none';
-  if(s2) s2.style.display = step === 2 ? '' : 'none';
-  if(s3) s3.style.display = step === 3 ? '' : 'none';
+  const steps = { 1:s1, 2:s2, 3:s3 };
+  Object.keys(steps).forEach(k=>{
+    const el = steps[k];
+    if(!el) return;
+    el.style.display = Number(k) === step ? '' : 'none';
+    if(Number(k) === step && dir){
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = dir > 0 ? 'tabInRight .32s ease' : 'tabInLeft .32s ease';
+    }
+  });
   const prev = $('#obPrevBtn');
-  if(prev) prev.style.display = (step === 1 || step === 3) ? 'none' : '';
+  if(prev) prev.style.display = step === 2 ? '' : 'none';
   const next = $('#obNextBtn');
-  if(next) next.style.display = step === 1 ? '' : 'none';
+  if(next) next.style.display = step <= 2 ? '' : 'none';
   const save = $('#onboardingSaveBtn');
-  if(save) save.style.display = step === 2 ? '' : 'none';
+  if(save) save.style.display = step === 3 ? '' : 'none';
   const dots = $$('#onboardingModal .ob-dot');
   dots.forEach((d,i)=> d.classList.toggle('on', i < step));
 }
-$('#obNextBtn').addEventListener('click', ()=>{
-  const alias = ($('#obAlias')?.value || '').trim();
-  if(!alias){ toast(t('Posa un alias')); return; }
-  if(alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
-  if(alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
-  if(!obData.sexe){ toast(t('Tria el sexe')); return; }
-  const naix = ($('#obNaix')?.value || '').trim();
-  if(!naix){ toast(t('Introdueix la data de naixement')); return; }
-  if(!parseBirth(naix)){ toast(t('Data de naixement no vàlida')); return; }
-  obGoTo(2);
-});
-$('#obPrevBtn').addEventListener('click', ()=>{ obGoTo(1); });
+function obStepNext(){
+  if(obCurrentStep === 1){
+    const alias = ($('#obAlias')?.value || '').trim();
+    if(!alias){ toast(t('Posa un alias')); return; }
+    if(alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
+    if(alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
+    if(!obData.sexe){ toast(t('Tria el sexe')); return; }
+    const naix = ($('#obNaix')?.value || '').trim();
+    if(!naix){ toast(t('Introdueix la data de naixement')); return; }
+    if(!parseBirth(isoToDdmmyyyy(naix))){ toast(t('Data de naixement no vàlida')); return; }
+    obGoTo(2, 1);
+  }else{
+    obGoTo(3, 1);
+  }
+}
+$('#obNextBtn').addEventListener('click', obStepNext);
+$('#obPrevBtn').addEventListener('click', ()=>{ obGoTo(obCurrentStep > 2 ? 2 : 1, -1); });
+/* Gest: lliscar entre les pantalles del formulari en mòbil */
+(function(){
+  const obModalEl = $('#onboardingModal');
+  if(!obModalEl) return;
+  const content = obModalEl.querySelector('.modal');
+  if(!content) return;
+  let obSwipe = null;
+  const onStart = e=>{
+    const t = e.touches[0];
+    obSwipe = { x: t.clientX, y: t.clientY };
+  };
+  const onMove = e=>{
+    if(!obSwipe) return;
+    const dx = e.touches[0].clientX - obSwipe.x;
+    const dy = e.touches[0].clientY - obSwipe.y;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 12 && e.cancelable) e.preventDefault();
+  };
+  const onEnd = e=>{
+    if(!obSwipe) return;
+    const dx = e.changedTouches[0].clientX - obSwipe.x;
+    const dy = e.changedTouches[0].clientY - obSwipe.y;
+    obSwipe = null;
+    if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)){
+      if(dx < 0 && obCurrentStep < 3) obStepNext();
+      else if(dx > 0 && obCurrentStep > 1) obGoTo(obCurrentStep - 1, -1);
+    }
+  };
+  content.addEventListener('touchstart', onStart, { passive: true });
+  content.addEventListener('touchmove', onMove, { passive: false });
+  content.addEventListener('touchend', onEnd, { passive: true });
+  content.addEventListener('touchcancel', onEnd, { passive: true });
+})();
 
 function updateObModeUI(){
   const casa = obMode === 'casa';
@@ -6628,28 +6717,28 @@ function closeOnboardingFlow(){
 }
 $('#onboardingCloseBtn').addEventListener('click', closeOnboardingFlow);
 
-$('#onboardingSaveBtn').addEventListener('click', async ()=>{
+async function saveOnboardingProfile(){
   obData.alias = $('#obAlias').value.trim();
   obData.avatar = obColor + '|' + obSymbol + (obFrame ? '|' + obFrame : '');
   obData.equipMode = obMode || 'gimnas';
   const naixInput = $('#obNaix');
-  if(naixInput) obData.dataNaix = (naixInput.value || '').trim();
-  if(!obData.alias){ toast(t('Posa un alias')); return; }
-  if(obData.alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
-  if(obData.alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
-  if(!(obData.altura>0)){ toast(t('Posa la teua altura')); return; }
-  if(!(obData.pes>0)){ toast(t('Posa el teu pes')); return; }
+  if(naixInput) obData.dataNaix = naixInput.value ? (isoToDdmmyyyy(naixInput.value) || '') : '';
+  if(!obData.alias){ toast(t('Posa un alias')); return false; }
+  if(obData.alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return false; }
+  if(obData.alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return false; }
+  if(!(obData.altura>0)){ toast(t('Posa la teua altura')); return false; }
+  if(!(obData.pes>0)){ toast(t('Posa el teu pes')); return false; }
   if(obData.dataNaix){
     const nascut = parseBirth(obData.dataNaix);
-    if(!nascut){ toast(t('Data de naixement no vàlida')); return; }
+    if(!nascut){ toast(t('Data de naixement no vàlida')); return false; }
     const computed = ageFromBirth(obData.dataNaix);
     if(computed > 0) obData.edat = computed;
   }
-  if(!(obData.edat>0)){ toast(t('Posa la teua edat')); return; }
-  if(!obData.dies){ toast(t('Tria els dies per setmana')); return; }
-  if(!obData.frequencia){ toast(t('Tria el teu nivell')); return; }
-  if(!obData.sexe){ toast(t('Tria el sexe')); return; }
-  if(await aliasIsTaken(obData.alias)){ toast(t('Este alias ja està en ús')); return; }
+  if(!(obData.edat>0)){ toast(t('Posa la teua edat')); return false; }
+  if(!obData.dies){ toast(t('Tria els dies per setmana')); return false; }
+  if(!obData.frequencia){ toast(t('Tria el teu nivell')); return false; }
+  if(!obData.sexe){ toast(t('Tria el sexe')); return false; }
+  if(await aliasIsTaken(obData.alias)){ toast(t('Este alias ja està en ús')); return false; }
   config.profile = Object.assign({}, obData, { diesSetmana: obData.dies });
   config.equipMode = obMode || 'gimnas';
   if(config.equipMode === 'gimnas') config.equipament = EQUIPMENTS.map(e=>e.id);
@@ -6668,27 +6757,22 @@ $('#onboardingSaveBtn').addEventListener('click', async ()=>{
     }catch(e){ console.error('FERRO: desar dades', e); }
   }
   config.onboardingDismissed = false;
+  obMandatoryOpen = false;
+  const closeBtn = $('#onboardingCloseBtn');
+  if(closeBtn) closeBtn.style.display = '';
   refreshAchievements();
-  if(obFirstTimeFlow){
-    // Primera vegada que es completa el perfil: mostra la pantalla "I ara què?" abans de tancar.
-    obMandatoryOpen = false;
-    const closeBtn = $('#onboardingCloseBtn');
-    if(closeBtn) closeBtn.style.display = '';
-    obGoTo(3);
-    toast(t('Dades desades'));
-  } else {
+  toast(t('Dades desades'));
+  return true;
+}
+$('#onboardingSaveBtn').addEventListener('click', async ()=>{
+  if(await saveOnboardingProfile()) closeOnboarding();
+});
+$('#obCreateRoutineBtn').addEventListener('click', async ()=>{
+  obFirstTimeFlow = false;
+  if(await saveOnboardingProfile()){
     closeOnboarding();
-    toast(t('Dades desades'));
+    openRoutineMethodModal();
   }
-});
-$('#obCreateRoutineBtn').addEventListener('click', ()=>{
-  obFirstTimeFlow = false;
-  closeOnboarding();
-  openRoutineMethodModal();
-});
-$('#obLaterBtn').addEventListener('click', ()=>{
-  obFirstTimeFlow = false;
-  closeOnboarding();
 });
 
 function maybeShowOnboarding(){
@@ -6813,6 +6897,8 @@ function applyScreenBack(root){
   if(id === 'onboardingModal') return;
   if(id === 'routineModal') return;
   if(id === 'finishModal') return;
+  if(id === 'medalDescModal') return;
+  if(id === 'expositorModal') return;
   if(root.querySelector('.modal-small')) return;
   const head = root.querySelector('.drawer-head, .notif-panel-head, .modal-head');
   if(!head || head.querySelector('.screen-back')) return;
@@ -6825,7 +6911,7 @@ function applyScreenBack(root){
   btn.addEventListener('click', ()=>{
     const fn = SCREEN_CLOSE[id];
     if(fn) fn();
-    else root.classList.remove('open');
+    else closeModal(id);
   });
   head.insertBefore(btn, head.firstChild);
 }
@@ -6849,9 +6935,13 @@ function openModal(id){
 function closeModal(id){
   const el = $('#'+id);
   if(el) el.classList.remove('open');
+  if(id === 'onboardingModal'){
+    document.body.classList.remove('modal-open-mobile');
+    document.body.classList.remove('ob-first-time');
+  }
 }
 $$('[data-close]').forEach(btn=>btn.addEventListener('click', ()=>closeModal(btn.dataset.close)));
-$$('.modal-overlay').forEach(ov=>ov.addEventListener('click', e=>{ if(e.target===ov){ if(ov.id === 'onboardingModal' && obMandatoryOpen) return; ov.classList.remove('open'); } }));
+$$('.modal-overlay').forEach(ov=>ov.addEventListener('click', e=>{ if(e.target===ov){ if(ov.id === 'onboardingModal' && obMandatoryOpen) return; closeModal(ov.id); } }));
 
 /* ---------- AJUSTOS (tema + descans) ---------- */
 function applyTheme(theme){
@@ -7359,12 +7449,20 @@ function showEntrenarTab(tab){
   setEntrenarTab(tab);
   updateBottomNav();
 }
-function setEntrenarTab(tab){
+function setEntrenarTab(tab, dir){
   entrenarTab = tab;
   $$('#entrenarTabs .seg-btn').forEach(b=> b.classList.toggle('active', b.dataset.entrenarTab===tab));
-  $('#entrenarPanel').style.display = tab==='entrenar' ? '' : 'none';
-  $('#rutinesPanel').style.display = tab==='rutines' ? '' : 'none';
-  $('#seguimentPanel').style.display = tab==='seguiment' ? '' : 'none';
+  const panels = { entrenar:$('#entrenarPanel'), rutines:$('#rutinesPanel'), seguiment:$('#seguimentPanel') };
+  Object.keys(panels).forEach(k=>{
+    const p = panels[k];
+    if(!p) return;
+    p.style.display = k===tab ? '' : 'none';
+    if(k===tab && dir){
+      p.style.animation = 'none';
+      void p.offsetWidth;
+      p.style.animation = dir > 0 ? 'tabInRight .3s ease' : 'tabInLeft .3s ease';
+    }
+  });
   if(tab==='entrenar'){
     if(!activeSession){
       const saved = loadActiveSession();
@@ -7417,10 +7515,12 @@ function renderView(view){
   }
   updateBottomNav();
 }
+const fullViewStack = [];
 function navigateTo(view){
   if(view==='rutines'){ showEntrenarTab('rutines'); return; }
   if(view==='historial'){ showEntrenarTab('seguiment'); return; }
   if(FULL_VIEWS.indexOf(view) !== -1 && currentViewName() !== view){
+    fullViewStack.push(currentViewName());
     try{ history.pushState({ view: currentViewName(), entrenarTab: entrenarTab }, ''); }catch(e){}
   }
   renderView(view);
@@ -7430,6 +7530,41 @@ $$('#entrenarTabs').forEach(tabsEl=> tabsEl.addEventListener('click', e=>{
   if(!btn) return;
   showEntrenarTab(btn.dataset.entrenarTab);
 }));
+/* Gest: lliscar entre les pestanyes Entrenar / Rutines / Seguiment en mòbil */
+(function(){
+  if(!window.matchMedia('(max-width:720px)').matches) return;
+  const view = $('#view-entrenar');
+  if(!view) return;
+  const TABS = ['entrenar', 'rutines', 'seguiment'];
+  let tabSwipe = null;
+  const onStart = e=>{
+    if(activeSession || isRestActive()) return;
+    const t = e.touches[0];
+    tabSwipe = { x: t.clientX, y: t.clientY };
+  };
+  const onMove = e=>{
+    if(!tabSwipe) return;
+    const dx = e.touches[0].clientX - tabSwipe.x;
+    const dy = e.touches[0].clientY - tabSwipe.y;
+    if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 12 && e.cancelable) e.preventDefault();
+  };
+  const onEnd = e=>{
+    if(!tabSwipe) return;
+    const dx = e.changedTouches[0].clientX - tabSwipe.x;
+    const dy = e.changedTouches[0].clientY - tabSwipe.y;
+    tabSwipe = null;
+    if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)){
+      const idx = TABS.indexOf(entrenarTab);
+      if(idx === -1) return;
+      if(dx < 0 && idx < TABS.length - 1) setEntrenarTab(TABS[idx + 1], 1);
+      else if(dx > 0 && idx > 0) setEntrenarTab(TABS[idx - 1], -1);
+    }
+  };
+  view.addEventListener('touchstart', onStart, { passive: true });
+  view.addEventListener('touchmove', onMove, { passive: false });
+  view.addEventListener('touchend', onEnd, { passive: true });
+  view.addEventListener('touchcancel', onEnd, { passive: true });
+})();
 $('#exercicisBtn').addEventListener('click', ()=> navigateTo('exercicis'));
 $('#veureTotesMedallesBtn').addEventListener('click', ()=> navigateTo('medalles'));
 $('.brand').addEventListener('click', ()=> navigateTo('entrenar'));
@@ -7448,7 +7583,7 @@ function closeMobileOverlays(){
   if($('#settingsDrawer') && $('#settingsDrawer').classList.contains('open')) closeSettingsDrawer();
   if($('#friendsDrawer') && $('#friendsDrawer').classList.contains('open')) closeFriendsDrawer();
   if($('#notifPanel') && $('#notifPanel').classList.contains('open')) closeNotifPanel();
-  $$('.modal-overlay.open').forEach(m=> m.classList.remove('open'));
+  $$('.modal-overlay.open').forEach(m=> closeModal(m.id));
 }
 $$('#bottomNav .bn-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -9408,33 +9543,58 @@ function renderSession(){
     }
   });
 
-  // Swipe gestures per a desplaçar-se entre exercicis en mòbil (estil galeria)
+  // Swipe gestures per a desplaçar-se entre exercicis en mòbil
   const exerciseCard = document.querySelector('.current-exercise');
   if(exerciseCard && window.matchMedia('(max-width:720px)').matches){
     let touchStartX = 0;
     let touchStartY = 0;
     let touchDragging = false;
     let touchIsHorizontal = null;
-    const SWIPE_MS = 280;
-    function slideInCard(dir){
-      const newCe = document.querySelector('.current-exercise');
-      if(!newCe) return;
-      newCe.style.transition = 'none';
-      newCe.style.transform = `translateX(${dir * 100}%)`;
-      newCe.getBoundingClientRect();
-      newCe.style.transition = `transform ${SWIPE_MS}ms ease`;
-      newCe.style.transform = '';
+    const SWIPE_OUT_MS = 200;
+    const SWIPE_IN_MS = 300;
+    /* Canvia d'exercici amb una animació suau: la targeta actual se'n va cap al
+       costat (lleugera translació + esvaeix) i la nova entra des del costat oposat.
+       swipeBusy evita que les lliscades ràpides solapen transicions i provoquen
+       el salt visual de tota la pantalla. */
+    function slideToExercise(dir){
+      if(swipeBusy) return;
+      swipeBusy = true;
+      const card = document.querySelector('.current-exercise');
+      if(card){
+        card.style.transition = `transform ${SWIPE_OUT_MS}ms ease, opacity ${SWIPE_OUT_MS}ms ease`;
+        card.style.transform = `translateX(${dir * -42}px) scale(.985)`;
+        card.style.opacity = '0';
+      }
+      setTimeout(()=>{
+        if(!activeSession){ swipeBusy = false; return; }
+        activeSession.currentIndex += dir;
+        renderSession();
+        saveActiveSession();
+        const newCard = document.querySelector('.current-exercise');
+        if(newCard){
+          newCard.style.transition = 'none';
+          newCard.style.opacity = '0';
+          newCard.style.transform = `translateX(${dir * 26}px)`;
+          void newCard.offsetWidth;
+          newCard.style.transition = `transform ${SWIPE_IN_MS}ms cubic-bezier(.22,.61,.36,1), opacity ${SWIPE_IN_MS}ms ease`;
+          newCard.style.transform = '';
+          newCard.style.opacity = '1';
+        }
+        setTimeout(()=>{ swipeBusy = false; }, SWIPE_IN_MS);
+      }, SWIPE_OUT_MS);
     }
     exerciseCard.addEventListener('touchstart', (e)=>{
+      if(swipeBusy) return;
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
       touchDragging = true;
       touchIsHorizontal = null;
       exerciseCard.style.transition = 'none';
       exerciseCard.style.transform = '';
+      exerciseCard.style.opacity = '';
     }, {passive:true});
     exerciseCard.addEventListener('touchmove', (e)=>{
-      if(!touchDragging) return;
+      if(!touchDragging || swipeBusy) return;
       const dx = e.changedTouches[0].screenX - touchStartX;
       const dy = e.changedTouches[0].screenY - touchStartY;
       if(touchIsHorizontal === null && (Math.abs(dx) > 6 || Math.abs(dy) > 6)){
@@ -9448,41 +9608,32 @@ function renderSession(){
       exerciseCard.style.transform = `translateX(${x}px)`;
     }, {passive:true});
     exerciseCard.addEventListener('touchend', (e)=>{
+      if(swipeBusy) return;
       touchDragging = false;
       const dx = e.changedTouches[0].screenX - touchStartX;
       const dy = e.changedTouches[0].screenY - touchStartY;
-      const goingLeft = dx < 0;
-      const goingRight = dx > 0;
       const canPrev = activeSession.currentIndex > 0;
       const canNext = activeSession.currentIndex < activeSession.exercicis.length-1;
       const shouldChange = Math.abs(dx) >= 50 && Math.abs(dx) > Math.abs(dy) && !isRestActive();
-      const goNext = shouldChange && goingLeft && canNext;
-      const goPrev = shouldChange && goingRight && canPrev;
-      exerciseCard.style.transition = `transform ${SWIPE_MS}ms ease`;
+      const goNext = shouldChange && dx < 0 && canNext;
+      const goPrev = shouldChange && dx > 0 && canPrev;
       if(goNext){
         stopCardioTimer(); cardioRemaining = 0;
-        exerciseCard.style.transform = 'translateX(-100%)';
-        setTimeout(()=>{
-          activeSession.currentIndex++;
-          renderSession(); saveActiveSession();
-          slideInCard(1);
-        }, SWIPE_MS);
+        slideToExercise(1);
       } else if(goPrev){
         stopCardioTimer(); cardioRemaining = 0;
-        exerciseCard.style.transform = 'translateX(100%)';
-        setTimeout(()=>{
-          activeSession.currentIndex--;
-          renderSession(); saveActiveSession();
-          slideInCard(-1);
-        }, SWIPE_MS);
+        slideToExercise(-1);
       } else {
+        exerciseCard.style.transition = `transform 200ms ease, opacity 200ms ease`;
         exerciseCard.style.transform = '';
+        exerciseCard.style.opacity = '';
       }
     }, {passive:true});
     exerciseCard.addEventListener('touchcancel', ()=>{
       touchDragging = false;
-      exerciseCard.style.transition = `transform ${SWIPE_MS}ms ease`;
+      exerciseCard.style.transition = `transform 200ms ease, opacity 200ms ease`;
       exerciseCard.style.transform = '';
+      exerciseCard.style.opacity = '';
     }, {passive:true});
   }
 
@@ -9687,7 +9838,11 @@ function transitionToNextExercise(){
   restTimerInterval = null;
   hideRestOverlay();
   const ce = $('.current-exercise');
-  if(ce) ce.classList.add('slide-out');
+  if(ce){
+    ce.style.transition = 'transform 200ms ease, opacity 200ms ease';
+    ce.style.transform = 'translateX(-42px) scale(.985)';
+    ce.style.opacity = '0';
+  }
   stopCardioTimer();
   cardioRemaining = 0;
   setTimeout(()=>{
@@ -9695,8 +9850,16 @@ function transitionToNextExercise(){
     renderSession();
     saveActiveSession();
     const newCe = $('.current-exercise');
-    if(newCe) newCe.classList.add('slide-in');
-  }, 300);
+    if(newCe){
+      newCe.style.transition = 'none';
+      newCe.style.opacity = '0';
+      newCe.style.transform = 'translateX(26px)';
+      void newCe.offsetWidth;
+      newCe.style.transition = 'transform 300ms cubic-bezier(.22,.61,.36,1), opacity 300ms ease';
+      newCe.style.transform = '';
+      newCe.style.opacity = '1';
+    }
+  }, 200);
 }
 
 function startRestTimer(seconds, curExercise){
@@ -10230,7 +10393,7 @@ const medalIcon = inner => `<svg viewBox="0 0 24 24" width="1em" height="1em" fi
 
 const MEDALS = [
   /* ================= COMPTE (permanents) ================= */
-  { id:'formulari', section:'compte', tipo:'Començament', nom:'Primer pas', desc:'Completa el formulari inicial', rang:'bronze', acumulativa:false, delay: 5*60*1000,
+  { id:'formulari', section:'compte', tipo:'Començament', nom:'Primer pas', desc:'Completa el formulari inicial', rang:'bronze', acumulativa:false, xp:0, delay: 5*60*1000,
     icon:medalIcon('<path d="M9.8 10.4 V16.4 M9.8 10.4 H14.2 L13.1 11.7 L14.2 13 H9.8"/>'), check:s=>s.formulari, progress:null },
   { id:'full-blanc', section:'compte', tipo:'Rutines i planificació', nom:'Full en blanc', desc:'Crea la teua primera rutina manual', rang:'bronze', acumulativa:false,
     icon:medalIcon('<rect x="9.4" y="9.6" width="5.2" height="7.4" rx="1"/><path d="M10.6 9.6 V8.6 H13.4 V9.6 M10.6 11.9 H13.4 M10.6 13.5 H13.4"/>'), check:s=>s.rutinesManual>=1, progress:null },
@@ -10383,6 +10546,7 @@ function recordMedalDates(ids, date, onlyMissing){
 const MEDAL_XP = { bronze:100, plata:250, or:500, platino:1000 };
 function xpForMedal(m){
   if(!m) return 0;
+  if(typeof m.xp === 'number') return m.xp;
   const id = m.id || '';
   if(id === 'platino-compte' || id.indexOf('platino-') === 0) return MEDAL_XP.platino;
   return MEDAL_XP[m.rang] || 0;
@@ -12749,6 +12913,13 @@ function removeExpositorMedal(id){
 let expositorPickingSlot = 0;
 function openExpositorPicker(slotIndex){
   closeExpositorPop();
+  const items = earnedExpositorItems();
+  const currentIds = expositorSlotIds();
+  const hasAvailable = items.some(it=> currentIds.indexOf(it.id) === -1);
+  if(!hasAvailable){
+    toast(t('Encara no tens medalles disponibles per a l\u2019expositor'));
+    return;
+  }
   const ids = expositorSlotIds();
   let slot = (typeof slotIndex === 'number') ? slotIndex : 0;
   if(!ids[slot] || !findMedal(ids[slot])){
@@ -12953,7 +13124,7 @@ window.addEventListener('popstate', (event)=>{
     if(top.id === 'confirmModal' && confirmFinishRef){
       confirmFinishRef(false);
     }else{
-      top.classList.remove('open');
+      closeModal(top.id);
     }
     return;
   }
@@ -12989,16 +13160,23 @@ window.addEventListener('popstate', (event)=>{
   }
   /* Vistes completes: torna a la pantalla anterior (back en mòbil) */
   const s = event.state;
+  const restoreView = (v)=>{
+    if(v === 'entrenar') showEntrenarTab(s && s.entrenarTab ? s.entrenarTab : 'entrenar');
+    else renderView(v);
+  };
   if(s && s.view){
     if(s.sessionActive && activeSession){
       showEntrenarTab('entrenar');
       return;
     }
-    if(s.view === 'entrenar'){
-      showEntrenarTab(s.entrenarTab || 'entrenar');
-    }else{
-      renderView(s.view);
-    }
+    fullViewStack.pop();
+    restoreView(s.view);
+  }else{
+    /* L'estat pot ser un modal o pantalla deixat enrere sense consumir:
+       es consumeix i es torna a la vista anterior registrada (per exemple,
+       des de "TOTES" tornem al perfil personal i no a la pàgina principal). */
+    const prev = fullViewStack.pop();
+    if(prev && FULL_VIEWS.indexOf(prev) !== -1) restoreView(prev);
   }
 });
 
