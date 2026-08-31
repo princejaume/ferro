@@ -531,7 +531,8 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .predef-prev-edit .pp-act{display:flex; align-items:center; gap:6px; flex-shrink:0;}
 .predef-prev-edit .pp-act .pp-del,
 .predef-prev-edit .pp-act .pp-gif{background:none; border:none; cursor:pointer; line-height:1; border-radius:8px; padding:6px 8px;}
-.predef-prev-edit .pp-act .pp-del{color:var(--ember); font-size:15px;}
+.predef-prev-edit .pp-act .pp-del{color:var(--ember); font-size:15px; display:inline-flex; align-items:center; justify-content:center;}
+.predef-prev-edit .pp-act .pp-del svg{width:15px; height:15px; display:block;}
 .predef-prev-edit .pp-act .pp-del:hover{opacity:.8;}
 .predef-prev-edit .pp-act .pp-gif{background:var(--accent); color:var(--accent-text); font-size:11px; font-weight:700; padding:6px 9px;}
 .predef-prev-edit .pp-act .pp-gif:hover{opacity:.85;}
@@ -7058,6 +7059,8 @@ function applyScreenBack(root){
   if(id === 'confirmModal') return;
   if(id === 'onboardingModal') return;
   if(id === 'routineModal') return;
+  if(id === 'routineMethodModal') return;
+  if(id === 'exDetailModal') return;
   if(id === 'finishModal') return;
   if(id === 'medalDescModal') return;
   if(id === 'expositorModal') return;
@@ -8079,7 +8082,7 @@ function renderPickedList(){
       });
     }
     const gifBtn = row.querySelector('.pi-gif');
-    if(gifBtn) gifBtn.addEventListener('click', e=>{ e.stopPropagation(); openGifModal(ex); });
+    if(gifBtn) gifBtn.addEventListener('click', e=>{ e.stopPropagation(); openExerciseDetail(ex); });
     row.querySelector('.pi-remove').addEventListener('click', async ()=>{
       const ok = await confirmDialog({
         title: t('Elimina exercici'),
@@ -8958,7 +8961,7 @@ function showPredefPreview(rutines){
           </label>
           <div class="pp-act">
             ${ex && gifFor(ex) ? `<button type="button" class="pp-gif" title="${t('Vore GIF')}" aria-label="${t('Vore GIF')}">GIF</button>` : ''}
-            <button type="button" class="pp-del" title="${t('Elimina')}" aria-label="${t('Elimina')}">🗑️</button>
+            <button type="button" class="pp-del" title="${t('Elimina')}" aria-label="${t('Elimina')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
           </div>
         </div>`;
       wrap.appendChild(row);
