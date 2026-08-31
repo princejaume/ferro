@@ -587,9 +587,10 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 }
 .picked-item .pi-actions{position:absolute; top:6px; right:6px; display:flex; align-items:center; gap:2px; z-index:2;}
 .picked-item .pi-actions button{background:none; border:none; line-height:1; cursor:pointer;}
-.picked-item .pi-actions .pi-expand{color:var(--text-dim); font-size:14px; padding:4px 4px; transition:transform .2s ease;}
-.picked-item .pi-actions .pi-expand:hover{color:var(--text);}
-.picked-item .pi-actions .pi-expand.open{transform:rotate(90deg);}
+.picked-item .pi-name-wrap.clickable{flex:1 1 auto; min-width:0; cursor:pointer;}
+.picked-item .pi-name-wrap.clickable .pi-name{transition:color .15s ease;}
+.picked-item .pi-name-wrap.clickable .pi-name:hover{color:var(--accent);}
+.picked-item .pi-name-wrap.clickable .pi-name:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
 .picked-item .pi-actions .pi-gif{background:var(--accent); color:var(--accent-text); font-size:10px; font-weight:700; letter-spacing:.02em; padding:3px 5px; border-radius:5px;}
 .picked-item .pi-actions .pi-gif:hover{opacity:.85;}
 .picked-item .pi-actions .pi-remove{color:var(--ember); font-size:12px; padding:1px 4px;}
@@ -1879,6 +1880,8 @@ button.nph-item{width:100%; background:none; border:none; text-align:left; color
 .modal-small{max-width:420px;}
 /* La finestra de descripció de medalla apareix centrada a la pantalla */
 #medalDescModal.modal-overlay{ align-items:center; }
+/* La finestra d'ajuda de la IA apareix centrada a la pantalla */
+#iaHelpModal.modal-overlay{ align-items:center; }
 .rew-gift-scene{
   position:relative; width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
@@ -2406,12 +2409,13 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   }
 
   /* Pantalles completes: cap aparença de finestra (sense fons fosc darrere) */
-  .modal-overlay:not(#confirmModal):not(#medalDescModal),
+  .modal-overlay:not(#confirmModal):not(#medalDescModal):not(#iaHelpModal),
   .drawer-overlay, .notif-overlay{ background:transparent; }
 
   /* Finestres de diàleg (verificació) conserven fons fosc i espai */
   #confirmModal.modal-overlay,
   #medalDescModal.modal-overlay,
+  #iaHelpModal.modal-overlay,
   #obNaixModal.modal-overlay{ padding:24px 16px; align-items:center; }
 
   /* En el selector de l'expositor en mòbil no es mostra el peu (botó Cancel·la) */
@@ -2424,6 +2428,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   #iaCloseBtn, #obAvatarCloseBtn, #notifPanelClose{ display:none; }
   /* ...excepte dins de les finestres de diàleg */
   .modal-small .modal-head .icon-btn[data-close]{ display:inline-flex; }
+  /* La finestra d'ajuda de la IA: sense botó de tancar (es tanca tirant enrere o apretant fora) */
+  #iaHelpModal .modal-head .icon-btn[data-close]{ display:none !important; }
 
   /* Botó "torna enrere" visible a les pantalles completes (substitueix la X) */
   .screen-back{ display:inline-flex !important; }
@@ -3105,10 +3111,12 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   <div class="modal modal-wide">
     <div class="modal-head">
       <h3 data-i18n="Rutina amb intel·ligència artificial">Rutina amb intel·ligència artificial</h3>
-      <button class="icon-btn" id="iaCloseBtn">✕</button>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button type="button" class="icon-btn" id="iaHelpBtn" title="Com funciona" aria-label="Com funciona" data-i18n-title="Com funciona" data-i18n-aria="Com funciona">❓</button>
+        <button class="icon-btn" id="iaCloseBtn">✕</button>
+      </div>
     </div>
     <div id="iaIntro">
-      <p class="ia-explanation" data-i18n="Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format.">Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format.</p>
       <button type="button" class="btn btn-block ia-template-btn" id="iaTemplateBtn" data-i18n="📋 Copiar plantilla per a la IA">📋 Copiar plantilla per a la IA</button>
       <div class="field">
         <textarea id="iaText" rows="12" placeholder="Dilluns - Pit i tríceps
@@ -3122,6 +3130,17 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
       </div>
     </div>
     <div id="iaResults" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: AJUDA IA ===================== -->
+<div class="modal-overlay" id="iaHelpModal">
+  <div class="modal modal-small">
+    <div class="modal-head">
+      <h3 data-i18n="Com funciona">Com funciona</h3>
+      <button type="button" class="icon-btn" data-close="iaHelpModal">✕</button>
+    </div>
+    <p data-i18n="Pega ací la rutina o rutines setmanals generades per una IA. El sistema analitzarà el text, extraurà els exercicis i crearà les rutines corresponents. Si encara no tens el text, toca «Copiar plantilla», enganxa-la a qualsevol IA i demana-li que et generi la rutina en aquest format." style="font-size:13px; color:var(--text-dim); line-height:1.6; margin:0;"></p>
   </div>
 </div>
 
@@ -5283,7 +5302,8 @@ const I18N = {
     "✓ App instal·lada":"✓ App instalada",
     "App instal·lada al dispositiu":"App instalada en el dispositivo",
     "Obre Safari → Comparteix → «Afegir a la pantalla d'inici»":"Abre Safari → Compartir → «Añadir a la pantalla de inicio»",
-    "Instal·la l'app":"Instala la app"
+    "Instal·la l'app":"Instala la app",
+    "Com funciona":"Cómo funciona"
   }
 };
 function t(str){
@@ -7063,6 +7083,8 @@ function applyScreenBack(root){
   if(id === 'exDetailModal') return;
   if(id === 'finishModal') return;
   if(id === 'medalDescModal') return;
+  if(id === 'iaModal') return;
+  if(id === 'iaHelpModal') return;
   if(id === 'expositorModal') return;
   if(id === 'predefModal') return;
   if(id === 'predefPreviewModal') return;
@@ -8024,13 +8046,12 @@ function renderPickedList(){
     row.innerHTML = `
       <div class="pi-top">
         <div class="pi-num">${idx+1}</div>
-        <div style="min-width:0;">
-          <div class="pi-name">${ex ? escapeHtml(ex.nom) : t('Exercici eliminat')}</div>
+        <div class="pi-name-wrap${cardio ? '' : ' clickable'}" style="min-width:0;">
+          <div class="pi-name"${cardio ? '' : ` role="button" tabindex="0" title="${expanded ? t('Amaga detall') : t('Desplega per sèries')}" aria-expanded="${expanded}"`}>${ex ? escapeHtml(ex.nom) : t('Exercici eliminat')}</div>
           <div class="pi-sub">${ex ? groupLabel(ex.grupMuscular) : ''}</div>
         </div>
         <div class="pi-actions">
           ${ex && gifFor(ex) ? `<button type="button" class="pi-gif" title="${t('Vore GIF')}" aria-label="${t('Vore GIF')}">GIF</button>` : ''}
-          ${cardio ? '' : `<button type="button" class="pi-expand${expanded?' open':''}" title="${expanded ? t('Amaga detall') : t('Desplega per sèries')}" aria-label="${expanded ? t('Amaga detall') : t('Desplega per sèries')}">▸</button>`}
           <button type="button" class="pi-remove" title="${t('Elimina')}" aria-label="${t('Elimina')}">✕</button>
         </div>
       </div>
@@ -8075,10 +8096,13 @@ function renderPickedList(){
       });
     });
     if(!cardio){
-      row.querySelector('.pi-expand').addEventListener('click', ()=>{
+      row.querySelector('.pi-name').addEventListener('click', ()=>{
         if(pickedExpandedSet.has(pe)) pickedExpandedSet.delete(pe);
         else pickedExpandedSet.add(pe);
         renderPickedList();
+      });
+      row.querySelector('.pi-name').addEventListener('keydown', e=>{
+        if(e.key==='Enter'||e.key===' '){ e.preventDefault(); row.querySelector('.pi-name').click(); }
       });
     }
     const gifBtn = row.querySelector('.pi-gif');
@@ -9042,12 +9066,12 @@ function showPredefPreview(rutines){
         r.exercicis.splice(i,1);
         showPredefPreview(rutines);
       });
-      // Vore el GIF de l'exercici
+      // Vore el GIF de l'exercici (mateixa pantalla que a l'editor de rutines)
       const gifBtn = panel.querySelector('.pp-gif');
       if(gifBtn) gifBtn.addEventListener('click', e=>{
         e.stopPropagation();
         const en = exById(gifBtn.dataset.ex || e.exerciciId);
-        if(en && gifFor(en)) openGifModal(en);
+        if(en && gifFor(en)) openExerciseDetail(en);
       });
       // Obrir / tancar el panell d'edició
       row.addEventListener('click', ()=>{
@@ -9089,6 +9113,7 @@ function openIAModal(){
   openModal('iaModal');
 }
 $('#iaCloseBtn').addEventListener('click', ()=> closeModal('iaModal'));
+$('#iaHelpBtn').addEventListener('click', ()=> openModal('iaHelpModal'));
 
 /* Nivell deduït del perfil del compte (freqüència + dies per setmana). */
 function profileNivell(){
@@ -9349,8 +9374,12 @@ function renderIAResults(){
   // Botó Accepta totes
   const foot = document.createElement('div');
   foot.className = 'modal-foot';
-  foot.innerHTML = '<button class="btn btn-primary" id="iaAcceptAllBtn">' + t('Accepta totes') + '</button>';
+  foot.innerHTML = '<button class="btn" id="iaCancelBtn">' + t('Cancel·la') + '</button><button class="btn btn-primary" id="iaAcceptAllBtn">' + t('Accepta totes') + '</button>';
   box.appendChild(foot);
+  foot.querySelector('#iaCancelBtn').addEventListener('click', ()=>{
+    iaParsedRutines = [];
+    closeModal('iaModal');
+  });
   foot.querySelector('#iaAcceptAllBtn').addEventListener('click', ()=>{
     const rutines = iaParsedRutines.map(r=>({ nom:r.nom||t('Rutina'), tipus:'hipertrofia', exercicis:r.exercicis.map(e=>({...e})) }));
     addRoutinesToState(rutines, 'ia');
