@@ -1,4 +1,4 @@
-const CACHE = 'ferro-v2';
+const CACHE = 'ferro-v5';
 const APP_SHELL = [
   './manifest.json',
   './supabase-config.js',
