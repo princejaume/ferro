@@ -50,6 +50,8 @@
   --legend-dim:#D96400;
   --diamant:#3D8BFF;
   --diamant-dim:#2F6FD6;
+  --repte:#B388FF;
+  --repte-dim:#9670E8;
   --line-dark:rgba(255,255,255,0.08);
   --line-light:rgba(20,22,26,0.10);
 
@@ -79,6 +81,8 @@
   --body-sil: #B9BEC5;
   --body-sil-line: rgba(20,22,26,0.14);
   --icon-box-bg: var(--chalk-soft);
+  --repte:#8E5CE8;
+  --repte-dim:#9670E8;
   --shadow: 0 1px 2px rgba(20,22,26,0.06), 0 8px 24px rgba(20,22,26,0.06);
   color-scheme: light;
 }
@@ -2472,6 +2476,95 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   .set-table .stp-cell .stepper input.stp-val{flex:2.2 1 0; width:100%; min-width:0; height:32px; font-size:13px; padding:0 2px;}
   .set-check{width:26px; height:32px; font-size:13px;}
 }
+/* ============================================================
+   REPTES (amics)
+   ============================================================ */
+.repte-card{
+  display:flex; flex-direction:column; gap:8px;
+  background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:10px 12px;
+  margin:8px 0 12px;
+}
+.repte-card .repte-row{display:flex; align-items:center; gap:10px;}
+.repte-card .repte-ico{
+  width:38px; height:38px; border-radius:9px; background:var(--repte); color:#14161A;
+  display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;
+}
+.repte-card .repte-info{flex:1; min-width:0;}
+.repte-card .repte-info b{font-size:13px; font-weight:700; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.repte-card .repte-info span{font-size:11px; color:var(--text-dim); display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.repte-card .repte-card-btn{
+  width:100%; display:flex; align-items:center; gap:10px; padding:10px 12px;
+  background:var(--bg); border:1px solid var(--repte); border-radius:12px;
+  color:var(--text); font:inherit; font-size:13px; font-weight:600; text-align:left; cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.repte-card .repte-card-btn:hover{background:var(--repte); color:#14161A;}
+.repte-card .repte-help{margin-left:auto; flex-shrink:0;}
+.repte-help-btn{
+  width:30px; height:30px; border-radius:8px; border:1px solid var(--line);
+  background:var(--surface-2); color:var(--text); font-size:13px; font-weight:700; cursor:pointer;
+}
+.repte-help-btn:hover{border-color:var(--repte); color:var(--repte);}
+/* ---------- Wizard ---------- */
+.repte-step{display:none;}
+.repte-step.active{display:block; animation:tabInRight .22s ease;}
+.repte-step.leaving{animation:tabInLeft .22s ease;}
+.repte-step p.repte-desc{font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:4px;}
+.repte-opt{
+  display:flex; align-items:center; gap:10px; padding:10px 12px; border:1px solid var(--line);
+  border-radius:12px; background:var(--bg); cursor:pointer; transition:border-color .15s ease;
+}
+.repte-opt:hover{border-color:var(--repte);}
+.repte-opt.selected{border-color:var(--repte); background:rgba(179,136,255,0.10);}
+.repte-opt .f-avatar{flex-shrink:0;}
+.repte-opt .f-info{flex:1; min-width:0;}
+.repte-opt .repte-check{
+  width:22px; height:22px; border-radius:6px; border:1.6px solid var(--line); flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:13px; color:transparent;
+}
+.repte-opt.selected .repte-check{border-color:var(--repte); background:var(--repte); color:#14161A;}
+.repte-opt.disabled{opacity:.45; cursor:not-allowed;}
+.repte-opt.disabled .repte-check{border-color:var(--line);}
+.repte-count{font-size:12px; color:var(--text-dim);}
+.repte-mode-desc{font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:6px; border-left:3px solid var(--repte); padding-left:10px;}
+.repte-rutines-list{display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto; margin-top:8px;}
+/* ---------- Vista del repte ---------- */
+.repte-chart{display:flex; align-items:flex-end; gap:0; padding:14px 6px 0; min-height:150px;}
+.repte-chart .rc-col{flex:1; min-width:0; display:flex; flex-direction:column; align-items:center; gap:4px;}
+.repte-chart .rc-bar-wrap{width:100%; max-width:46px; height:96px; display:flex; align-items:flex-end; justify-content:center;}
+.repte-chart .rc-bar{
+  width:100%; min-height:2px; border-radius:6px 6px 0 0; background:var(--repte);
+  transition:height .4s ease; position:relative;
+}
+.repte-chart .rc-bar.empty{background:var(--surface-2);}
+.repte-chart .rc-avatar{
+  width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center;
+  font-size:13px; flex-shrink:0; color:#14161A;
+}
+.repte-chart .rc-name{font-size:10px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; text-align:center;}
+.repte-chart .rc-num{font-size:10px; color:var(--text-dim);}
+.repte-info-block{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px;}
+.repte-info-row{display:flex; justify-content:space-between; gap:10px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--line);}
+.repte-info-row:last-child{border-bottom:none;}
+.repte-info-row span{color:var(--text-dim);}
+.repte-info-row b{font-weight:600; text-align:right;}
+.repte-part{display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13px; border-bottom:1px solid var(--line);}
+.repte-part:last-child{border-bottom:none;}
+.repte-part .f-avatar{width:32px; height:32px; font-size:14px; border-radius:8px;}
+.repte-part b{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.repte-reward{background:var(--surface); border:1px dashed var(--line); border-radius:14px; padding:18px; text-align:center; color:var(--text-dim); font-size:13px; display:flex; flex-direction:column; gap:4px; align-items:center;}
+.repte-reward b{color:var(--text);}
+.repte-actions{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
+.repte-sub{font-size:12px; color:var(--text-dim); margin-top:4px; line-height:1.4;}
+/* ---------- Rutina de repte ---------- */
+.routine-card.repte{border-color:var(--repte);}
+.rc-repte-warn{color:var(--gold);}
+.rc-repte-warn:hover{background:rgba(255,194,77,0.12);}
+/* ---------- Xat de grup: noms WhatsApp ---------- */
+.chat-msg.theirs .c-author{font-size:11px; font-weight:700; color:var(--repte); margin-bottom:2px; display:block;}
+.chat-msg{flex-direction:column; align-items:flex-start;}
+.chat-msg .chat-body{display:flex; align-items:flex-end; gap:6px; width:100%;}
+.chat-msg .c-time{flex-shrink:0; font-size:9px; opacity:.65; line-height:1; padding-bottom:1px; font-family:'Space Mono',monospace; align-self:flex-end;}
 </style>
 </head>
 <body data-theme="dark">
@@ -2701,6 +2794,22 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
         <div class="medal-row-grid profile-medal-grid" id="profileMedalGrid"></div>
       </div>
     </div>
+  </section>
+
+  <section class="view" id="view-repte">
+    <div class="view-head">
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="icon-btn" id="repteBackBtn" title="Arrere" aria-label="Arrere" data-i18n-title="Arrere" data-i18n-aria="Arrere"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+        <h2 id="repteViewTitle" data-i18n="Repte">Repte</h2>
+      </div>
+      <button class="icon-btn" id="repteViewHelp" title="Què és un repte?" data-i18n-title="Què és un repte?" aria-label="Què és un repte?" data-i18n-aria="Què és un repte?">?</button>
+    </div>
+    <div class="seg" id="repteTabs" style="margin:10px 0 14px;">
+      <button type="button" class="seg-btn active" data-repteTab="resum" data-i18n="Resum">Resum</button>
+      <button type="button" class="seg-btn" data-repteTab="xat" data-i18n="Xat">Xat</button>
+    </div>
+    <div id="repteResumPanel"></div>
+    <div id="repteXatPanel" style="display:none;"></div>
   </section>
 
 </main>
@@ -3546,6 +3655,201 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   </div>
 </div>
 
+<!-- ===================== MODAL: QUÈ ÉS UN REPTE? ===================== -->
+<div class="modal-overlay" id="repteHelpModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Què és un repte?">Què és un repte?</h3>
+      <button class="icon-btn" data-close="repteHelpModal">✕</button>
+    </div>
+    <div class="modal-body" style="display:flex; flex-direction:column; gap:10px; font-size:14px; line-height:1.55;">
+      <p data-i18n="Un repte és una competició amistosa amb els teus amics per entrenar amb constància. Cada setmana comptem els entrenaments que fas (com a màxim 1 al dia i 6 a la setmana). Guanya qui acumuli més punts quan acabi la durada del repte. Al final, els millors guanyen experiència i medalles.">Un repte és una competició amistosa amb els teus amics per entrenar amb constància. Cada setmana comptem els entrenaments que fas (com a màxim 1 al dia i 6 a la setmana). Guanya qui acumuli més punts quan acabi la durada del repte. Al final, els millors guanyen experiència i medalles.</p>
+      <details class="repte-help-item">
+        <summary data-i18n="Com es puntua?">Com es puntua?</summary>
+        <p data-i18n="Cada setmana compten els teus entrenaments fins a la freqüència del repte. Si una setmana fas menys, la setmana següent pots recuperar els dies perduts (màxim 6 per setmana). Guanya qui arribi al final amb més punts.">Cada setmana compten els teus entrenaments fins a la freqüència del repte. Si una setmana fas menys, la setmana següent pots recuperar els dies perduts (màxim 6 per setmana). Guanya qui arribi al final amb més punts.</p>
+      </details>
+      <details class="repte-help-item">
+        <summary data-i18n="Mode Adaptatiu vs Mode Fixe">Mode Adaptatiu vs Mode Fixe</summary>
+        <p data-i18n="En mode Adaptatiu, cada participant entrena amb les seves pròpies rutines, sempre que compleixin el mínim d'exercicis i sèries del repte. En mode Fixe, tots els participants reben les rutines que tria el creador i no les poden modificar fins que acaba el repte.">En mode Adaptatiu, cada participant entrena amb les seves pròpies rutines, sempre que compleixin el mínim d'exercicis i sèries del repte. En mode Fixe, tots els participants reben les rutines que tria el creador i no les poden modificar fins que acaba el repte.</p>
+      </details>
+      <details class="repte-help-item">
+        <summary data-i18n="Què passa si no hi ha participants suficients?">Què passa si no hi ha participants suficients?</summary>
+        <p data-i18n="Si el dilluns d'inici no hi ha com a mínim 2 persones acceptades, el repte es cancel·la.">Si el dilluns d'inici no hi ha com a mínim 2 persones acceptades, el repte es cancel·la.</p>
+      </details>
+      <details class="repte-help-item">
+        <summary data-i18n="Puc deixar-lo?">Puc deixar-lo?</summary>
+        <p data-i18n="Només durant la primera setmana. Després, ja no es pot abandonar.">Només durant la primera setmana. Després, ja no es pot abandonar.</p>
+      </details>
+      <details class="repte-help-item">
+        <summary data-i18n="Què passa amb les rutines del repte (mode fixe)?">Què passa amb les rutines del repte (mode fixe)?</summary>
+        <p data-i18n="Al final, pots quedar-te-les o eliminar-les.">Al final, pots quedar-te-les o eliminar-les.</p>
+      </details>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-primary" data-close="repteHelpModal" data-i18n="Entès">Entès</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: CREAR REPTE (WIZARD) ===================== -->
+<div class="modal-overlay" id="repteModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Crea un repte">Crea un repte</h3>
+      <button class="icon-btn" data-close="repteModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="repte-step active" id="repteStep1">
+        <div class="field">
+          <label for="repteNomInput" data-i18n="Nom del repte">Nom del repte</label>
+          <input type="text" id="repteNomInput" maxlength="12" placeholder="3–12 caràcters" autocomplete="off">
+          <p class="hint" id="repteNomHint" data-i18n="Entre 3 i 12 caràcters.">Entre 3 i 12 caràcters.</p>
+        </div>
+        <div class="field">
+          <label data-i18n="Data d'inici">Data d'inici</label>
+          <div class="invite-card"><div><span class="invite-code" id="repteDataInici">—</span></div></div>
+          <p class="hint" data-i18n="Sempre el proper dilluns.">Sempre el proper dilluns.</p>
+        </div>
+        <div class="field">
+          <label data-i18n="Participants">Participants</label>
+          <div id="repteParticipantsList" class="f-list"></div>
+          <p class="hint repte-count" id="repteParticipantsCount"></p>
+        </div>
+        <div class="field">
+          <label data-i18n="Mode">Mode</label>
+          <div class="seg" id="repteModeSeg">
+            <button type="button" class="seg-btn" data-mode="adaptatiu" data-i18n="Adaptatiu">Adaptatiu</button>
+            <button type="button" class="seg-btn" data-mode="fixe" data-i18n="Fixe">Fixe</button>
+          </div>
+          <p class="repte-mode-desc" id="repteModeDesc" style="display:none;"></p>
+        </div>
+      </div>
+      <div class="repte-step" id="repteStep2">
+        <div class="field">
+          <label data-i18n="Freqüència">Freqüència</label>
+          <div class="seg" id="repteFreqSeg">
+            <button type="button" class="seg-btn" data-freq="2">2</button>
+            <button type="button" class="seg-btn" data-freq="3">3</button>
+            <button type="button" class="seg-btn" data-freq="4">4</button>
+            <button type="button" class="seg-btn" data-freq="5">5</button>
+          </div>
+          <p class="hint" data-i18n="Dies per setmana.">Dies per setmana.</p>
+        </div>
+        <div class="field">
+          <label data-i18n="Duració">Duració</label>
+          <div class="stepper" style="max-width:220px;">
+            <button type="button" class="stp-btn" id="repteDurMinus">−</button>
+            <input type="text" class="stp-val" id="repteDurVal" value="1" readonly style="text-align:center;">
+            <button type="button" class="stp-btn" id="repteDurPlus">+</button>
+          </div>
+          <p class="hint" id="repteDurLabel"></p>
+        </div>
+        <div class="field">
+          <label data-i18n="Exercicis mínims per rutina">Exercicis mínims per rutina</label>
+          <div class="seg" id="repteMinSeg">
+            <button type="button" class="seg-btn" data-min="6">6</button>
+            <button type="button" class="seg-btn" data-min="7">7</button>
+            <button type="button" class="seg-btn" data-min="8">8</button>
+            <button type="button" class="seg-btn" data-min="9">9</button>
+            <button type="button" class="seg-btn" data-min="10">10</button>
+          </div>
+          <p class="hint" data-i18n="Si una rutina no té com a mínim aquest número d'exercicis (i cada exercici amb ≥3 sèries, o ≥10 min si és cardio), l'entrenament no comptarà per al repte.">Si una rutina no té com a mínim aquest número d'exercicis (i cada exercici amb ≥3 sèries, o ≥10 min si és cardio), l'entrenament no comptarà per al repte.</p>
+        </div>
+        <div class="field" id="repteRutinesField" style="display:none;">
+          <label data-i18n="Rutines">Rutines</label>
+          <button type="button" class="btn" id="repteTriaRutinesBtn" data-i18n="Tria les rutines">Tria les rutines</button>
+          <p class="hint repte-count" id="repteRutinesCount"></p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" id="repteWizBack" data-i18n="Enrere" style="display:none;">Enrere</button>
+      <button class="btn btn-primary" id="repteWizNext" data-i18n="Continua">Continua</button>
+      <button class="btn btn-primary" id="repteWizCreate" data-i18n="Crea repte" style="display:none;">Crea repte</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: TRIAR RUTINES DEL REPTE (FIXE) ===================== -->
+<div class="modal-overlay" id="repteRoutinesModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Tria les rutines">Tria les rutines</h3>
+      <button class="icon-btn" data-close="repteRoutinesModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" id="repteRoutinesReq"></p>
+      <div id="repteRoutinesList" class="repte-rutines-list"></div>
+      <p class="hint repte-count" id="repteRoutinesCount"></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="repteRoutinesModal" data-i18n="Cancel·la">Cancel·la</button>
+      <button class="btn btn-primary" id="repteRoutinesConfirm" data-i18n="Confirmar" disabled>Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: ALLIBERAR ESPAIS DE RUTINES ===================== -->
+<div class="modal-overlay" id="repteSlotsModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Espai per a les rutines del repte">Espai per a les rutines del repte</h3>
+      <button class="icon-btn" data-close="repteSlotsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" id="repteSlotsMsg"></p>
+      <div id="repteSlotsList" class="repte-rutines-list"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="repteSlotsModal" data-i18n="Cancel·la">Cancel·la</button>
+      <button class="btn btn-danger" id="repteSlotsConfirm" data-i18n="Elimina i continua" disabled>Elimina i continua</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: DESTÍ DE LES RUTINES (FINALITZAR) ===================== -->
+<div class="modal-overlay" id="repteRoutinesDestiModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Fi del repte">Fi del repte</h3>
+      <button class="icon-btn" data-close="repteRoutinesDestiModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p id="repteDestiMsg" style="font-size:14px; line-height:1.55;"></p>
+      <div class="f-list" style="margin-top:10px;">
+        <button type="button" class="f-item" id="repteDestiKeepBtn">
+          <div class="f-avatar">📋</div>
+          <div class="f-info"><b data-i18n="Quedar-se-les">Quedar-se-les</b><span data-i18n="Es converteixen en rutines normals i editables.">Es converteixen en rutines normals i editables.</span></div>
+        </button>
+        <button type="button" class="f-item" id="repteDestiDeleteBtn">
+          <div class="f-avatar">🗑️</div>
+          <div class="f-info"><b data-i18n="Eliminar-les del compte">Eliminar-les del compte</b><span data-i18n="Les rutines del repte esborrades del teu compte.">Les rutines del repte esborrades del teu compte.</span></div>
+        </button>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="repteRoutinesDestiModal" data-i18n="Cancel·la">Cancel·la</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: CONVIDAR A MIG REPTE ===================== -->
+<div class="modal-overlay" id="repteInviteModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 data-i18n="Convidar">Convidar</h3>
+      <button class="icon-btn" data-close="repteInviteModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="hint" id="repteInviteHint"></p>
+      <div id="repteInviteList" class="f-list"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="repteInviteModal" data-i18n="Cancel·la">Cancel·la</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== MODAL: CONFIRMACIÓ ===================== -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal modal-small">
@@ -3953,7 +4257,7 @@ const DEFAULT_EXERCISES = [
 ];
 
 /* ---------- ESTAT ---------- */
-const LS_KEYS = { exercicis:'ferro_exercicis', rutines:'ferro_rutines', historial:'ferro_historial', tema:'ferro_tema', config:'ferro_config', weekDone:'ferro_weekdone', notifState:'ferro_notifstate', navIcon:'ferro_navicon', activeSession:'ferro_active_session', setTimings:'ferro_set_timings' };
+const LS_KEYS = { exercicis:'ferro_exercicis', rutines:'ferro_rutines', historial:'ferro_historial', tema:'ferro_tema', config:'ferro_config', weekDone:'ferro_weekdone', notifState:'ferro_notifstate', navIcon:'ferro_navicon', activeSession:'ferro_active_session', setTimings:'ferro_set_timings', repte:'ferro_repte' };
 const CLOUD_RESET_KEY = '__ferro_reset_pending__';
 
 let supabaseClient = null;
@@ -4013,7 +4317,7 @@ let state = {
   weekDone: loadLS(LS_KEYS.weekDone, {}),
 };
 
-const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [] };
+const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [], repteExplicacioVist: false, repteActiu: null, repteCreades: 0, repteCompletats: 0, repteGuanyats: 0, reptePerfectes: 0, repteAmfitrio: 0, repteCreatComencat: false, repteXpAtorgat: {}, repteMedalsAtorgades: {}, repteRutinesResoltes: {} };
 let config = Object.assign({}, DEFAULT_CONFIG, loadLS(LS_KEYS.config, {}));
 function normalizeConfig(){
   if(config.lang !== 'ca' && config.lang !== 'es') config.lang = 'ca';
@@ -4053,6 +4357,17 @@ function normalizeConfig(){
   if(typeof config.histConsultes !== 'number' || isNaN(config.histConsultes)) config.histConsultes = 0;
   if(!Array.isArray(config.seguimentTabs)) config.seguimentTabs = [];
   if(!Array.isArray(config.friendsEver)) config.friendsEver = [];
+  if(typeof config.repteExplicacioVist !== 'boolean') config.repteExplicacioVist = false;
+  if(config.repteActiu !== null && typeof config.repteActiu !== 'string') config.repteActiu = null;
+  if(typeof config.repteCreades !== 'number' || isNaN(config.repteCreades)) config.repteCreades = 0;
+  if(typeof config.repteCompletats !== 'number' || isNaN(config.repteCompletats)) config.repteCompletats = 0;
+  if(typeof config.repteGuanyats !== 'number' || isNaN(config.repteGuanyats)) config.repteGuanyats = 0;
+  if(typeof config.reptePerfectes !== 'number' || isNaN(config.reptePerfectes)) config.reptePerfectes = 0;
+  if(typeof config.repteAmfitrio !== 'number' || isNaN(config.repteAmfitrio)) config.repteAmfitrio = 0;
+  if(typeof config.repteCreatComencat !== 'boolean') config.repteCreatComencat = false;
+  if(!config.repteXpAtorgat || typeof config.repteXpAtorgat !== 'object') config.repteXpAtorgat = {};
+  if(!config.repteMedalsAtorgades || typeof config.repteMedalsAtorgades !== 'object') config.repteMedalsAtorgades = {};
+  if(!config.repteRutinesResoltes || typeof config.repteRutinesResoltes !== 'object') config.repteRutinesResoltes = {};
 }
 normalizeConfig();
 let setTimingData = {}; // {rutinaId: {exerciciId: {setIndex: [temps1, temps2, ...]}}} - temps en segons
@@ -5303,7 +5618,134 @@ const I18N = {
     "App instal·lada al dispositiu":"App instalada en el dispositivo",
     "Obre Safari → Comparteix → «Afegir a la pantalla d'inici»":"Abre Safari → Compartir → «Añadir a la pantalla de inicio»",
     "Instal·la l'app":"Instala la app",
-    "Com funciona":"Cómo funciona"
+    "Com funciona":"Cómo funciona",
+    "Repte":"Reto",
+    "Reptes":"Retos",
+    "Crear repte":"Crear reto",
+    "Repte: {1}":"Reto: {1}",
+    "Què és un repte?":"¿Qué es un reto?",
+    "Crea un repte":"Crea un reto",
+    "Nom del repte":"Nombre del reto",
+    "Data d'inici":"Fecha de inicio",
+    "Data de fi":"Fecha de fin",
+    "Participants":"Participantes",
+    "Mode":"Modo",
+    "Adaptatiu":"Adaptativo",
+    "Fixe":"Fijo",
+    "Freqüència":"Frecuencia",
+    "Duració":"Duración",
+    "Mes":"Mes",
+    "Mesos":"Meses",
+    "Exercicis mínims per rutina":"Ejercicios mínimos por rutina",
+    "Continua":"Continúa",
+    "Enrere":"Atrás",
+    "Tria les rutines":"Elige las rutinas",
+    "Seleccionades: {1} de {2}":"Seleccionadas: {1} de {2}",
+    "Accepta":"Acepta",
+    "Rebutja":"Rechaza",
+    "Abandonar":"Abandonar",
+    "Finalitzar":"Finalizar",
+    "Convidar":"Invitar",
+    "Vore el repte":"Ver el reto",
+    "{1} et convida a un repte":"{1} te invita a un reto",
+    "Has enviat una invitació a un repte":"Has enviado una invitación a un reto",
+    "Aquesta persona ja està dins d'un repte":"Esta persona ya está en un reto",
+    "Aquest entrenament no computarà per al repte":"Este entrenamiento no contará para el reto",
+    "Aquesta rutina forma part del repte":"Esta rutina forma parte del reto",
+    "Aquesta rutina només té {1} exercicis i el repte en demana com a mínim {2}":"Esta rutina solo tiene {1} ejercicios y el reto pide al menos {2}",
+    "Què vols fer amb les {1} rutines del repte?":"¿Qué quieres hacer con las {1} rutinas del reto?",
+    "Quedar-se-les":"Quedárselas",
+    "Eliminar-les del compte":"Eliminarlas de la cuenta",
+    "Has de deixar {1} espais lliures":"Tienes que dejar {1} espacios libres",
+    "Comença el dilluns {1}":"Empieza el lunes {1}",
+    "Setmana {1} de {2}":"Semana {1} de {2}",
+    "Esperant {1} acceptacions…":"Esperando {1} aceptaciones…",
+    "Ja no pot unir-se: no li queda temps per compensar":"Ya no puede unirse: no le queda tiempo para compensar",
+    "Repte cancel·lat":"Reto cancelado",
+    "Cancel·lat: {1}":"Cancelado: {1}",
+    "Recompensa":"Recompensa",
+    "Resum":"Resumen",
+    "Xat":"Chat",
+    "Setmanal":"Semanal",
+    "Total":"Total",
+    "dies/setmana":"días/semana",
+    "Rutines del repte":"Rutinas del reto",
+    "Per determinar":"Por determinar",
+    "Sense participants":"Sin participantes",
+    "Sense participants actius":"Sin participantes activos",
+    "No participes en aquest repte":"No participas en este reto",
+    "Pendent d\u2019iniciar… Comença el {1}":"Pendiente de empezar… Empieza el {1}",
+    "Acaba el {1}":"Termina el {1}",
+    "Finalitzat":"Finalizado",
+    "Resultat final: posició {1} amb {2}% de completament":"Resultado final: posición {1} con {2}% de cumplimiento",
+    "Repte no trobat":"Reto no encontrado",
+    "Repte creat!":"¡Reto creado!",
+    "Repte acceptat!":"¡Reto aceptado!",
+    "Repte rebutjat":"Reto rechazado",
+    "Repte abandonat":"Reto abandonado",
+    "Repte tancat":"Reto cerrado",
+    "Invitació enviada":"Invitación enviada",
+    "No s'ha pogut crear el repte":"No se ha podido crear el reto",
+    "No s'ha pogut acceptar el repte":"No se ha podido aceptar el reto",
+    "No s'ha pogut rebutjar el repte":"No se ha podido rechazar el reto",
+    "No s'ha pogut abandonar el repte":"No se ha podido abandonar el reto",
+    "No s'ha pogut finalitzar el repte":"No se ha podido finalizar el reto",
+    "No s'ha pogut enviar la invitació":"No se ha podido enviar la invitación",
+    "El nom ha de tenir entre 3 i 12 caràcters":"El nombre debe tener entre 3 y 12 caracteres",
+    "Entre 3 i 12 caràcters.":"Entre 3 y 12 caracteres.",
+    "Tria com a mínim 1 participant":"Elige al menos 1 participante",
+    "Tria el mode":"Elige el modo",
+    "Tria la freqüència":"Elige la frecuencia",
+    "Tria els exercicis mínims":"Elige los ejercicios mínimos",
+    "Primer tria els exercicis mínims":"Primero elige los ejercicios mínimos",
+    "Selecciona exactament {1} rutines":"Selecciona exactamente {1} rutinas",
+    "Màxim 5 participants":"Máximo 5 participantes",
+    "Participants: {1} de 5":"Participantes: {1} de 5",
+    "Només rutines amb com a mínim {1} exercicis":"Solo rutinas con al menos {1} ejercicios",
+    "Sense rutines":"Sin rutinas",
+    "Sense rutines eliminables":"Sin rutinas eliminables",
+    "Espai per a les rutines del repte":"Espacio para las rutinas del reto",
+    "Elimina i continua":"Elimina y continúa",
+    "Fi del repte":"Fin del reto",
+    "Es converteixen en rutines normals i editables.":"Se convierten en rutinas normales y editables.",
+    "Les rutines del repte esborrades del teu compte.":"Las rutinas del reto borradas de tu cuenta.",
+    "Elimina rutines":"Eliminar rutinas",
+    "Segur que vols eliminar les rutines del repte?":"¿Seguro que quieres eliminar las rutinas del reto?",
+    "Abandonar repte":"Abandonar reto",
+    "Segur que vols abandonar el repte?":"¿Seguro que quieres abandonar el reto?",
+    "solament un membre":"solo un miembro",
+    "falta de participants":"falta de participantes",
+    "Entès":"Entendido",
+    "Ajusta una rutina perquè sigui vàlida per al repte":"Ajusta una rutina para que sea válida para el reto",
+    "Té menys de {1} exercicis (en té {2})":"Tiene menos de {1} ejercicios (tiene {2})",
+    "Algun exercici té menys de 3 sèries":"Algún ejercicio tiene menos de 3 series",
+    "Algun exercici de cardio dura menys de 10 minuts":"Algún ejercicio de cardio dura menos de 10 minutos",
+    "La rutina no compleix els requisits del repte.":"La rutina no cumple los requisitos del reto.",
+    "Es pot unir qui pugui arribar al 50% de completament amb les setmanes restants.":"Puede unirse quien pueda llegar al 50% de cumplimiento con las semanas restantes.",
+    "Un repte és una competició amistosa amb els teus amics per entrenar amb constància. Cada setmana comptem els entrenaments que fas (com a màxim 1 al dia i 6 a la setmana). Guanya qui acumuli més punts quan acabi la durada del repte. Al final, els millors guanyen experiència i medalles.":"Un reto es una competición amistosa con tus amigos para entrenar con constancia. Cada semana contamos los entrenamientos que haces (como máximo 1 al día y 6 a la semana). Gana quien acumule más puntos cuando acabe la duración del reto. Al final, los mejores ganan experiencia y medallas.",
+    "Com es puntua?":"¿Cómo se puntúa?",
+    "Cada setmana compten els teus entrenaments fins a la freqüència del repte. Si una setmana fas menys, la setmana següent pots recuperar els dies perduts (màxim 6 per setmana). Guanya qui arribi al final amb més punts.":"Cada semana cuentan tus entrenamientos hasta la frecuencia del reto. Si una semana haces menos, la siguiente puedes recuperar los días perdidos (máximo 6 por semana). Gana quien llegue al final con más puntos.",
+    "Mode Adaptatiu vs Mode Fixe":"Modo Adaptativo vs Modo Fijo",
+    "En mode Adaptatiu, cada participant entrena amb les seves pròpies rutines, sempre que compleixin el mínim d'exercicis i sèries del repte. En mode Fixe, tots els participants reben les rutines que tria el creador i no les poden modificar fins que acaba el repte.":"En modo Adaptativo, cada participante entrena con sus propias rutinas, siempre que cumplan el mínimo de ejercicios y series del reto. En modo Fijo, todos los participantes reciben las rutinas que elige el creador y no pueden modificarlas hasta que acaba el reto.",
+    "Què passa si no hi ha participants suficients?":"¿Qué pasa si no hay suficientes participantes?",
+    "Si el dilluns d'inici no hi ha com a mínim 2 persones acceptades, el repte es cancel·la.":"Si el lunes de inicio no hay al menos 2 personas aceptadas, el reto se cancela.",
+    "Puc deixar-lo?":"¿Puedo dejarlo?",
+    "Només durant la primera setmana. Després, ja no es pot abandonar.":"Solo durante la primera semana. Después, ya no se puede abandonar.",
+    "Què passa amb les rutines del repte (mode fixe)?":"¿Qué pasa con las rutinas del reto (modo fijo)?",
+    "Al final, pots quedar-te-les o eliminar-les.":"Al final, puedes quedártelas o eliminarlas.",
+    "Campió":"Campeón",
+    "Diamant":"Diamante",
+    "Estrateg":"Estratega",
+    "Company":"Compañero",
+    "Impecable":"Impecable",
+    "Amfitrió":"Anfitrión",
+    "Guanya 1 repte":"Gana 1 reto",
+    "Guanya 3 reptes":"Gana 3 retos",
+    "Guanya 10 reptes":"Gana 10 retos",
+    "Crea un repte i aconsegueix que comenci":"Crea un reto y consigue que empiece",
+    "Acaba un repte sense abandonar":"Acaba un reto sin abandonar",
+    "Acaba un repte amb el 100% de punts":"Acaba un reto con el 100% de puntos",
+    "Guanya un repte que has creat":"Gana un reto que has creado"
   }
 };
 function t(str){
@@ -5367,6 +5809,7 @@ let pickedExpandedSet = new Set(); // exercicis del picker desplegats per sèrie
 const DEFAULT_CARDIO_DURADA = 15; // minuts per defecte quan s'afegeix un exercici de cardio
 let pendingRoutineDays = []; // array de valors 1-7 (dilluns..diumenge)
 let editingRoutineId = null;
+let routineModalLocked = false;
 let lastRoutineHora = '07:00';
 let clockTouched = false;
 let activeSession = null; // {rutinaId, startedAt, currentIndex, exercicis:[{exerciciId, sets:[{pes,repeticions,completed}], targetSets, targetReps}]}
@@ -7687,7 +8130,7 @@ function setEntrenarTab(tab, dir){
 function setEntrenarTabsActive(on){
   $$('#entrenarTabs .seg-btn').forEach(b=> b.classList.toggle('active', on && b.dataset.entrenarTab===entrenarTab));
 }
-const FULL_VIEWS = ['entrenar', 'exercicis', 'medalles', 'perfil'];
+const FULL_VIEWS = ['entrenar', 'exercicis', 'medalles', 'perfil', 'repte'];
 function currentViewName(){
   const av = $$('.view.active')[0];
   return av ? av.id.replace('view-','') : 'entrenar';
@@ -7706,6 +8149,8 @@ function renderView(view){
       renderMedalles();
     }else if(view==='perfil'){
       renderPerfil();
+    }else if(view==='repte'){
+      renderRepteView();
     }
   }
   updateBottomNav();
@@ -7854,7 +8299,11 @@ function renderRutines(){
   grid.innerHTML = '';
   state.rutines.forEach(r=>{
     const div = document.createElement('div');
-    div.className = 'card routine-card' + (r.activa ? ' activa' : '');
+    const repteR = repteActiuCache();
+    const warnHTML = (repteR && repteR.mode === 'adaptatiu' && !routineValidaPerRepte(r, repteR))
+      ? `<button class="icon-btn rc-repte-warn" data-act="repteWarn" title="${t('Aquest entrenament no computarà per al repte')}" aria-label="${t('Aquest entrenament no computarà per al repte')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>`
+      : '';
+    div.className = 'card routine-card' + (r.activa ? ' activa' : '') + ((r.repteId || (repteR && repteR.mode === 'adaptatiu' && routineValidaPerRepte(r, repteR))) ? ' repte' : '');
     div.innerHTML = `
       <div class="rc-top">
         <h3>${escapeHtml(r.nom)}</h3>
@@ -7869,6 +8318,7 @@ function renderRutines(){
         ${r.hora ? `<span class="rc-time">⏰ ${escapeHtml(r.hora)}</span>` : ''}
       </div>
       <div class="rc-actions">
+        ${warnHTML}
         <button class="icon-btn" data-act="share" title="${t('Comparteix la rutina')}" aria-label="${t('Comparteix la rutina')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
         <button class="icon-btn" data-act="dup" title="${t('Duplica rutina')}" aria-label="${t('Duplica rutina')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
         <button class="icon-btn rc-del" data-act="del" title="${t('Elimina rutina')}" aria-label="${t('Elimina rutina')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg></button>
@@ -7880,6 +8330,8 @@ function renderRutines(){
     div.querySelector('[data-act="dup"]').addEventListener('click', e=>{ e.stopPropagation(); duplicateRoutine(r.id); });
     div.querySelector('[data-act="del"]').addEventListener('click', e=>{ e.stopPropagation(); deleteRoutine(r.id); });
     div.querySelector('[data-act="activa"]').addEventListener('click', e=>{ e.stopPropagation(); toggleRoutineActiva(r.id); });
+    const warnBtn = div.querySelector('[data-act="repteWarn"]');
+    if(warnBtn) warnBtn.addEventListener('click', e=>{ e.stopPropagation(); showRepteRoutineWarn(r); });
     div.addEventListener('click', ()=> openRoutineModal(r.id));
     grid.appendChild(div);
   });
@@ -7929,6 +8381,8 @@ function confirmDialog({ title, message, okLabel }){
 }
 
 function deleteRoutine(id){
+  const r = state.rutines.find(x=>x.id===id);
+  if(r && r.repteId){ toast(t('Aquesta rutina forma part del repte')); return; }
   confirmDialog({
     title: t('Elimina rutina'),
     message: t('Segur que vols eliminar esta rutina?'),
@@ -7960,6 +8414,7 @@ function duplicateRoutine(id){
 function toggleRoutineActiva(id){
   const r = state.rutines.find(x=>x.id===id);
   if(!r) return;
+  if(r.repteId){ toast(t('Aquesta rutina forma part del repte')); return; }
   r.activa = !r.activa;
   saveLS(LS_KEYS.rutines, state.rutines);
   renderRutines();
@@ -7973,8 +8428,15 @@ $('#newRoutineBtn').addEventListener('click', ()=> openRoutineMethodModal());
 function openRoutineModal(routineId){
   editingRoutineId = routineId;
   const r = routineId ? state.rutines.find(x=>x.id===routineId) : null;
+  routineModalLocked = !!(r && r.repteId);
   $('#routineModalTitle').textContent = r ? t('Edita rutina') : t('Nova rutina');
   $('#rName').value = r ? r.nom : '';
+  $('#rName').disabled = routineModalLocked;
+  $('#rType').disabled = routineModalLocked;
+  $('#rDesc').readOnly = routineModalLocked;
+  $('#addExerciseToRoutineBtn').style.display = routineModalLocked ? 'none' : '';
+  const picker = $('#exercisePickerBox');
+  if(picker) picker.style.display = 'none';
   $('#rType').value = r ? r.tipus : 'hipertrofia';
   $('#rDesc').value = r ? (r.descripcio||'') : '';
   pendingRoutineExercises = r ? JSON.parse(JSON.stringify(r.exercicis)) : [];
@@ -8052,7 +8514,7 @@ function renderPickedList(){
         </div>
         <div class="pi-actions">
           ${ex && gifFor(ex) ? `<button type="button" class="pi-gif" title="${t('Vore GIF')}" aria-label="${t('Vore GIF')}">GIF</button>` : ''}
-          <button type="button" class="pi-remove" title="${t('Elimina')}" aria-label="${t('Elimina')}">✕</button>
+          ${!routineModalLocked ? `<button type="button" class="pi-remove" title="${t('Elimina')}" aria-label="${t('Elimina')}">✕</button>` : ''}
         </div>
       </div>
       <div class="pi-controls">
@@ -8107,7 +8569,8 @@ function renderPickedList(){
     }
     const gifBtn = row.querySelector('.pi-gif');
     if(gifBtn) gifBtn.addEventListener('click', e=>{ e.stopPropagation(); openExerciseDetail(ex); });
-    row.querySelector('.pi-remove').addEventListener('click', async ()=>{
+    const rmBtn = row.querySelector('.pi-remove');
+    if(rmBtn) rmBtn.addEventListener('click', async ()=>{
       const ok = await confirmDialog({
         title: t('Elimina exercici'),
         message: t('Segur que vols eliminar este exercici de la rutina?'),
@@ -8337,24 +8800,36 @@ function getNextDefaultRoutineName(){
   return prefix + ' ' + next;
 }
 $('#saveRoutineBtn').addEventListener('click', ()=>{
-  let nom = $('#rName').value.trim();
-  if(!nom) nom = getNextDefaultRoutineName();
-  if(pendingRoutineExercises.length===0){ toast(t('Afig almenys un exercici')); return; }
-  if(!editingRoutineId && countRutines() >= MAX_RUTINES){ toast(t('Has arribat al límit de {1} rutines. Elimina’n alguna per a crear-ne de noves.', MAX_RUTINES)); return; }
-  const data = {
-    nom, tipus: $('#rType').value, descripcio: $('#rDesc').value.trim(),
-    dies: pendingRoutineDays,
-    hora: clockTouched ? routineTimeValue() : '',
-    exercicis: pendingRoutineExercises.map((e,i)=>({...e, ordre:i}))
-  };
-  lastRoutineHora = routineTimeValue();
-  if(editingRoutineId){
-    const r = state.rutines.find(x=>x.id===editingRoutineId);
-    Object.assign(r, data);
-  } else {
-    state.rutines.push({id:uid(), ...data, activa:true, dataCreacio:new Date().toISOString(), origen:'manual'});
-  }
-  saveLS(LS_KEYS.rutines, state.rutines);
+   let nom = $('#rName').value.trim();
+   if(!nom) nom = getNextDefaultRoutineName();
+   if(pendingRoutineExercises.length===0){ toast(t('Afig almenys un exercici')); return; }
+   if(!editingRoutineId && countRutines() >= MAX_RUTINES){ toast(t('Has arribat al límit de {1} rutines. Elimina’n alguna per a crear-ne de noves.', MAX_RUTINES)); return; }
+   const locked = !!routineModalLocked;
+   const lockedSrc = locked && editingRoutineId ? state.rutines.find(x=>x.id===editingRoutineId) : null;
+   const data = {
+     nom: locked && lockedSrc ? lockedSrc.nom : nom,
+     tipus: locked && lockedSrc ? lockedSrc.tipus : $('#rType').value,
+     descripcio: locked && lockedSrc ? (lockedSrc.descripcio||'') : $('#rDesc').value.trim(),
+     dies: pendingRoutineDays,
+     hora: clockTouched ? routineTimeValue() : '',
+     exercicis: pendingRoutineExercises.map((e,i)=>({...e, ordre:i}))
+   };
+   lastRoutineHora = routineTimeValue();
+   if(editingRoutineId){
+     const r = state.rutines.find(x=>x.id===editingRoutineId);
+     if(locked){
+       // només es permeten canvis de sèries/reps/pes/descans, dies i recordatori
+       r.exercicis = data.exercicis;
+       r.dies = data.dies;
+       if(data.hora) r.hora = data.hora;
+     } else {
+       Object.assign(r, data);
+     }
+   } else {
+     state.rutines.push({id:uid(), ...data, activa:true, dataCreacio:new Date().toISOString(), origen:'manual'});
+   }
+   routineModalLocked = false;
+   saveLS(LS_KEYS.rutines, state.rutines);
   closeModal('routineModal');
   renderRutines();
   if($('#view-entrenar').classList.contains('active') && !activeSession) renderEntrenarPicker();
@@ -9698,20 +10173,26 @@ $('#extraBtn').addEventListener('click', ()=>{
 function routineCardForEntrenar(r, label, done, btnLabel){
   const isActiveSession = activeSession && activeSession.rutinaId === r.id;
   btnLabel = btnLabel || (isActiveSession ? t('▶ Seguir') : t('▶ Comença l\'entrenament'));
+  const repteR = repteActiuCache();
+  const warnIcon = (repteR && repteR.mode === 'adaptatiu' && !routineValidaPerRepte(r, repteR))
+    ? ` <button type="button" class="icon-btn rc-repte-warn" data-act="repteWarn" title="${t('Aquest entrenament no computarà per al repte')}" aria-label="${t('Aquest entrenament no computarà per al repte')}" style="vertical-align:middle;"><svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>`
+    : '';
   const div = document.createElement('div');
-  div.className = 'card routine-card';
+  div.className = 'card routine-card' + ((r.repteId || (repteR && repteR.mode === 'adaptatiu' && routineValidaPerRepte(r, repteR))) ? ' repte' : '');
   div.innerHTML = `
     <div class="rc-top"><h3>${escapeHtml(r.nom)}</h3><span class="badge ${r.tipus}">${typeLabel(r.tipus)}</span></div>
     <p class="desc">${escapeHtml(r.descripcio||'')}</p>
     <div class="rc-meta">
       <span>🏋️ ${t('{1} exercicis', r.exercicis.length)}</span>
-      ${label ? `<span>📅 ${escapeHtml(label)}</span>` : ''}
+      ${label ? `<span>📅 ${escapeHtml(label)} ${warnIcon}</span>` : ''}
       ${done ? '<span>✅ ' + t('Feta esta setmana') + '</span>' : ''}
     </div>
     ${done
       ? '<button class="btn btn-block" disabled>' + t('✓ Completada') + '</button>'
       : `<button class="btn btn-primary btn-block">${btnLabel}</button>`}
   `;
+  const warnBtn = div.querySelector('[data-act="repteWarn"]');
+  if(warnBtn) warnBtn.addEventListener('click', e=>{ e.stopPropagation(); showRepteRoutineWarn(r); });
   if(!done) div.querySelector('button').addEventListener('click', ()=>{
     if(isActiveSession){
       $('#entrenarPicker').style.display = 'none';
@@ -10346,6 +10827,7 @@ $('#confirmFinishBtn').addEventListener('click', ()=>{
   if(reason) record.noCompta = reason;
   state.historial.unshift(record);
   saveLS(LS_KEYS.historial, state.historial);
+  updateReptePoints();
   markRoutineDone(activeSession.rutinaId);
   saveSessionChangesToRoutine();
   const freshMedals = checkNewMedals();
@@ -10835,6 +11317,22 @@ const MEDALS = [
     icon:medalIcon('<circle cx="8.4" cy="10.6" r="2.3"/><circle cx="14" cy="9.6" r="2"/><circle cx="18.4" cy="12.2" r="1.7"/><path d="M4.2 16.6 C4.2 14.6 6 13.8 8.4 13.8 C10.8 13.8 12.6 14.6 12.6 16.6 M11.8 14.8 C11.8 13.1 12.9 12.3 14 12.3 C15.2 12.3 16.5 13.1 16.5 14.8 M15.4 14.6 C15.4 12.9 16.4 12.2 17.5 12.2 C18.6 12.2 19.8 12.9 19.8 14.6"/>'), check:s=> (s.amics||0)>10, progress:null },
   { id:'llegio', section:'llegenda', oculta:true, nom:'Llegió', desc:'Afig 100 amics/amigues', rang:'platino',
     icon:medalIcon('<path d="M9.4 8 L10.5 9.8 L12 8.6 L13.5 9.8 L14.6 8 L14 10.4 H10 Z"/><circle cx="9.8" cy="12.2" r="1.2"/><circle cx="12.2" cy="11.8" r="1.2"/><circle cx="14.6" cy="12.4" r="1.2"/><path d="M6.8 16.6 C6.8 14.8 8.2 13.9 9.8 13.9 C11.4 13.9 12.8 14.8 12.8 16.6 M11.2 14.2 C11.2 12.7 12.2 12 13.3 12 C14.4 12 15.4 12.7 15.4 14.2 M15.4 15.2 C15.4 13.8 16.3 13.2 17.3 13.2 C18.3 13.2 19.2 13.8 19.2 15.2"/>'), check:s=> (s.amics||0)>=100, progress:null },
+
+  /* ================= REPTES (permanents) ================= */
+  { id:'repte-guanyat', section:'compte', tipo:'Reptes', nom:'Campió', desc:'Guanya 1 repte', rang:'or', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M8 11.6 L10.6 14.2 L16 8.8"/><circle cx="12" cy="12.4" r="4.4"/><path d="M9.4 16.8 L12 21 L14.6 16.8"/>'), check:s=> (s.repteGuanyats||0)>=1, progress:s=>clamp((s.repteGuanyats||0)/1) },
+  { id:'repte-3', section:'compte', tipo:'Reptes', nom:'Diamant', desc:'Guanya 3 reptes', rang:'platino', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M12 8 L15 9.6 V12.4 C15 14.8 13.6 16.4 12 17.2 C10.4 16.4 9 14.8 9 12.4 V9.6 Z"/><path d="M10.6 12.8 L11.5 13.7 L13.4 11.6"/>'), check:s=> (s.repteGuanyats||0)>=3, progress:s=>clamp((s.repteGuanyats||0)/3) },
+  { id:'repte-10', section:'compte', tipo:'Reptes', nom:'Llegenda', desc:'Guanya 10 reptes', rang:'platino', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M12 7.6 L13.8 10 L16.6 10.4 L14.5 12.3 L15.1 15 L12 13.4 L8.9 15 L9.5 12.3 L7.4 10.4 L10.2 10 Z"/><path d="M9.6 16.6 H14.4 M12 15.2 V17.8"/>'), check:s=> (s.repteGuanyats||0)>=10, progress:s=>clamp((s.repteGuanyats||0)/10) },
+  { id:'repte-creador', section:'compte', tipo:'Reptes', nom:'Estrateg', desc:'Crea un repte i aconsegueix que comenci', rang:'plata', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M12 9.3 L14.4 10.6 V13.2 C14.4 15 13.2 16.3 12 17 C10.8 16.3 9.6 15 9.6 13.2 V10.6 Z"/><path d="M10.8 13.2 L11.6 14 L13.3 12.2"/>'), check:s=> (s.repteCreades||0)>=1 && !!config.repteCreatComencat, progress:s=>clamp((s.repteCreades||0)/1) },
+  { id:'repte-participant', section:'compte', tipo:'Reptes', nom:'Company', desc:'Acaba un repte sense abandonar', rang:'bronze', acumulativa:false, xp:0,
+    icon:medalIcon('<circle cx="9.6" cy="12.4" r="2.4"/><circle cx="14.8" cy="12.4" r="2.4"/><path d="M6.2 16.9 C6.2 15.1 7.7 14.3 9.6 14.3 C11.5 14.3 13 15.1 13 16.9 M10.4 15.3 C10.4 13.9 11.6 13.3 12.9 13.3 C14.2 13.3 15.6 13.9 15.6 15.3"/>'), check:s=> (s.repteCompletats||0)>=1, progress:s=>clamp((s.repteCompletats||0)/1) },
+  { id:'repte-perfecte', section:'compte', tipo:'Reptes', nom:'Impecable', desc:'Acaba un repte amb el 100% de punts', rang:'or', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M9.4 12.2 H14.6 M10.4 10.6 V13.8 M12 10.6 V13.8 M13.6 10.6 V13.8"/><circle cx="12" cy="15.6" r="2.6"/><path d="M12 9 V7.4"/>'), check:s=> (s.reptePerfectes||0)>=1, progress:null },
+  { id:'repte-amfitrio', section:'compte', tipo:'Reptes', nom:'Amfitrió', desc:'Guanya un repte que has creat', rang:'or', acumulativa:false, xp:0,
+    icon:medalIcon('<path d="M8 11.4 L10.2 13.6 L14.8 9 L16 10.2 L10.2 16 Z"/><circle cx="12" cy="8.6" r="1.8"/><path d="M9 15.6 L8 18 H16 L15 15.6"/>'), check:s=> (s.repteAmfitrio||0)>=1, progress:null },
 ];
 
 function currentYear(){ return new Date().getFullYear(); }
@@ -11156,6 +11654,11 @@ function medalStatsFrom(historial, rutines, exercicis, year){
     histConsultes: config.histConsultes || 0,
     seguimentTabs: config.seguimentTabs || [],
     amics: (Array.isArray(config.friendsEver) ? config.friendsEver.length : 0),
+    repteGuanyats: config.repteGuanyats || 0,
+    repteCreades: config.repteCreades || 0,
+    repteCompletats: config.repteCompletats || 0,
+    reptePerfectes: config.reptePerfectes || 0,
+    repteAmfitrio: config.repteAmfitrio || 0,
     accountCreatedAt: accountCreatedAt
   };
 }
@@ -13731,9 +14234,12 @@ async function renderFriendsList(){
     </div>
     ${requestsHTML}
     ${sentHTML}
+    <h4 class="f-sec">${t('Repte')}</h4>
+    <div class="repte-card" id="repteCard"></div>
     <h4 class="f-sec">${t('Els teus')}</h4>
     ${friendsHTML}
   </div>`;
+  renderRepteCard();
   renderFriendAvatars();
   $('#addFriendOpen').addEventListener('click', toggleAddFriendDropdown);
   const search = $('#friendSearch');
@@ -14327,33 +14833,57 @@ let chatMessages = [];
 let chatAllLoaded = false;
 let chatLoadingOlder = false;
 
-function chatMsgHTML(m, me){
+function chatMsgHTMLBase(m, me, opts){
+  opts = opts || {};
   const date = new Date(m.created_at);
   const mine = m.sender_id === me;
   const time = date.toLocaleTimeString(LOCALE(), { hour:'2-digit', minute:'2-digit' });
   const shared = parseRoutineShare(m.message);
   const sharedEx = parseExerciseShare(m.message);
+  const repteInv = parseRepteShare(m.message);
+  const author = (opts.mostrarNom && !mine && opts.alias)
+    ? `<span class="c-author">${escapeHtml(opts.alias)}</span>` : '';
   if(shared){
     return `<div class="chat-msg ${mine ? 'mine' : 'theirs'} chat-share cs-open" data-mid="${escapeHtml(m.id || '')}" data-share="${escapeHtml(JSON.stringify(shared))}" ${mine ? 'data-mine="1"' : ''}>
-      <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
-      <div class="cs-body">
-        <b>${escapeHtml(shared.nom)}</b>
-        <span>${t('{1} exercicis', shared.exercicis.length)}</span>
+      <div class="chat-body">
+        <div class="cs-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg></div>
+        <div class="cs-body">
+          <b>${escapeHtml(shared.nom)}</b>
+          <span>${t('{1} exercicis', shared.exercicis.length)}</span>
+        </div>
+        <span class="c-time">${time}</span>
       </div>
-      <span class="c-time">${time}</span>
     </div>`;
   }
   if(sharedEx){
     return `<div class="chat-msg ${mine ? 'mine' : 'theirs'} chat-share cs-open" data-mid="${escapeHtml(m.id || '')}" data-exshare="${escapeHtml(JSON.stringify(sharedEx))}" ${mine ? 'data-mine="1"' : ''}>
-      <div class="cs-icon"><svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5"/><path d="M9.5 9.5 6 13l5 5 3.5-3.5"/><path d="M17.5 6.5 21 3"/><path d="M14.5 14.5 18 18"/><path d="M3 21l3-3"/></svg></div>
-      <div class="cs-body">
-        <b>${escapeHtml(sharedEx.nom)}</b>
-        <span>${escapeHtml(groupLabel(sharedEx.grupMuscular))}</span>
+      <div class="chat-body">
+        <div class="cs-icon"><svg viewBox="0 0 24 24" width="1.1em" height="1.1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5"/><path d="M9.5 9.5 6 13l5 5 3.5-3.5"/><path d="M17.5 6.5 21 3"/><path d="M14.5 14.5 18 18"/><path d="M3 21l3-3"/></svg></div>
+        <div class="cs-body">
+          <b>${escapeHtml(sharedEx.nom)}</b>
+          <span>${escapeHtml(groupLabel(sharedEx.grupMuscular))}</span>
+        </div>
+        <span class="c-time">${time}</span>
       </div>
-      <span class="c-time">${time}</span>
     </div>`;
   }
-  return `<div class="chat-msg ${mine ? 'mine' : 'theirs'}" data-mid="${escapeHtml(m.id || '')}">${escapeHtml(m.message)}<span class="c-time">${time}</span></div>`;
+  if(repteInv){
+    return `<div class="chat-msg ${mine ? 'mine' : 'theirs'} chat-share cs-open" data-mid="${escapeHtml(m.id || '')}" data-repte="${escapeHtml(repteInv.repteId)}" ${mine ? 'data-mine="1"' : ''}>
+      <div class="chat-body">
+        <div class="cs-icon" style="background:var(--repte); color:#14161A;">👊</div>
+        <div class="cs-body">
+          <b>${t('Repte')}</b>
+          <span>${mine ? t('Has enviat una invitació a un repte') : t('{1} et convida a un repte', opts.alias || t('Un amic'))}</span>
+        </div>
+        <span class="c-time">${time}</span>
+      </div>
+    </div>`;
+  }
+  return `<div class="chat-msg ${mine ? 'mine' : 'theirs'}" data-mid="${escapeHtml(m.id || '')}"><div class="chat-body">${author}<span class="chat-text">${escapeHtml(m.message)}<span class="c-time">${time}</span></span></div></div>`;
+}
+
+function chatMsgHTML(m, me){
+  return chatMsgHTMLBase(m, me, { mostrarNom:false });
 }
 
 function renderChatLog(){
@@ -14375,6 +14905,13 @@ function renderChatLog(){
   $$('#chatLog .cs-open').forEach(b=>{
     b.addEventListener('click', ()=>{
       try{
+        if(b.dataset.repte){
+          const id = b.dataset.repte;
+          stopChatPoll();
+          closeFriendsDrawer();
+          navigateToRepte(id);
+          return;
+        }
         const isMine = b.dataset.mine === '1';
         if(b.dataset.exshare){
           openReceivedExercise(JSON.parse(b.dataset.exshare), isMine);
@@ -14472,8 +15009,10 @@ function showChatSearchBtn(show){
 function chatSearchLabel(m){
   const shared = parseRoutineShare(m.message);
   const sharedEx = parseExerciseShare(m.message);
+  const repteInv = parseRepteShare(m.message);
   if(shared) return '📤 ' + shared.nom;
   if(sharedEx) return '🏋️ ' + sharedEx.nom;
+  if(repteInv) return '👊 ' + t('Repte');
   return m.message || '';
 }
 function renderChatSearchResults(data, q){
@@ -14811,7 +15350,7 @@ function renderShareRoutineList(){
     b.addEventListener('click', ()=>{
       const rid = b.closest('.f-item').dataset.rid;
       const r = state.rutines.find(x=> x.id === rid);
-      if(!r || !shareChatFriend) return;
+      if(!r || (!shareChatFriend && !activeRepteChat)) return;
       closeModal('shareRoutineModal');
       sendRoutineToFriend(shareChatFriend, buildRoutineSharePayload(r));
     });
@@ -14836,7 +15375,7 @@ function renderShareExerciseList(){
     b.addEventListener('click', ()=>{
       const eid = b.closest('.f-item').dataset.eid;
       const ex = state.exercicis.find(x=> x.id === eid);
-      if(!ex || !shareChatFriend) return;
+      if(!ex || (!shareChatFriend && !activeRepteChat)) return;
       closeModal('shareRoutineModal');
       sendExerciseToFriend(shareChatFriend, buildExerciseSharePayload(ex));
     });
@@ -14846,6 +15385,14 @@ function renderShareExerciseList(){
 async function sendRoutineToFriend(friend, payload){
   if(!supabaseClient || !currentUser){ startLogin(); return; }
   const message = ROUTINE_SHARE_PREFIX + JSON.stringify(payload);
+  if(!friend && activeRepteChat){
+    try{
+      await supabaseClient.from('repte_messages').insert({ repte_id: activeRepteChat.id, sender_id: currentUser.id, message });
+      toast(t('Rutina enviada'));
+    }catch(e){ console.error('FERRO: enviar rutina', e); toast(t('No s\'ha pogut enviar la rutina')); }
+    loadRepteChatMessages(activeRepteChat);
+    return;
+  }
   try{
     await supabaseClient.from('chat_messages').insert({ sender_id: currentUser.id, recipient_id: friend.user_id, message });
     toast(t('Rutina enviada a {1}', friend.display_name || t('l\'amic')));
@@ -14858,6 +15405,14 @@ async function sendRoutineToFriend(friend, payload){
 async function sendExerciseToFriend(friend, payload){
   if(!supabaseClient || !currentUser){ startLogin(); return; }
   const message = EXERCISE_SHARE_PREFIX + JSON.stringify(payload);
+  if(!friend && activeRepteChat){
+    try{
+      await supabaseClient.from('repte_messages').insert({ repte_id: activeRepteChat.id, sender_id: currentUser.id, message });
+      toast(t('Exercici enviat'));
+    }catch(e){ console.error('FERRO: enviar exercici', e); toast(t('No s\'ha pogut enviar l\'exercici')); }
+    loadRepteChatMessages(activeRepteChat);
+    return;
+  }
   try{
     await supabaseClient.from('chat_messages').insert({ sender_id: currentUser.id, recipient_id: friend.user_id, message });
     toast(t('Exercici enviat a {1}', friend.display_name || t('l\'amic')));
@@ -15077,6 +15632,1218 @@ setInterval(checkSocialNotifs, 25000);
 checkSocialNotifs();
 
 /* ---------- INICI ---------- */
+/* =========================================================================
+   REPTES — Sistema de reptes entre amics
+   ========================================================================= */
+const REPTE_SHARE_PREFIX = 'FERRO_REPTE::';
+const REPTE_MAX_PARTICIPANTS = 6;
+
+let repteCache = loadLS(LS_KEYS.repte, null);
+let repteViewId = null;
+let repteViewTab = 'resum';
+let repteChartMode = 'setmanal';
+let repteChatMessages = [];
+let repteChatAllLoaded = false;
+let repteChatLoadingOlder = false;
+let repteChatInterval = null;
+let reptePointsTimer = null;
+let activeRepteChat = null;
+
+const repteWizard = { step:1, nom:'', participants:[], mode:null, freq:null, durada:1, min:null, rutines:[] };
+
+/* ---------- Helpers de dates ---------- */
+function repteKeyDate(d){
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y + '-' + m + '-' + day;
+}
+function dataIniciRepte(){
+  const d = new Date();
+  d.setHours(0,0,0,0);
+  const day = d.getDay();
+  const dies = day === 1 ? 7 : ((8 - day) % 7 || 7);
+  d.setDate(d.getDate() + dies);
+  return d;
+}
+function fmtDate(dateStr){
+  if(!dateStr) return '';
+  const d = new Date(dateStr.indexOf('T') > -1 ? dateStr : dateStr + 'T00:00:00');
+  if(isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString(LOCALE(), { weekday:'short', day:'numeric', month:'short' });
+}
+function repteSetmanaActual(repte){
+  const start = new Date(repte.data_inici + 'T00:00:00');
+  const diffDays = Math.floor((Date.now() - start.getTime()) / 86400000);
+  return Math.max(0, Math.floor(diffDays / 7));
+}
+function repteDinsPrimeraSetmana(repte){
+  const start = new Date(repte.data_inici + 'T00:00:00');
+  return Date.now() < (start.getTime() + 7*86400000);
+}
+function myRepteParticipant(repte){
+  if(!repte || !currentUser) return null;
+  return (repte.participants||[]).find(p=> p.uid === currentUser.id) || null;
+}
+function repteCancelMotiu(repte){
+  if(repte.cancelat_per === 'sol') return t('solament un membre');
+  return t('falta de participants');
+}
+function repteModeLabel(repte){
+  return repte.mode === 'fixe' ? t('Fixe') : t('Adaptatiu');
+}
+
+/* ---------- Cache i lectura del repte actiu ---------- */
+function repteCacheSave(){ saveLS(LS_KEYS.repte, repteCache); }
+function repteActiuCache(){
+  if(repteCache === undefined) repteCache = loadLS(LS_KEYS.repte, null);
+  if(!repteCache || !repteCache.repte) return null;
+  return repteCache.repte;
+}
+async function fetchRepteActiu(){
+  const cached = (repteCache !== undefined ? repteCache : loadLS(LS_KEYS.repte, null)) || null;
+  let repte = (cached && cached.repte) || null;
+  let punts = (cached && cached.punts) || null;
+  if(!supabaseClient || !currentUser){ return { repte, me: myRepteParticipant(repte), punts }; }
+  try{
+    if(config.repteActiu){
+      const { data, error } = await supabaseClient.from('reptes').select('*').eq('id', config.repteActiu).maybeSingle();
+      if(!error && data){ repte = data; }
+      else if(error){ config.repteActiu = null; saveConfig(); }
+    }
+    if(!repte){
+      const { data, error } = await supabaseClient.from('reptes').select('*').order('created_at', { ascending:false });
+      if(!error && data && data.length){
+        repte = data.find(r=> {
+          const p = myRepteParticipant(r);
+          return p && !['rebutjat','abandonat','finalitzat'].includes(p.estat);
+        }) || null;
+      }
+    }
+    if(repte){
+      const me = myRepteParticipant(repte);
+      if(!me || ['rebutjat','abandonat','finalitzat'].includes(me.estat)){
+        if(config.repteActiu === repte.id){ config.repteActiu = null; saveConfig(); }
+        repte = null;
+      }
+    }
+    if(repte){
+      const { data: p, error: pe } = await supabaseClient.from('repte_punts')
+        .select('*').eq('repte_id', repte.id).eq('uid', currentUser.id).maybeSingle();
+      if(!pe && p) punts = p;
+      if(config.repteActiu !== repte.id){ config.repteActiu = repte.id; saveConfig(); }
+    }
+    repteCache = { repte, me: myRepteParticipant(repte), punts, cancelatVist: (cached && cached.cancelatVist) || false };
+    repteCacheSave();
+    return { repte, me: myRepteParticipant(repte), punts };
+  }catch(e){ console.error('FERRO: repte actiu', e); }
+  return { repte, me: myRepteParticipant(repte), punts };
+}
+
+/* ---------- Validesa de rutina per al repte (adaptatiu) ---------- */
+function routineValidaPerRepte(r, repte){
+  if(!repte) return false;
+  if(!r || !Array.isArray(r.exercicis)) return false;
+  if(r.exercicis.length < repte.min_exercicis) return false;
+  return r.exercicis.every(pe=>{
+    const ex = exerciseById(pe.exerciciId);
+    if(ex && ex.grupMuscular === 'cardio') return (pe.durada || 0) >= 10;
+    return (pe.series || 0) >= 3;
+  });
+}
+function repteRoutineInvalidReasons(r, repte){
+  const reasons = [];
+  if((r.exercicis||[]).length < repte.min_exercicis) reasons.push(t('Té menys de {1} exercicis (en té {2})', repte.min_exercicis, (r.exercicis||[]).length));
+  const badSeries = (r.exercicis||[]).some(pe=>{
+    const ex = exerciseById(pe.exerciciId);
+    return !(ex && ex.grupMuscular === 'cardio') && (pe.series||0) < 3;
+  });
+  if(badSeries) reasons.push(t('Algun exercici té menys de 3 sèries'));
+  const badCardio = (r.exercicis||[]).some(pe=>{
+    const ex = exerciseById(pe.exerciciId);
+    return !!(ex && ex.grupMuscular === 'cardio') && (pe.durada||0) < 10;
+  });
+  if(badCardio) reasons.push(t('Algun exercici de cardio dura menys de 10 minuts'));
+  return reasons;
+}
+async function showRepteRoutineWarn(r){
+  const { repte } = await fetchRepteActiu();
+  if(!repte) return;
+  const reasons = repteRoutineInvalidReasons(r, repte);
+  const lines = reasons.length ? reasons.map(x=> '• ' + x).join('\n') : t('La rutina no compleix els requisits del repte.');
+  await confirmDialog({ title: t('Aquest entrenament no computarà per al repte'), message: lines, okLabel: t('Entès') });
+}
+
+/* ---------- Contenidor d'amics ---------- */
+async function renderRepteCard(){
+  const box = $('#repteCard');
+  if(!box) return;
+  const { repte } = await fetchRepteActiu();
+  if(!supabaseClient || !currentUser || !repte){
+    box.innerHTML = `<div class="repte-row">
+      <button type="button" class="repte-card-btn" id="repteCreateBtn" style="flex:1;">👊 ${t('Crear repte')}</button>
+      <button type="button" class="repte-help-btn" id="repteHelpBtn" title="${t('Què és un repte?')}" aria-label="${t('Què és un repte?')}">?</button>
+    </div>`;
+    const cb = $('#repteCreateBtn');
+    if(cb) cb.addEventListener('click', ()=> openRepteWizard());
+    const hb = $('#repteHelpBtn');
+    if(hb) hb.addEventListener('click', ()=> openRepteHelp());
+    return;
+  }
+  let sub = '';
+  if(repte.estat === 'pendent') sub = t('Pendent d\u2019iniciar… Comença el {1}', fmtDate(repte.data_inici));
+  else if(repte.estat === 'actiu') sub = t('Acaba el {1}', fmtDate(repte.data_fi));
+  else if(repte.estat === 'cancelat') sub = t('Cancel\u00b7lat: {1}', repteCancelMotiu(repte));
+  else if(repte.estat === 'finalitzat') sub = t('Finalitzat');
+  box.innerHTML = `<div class="repte-row">
+    <button type="button" class="repte-card-btn" id="repteOpenBtn" style="flex:1;">
+      <span class="repte-ico">👊</span>
+      <span class="repte-info"><b>${t('Repte: {1}', escapeHtml(repte.nom))}</b><span>${escapeHtml(sub)}</span></span>
+    </button>
+    <button type="button" class="repte-help-btn" id="repteHelpBtn" title="${t('Què és un repte?')}" aria-label="${t('Què és un repte?')}">?</button>
+  </div>`;
+  const openBtn = $('#repteOpenBtn');
+  if(openBtn) openBtn.addEventListener('click', ()=>{
+    if(!config.repteExplicacioVist){ openRepteHelp(()=> { closeFriendsDrawer(); navigateToRepte(repte.id); }); return; }
+    closeFriendsDrawer();
+    navigateToRepte(repte.id);
+  });
+  const hb = $('#repteHelpBtn');
+  if(hb) hb.addEventListener('click', ()=> openRepteHelp());
+}
+
+/* ---------- Modal d'explicació ---------- */
+function openRepteHelp(onClose){
+  config.repteExplicacioVist = true;
+  saveConfig();
+  openModal('repteHelpModal');
+  if(onClose){
+    const closeBtns = $$('#repteHelpModal [data-close="repteHelpModal"]');
+    const finish = ()=>{
+      closeBtns.forEach(b=> b.removeEventListener('click', finish));
+      onClose();
+    };
+    closeBtns.forEach(b=> b.addEventListener('click', finish));
+  }
+}
+
+/* ---------- Wizard de creació ---------- */
+async function renderRepteWizardParticipants(){
+  const list = $('#repteParticipantsList');
+  if(!list) return;
+  const data = (friendsDataCache && friendsDataCache.friends) ? friendsDataCache : await refreshFriends();
+  const friends = data.friends || [];
+  const status = {};
+  await Promise.all(friends.map(async f=>{
+    try{
+      const fd = await fetchFriendDataCached(f.user_id);
+      status[f.user_id] = !!(fd && fd.config && fd.config.repteActiu);
+    }catch(e){ status[f.user_id] = false; }
+  }));
+  list.innerHTML = friends.map(f=>{
+    const busy = !!status[f.user_id];
+    const selected = repteWizard.participants.includes(f.user_id);
+    return `<div class="repte-opt ${selected?'selected':''} ${busy?'disabled':''}" data-uid="${f.user_id}" ${busy?'title="'+t('Aquesta persona ja està dins d\'un repte')+'"':''}>
+      <span class="f-avatar" data-avatar-uid="${f.user_id}">👤</span>
+      <div class="f-info"><b>${escapeHtml(friendName(f))}</b></div>
+      <span class="repte-check">✓</span>
+    </div>`;
+  }).join('') || `<div class="empty" style="padding:16px 10px;">${t('Sense amics')}</div>`;
+  renderFriendAvatars();
+  $$('#repteParticipantsList .repte-opt').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      if(row.classList.contains('disabled')) return;
+      const uid = row.dataset.uid;
+      const i = repteWizard.participants.indexOf(uid);
+      if(i >= 0) repteWizard.participants.splice(i, 1);
+      else {
+        if(repteWizard.participants.length >= 5){ toast(t('Màxim 5 participants')); return; }
+        repteWizard.participants.push(uid);
+      }
+      renderRepteWizardParticipants();
+    });
+  });
+  updateRepteParticipantsCount();
+}
+function updateRepteParticipantsCount(){
+  const el = $('#repteParticipantsCount');
+  if(el) el.textContent = t('Participants: {1} de 5', repteWizard.participants.length);
+}
+function renderRepteWizardStep(){
+  const s1 = $('#repteStep1'), s2 = $('#repteStep2');
+  if(s1) s1.classList.toggle('active', repteWizard.step === 1);
+  if(s2) s2.classList.toggle('active', repteWizard.step === 2);
+  const back = $('#repteWizBack'), next = $('#repteWizNext'), create = $('#repteWizCreate');
+  if(back) back.style.display = repteWizard.step === 2 ? '' : 'none';
+  if(next) next.style.display = repteWizard.step === 1 ? '' : 'none';
+  if(create) create.style.display = repteWizard.step === 2 ? '' : 'none';
+  const dIni = $('#repteDataInici');
+  if(dIni) dIni.textContent = fmtDate(repteKeyDate(dataIniciRepte()));
+  const dur = $('#repteDurVal');
+  if(dur) dur.value = repteWizard.durada % 1 === 0 ? String(repteWizard.durada) : String(repteWizard.durada).replace('.', ',');
+  const durLabel = $('#repteDurLabel');
+  if(durLabel) durLabel.textContent = repteWizard.durada === 1 ? t('1 mes') : t('{1} mesos', String(repteWizard.durada).replace('.', ','));
+  const rutinesField = $('#repteRutinesField');
+  if(rutinesField) rutinesField.style.display = repteWizard.mode === 'fixe' ? '' : 'none';
+  const rCount = $('#repteRutinesCount');
+  if(rCount) rCount.textContent = repteWizard.mode === 'fixe'
+    ? t('Seleccionades: {1} de {2}', repteWizard.rutines.length, repteWizard.freq || 0)
+    : '';
+  updateRepteParticipantsCount();
+}
+function continueOpenRepteWizard(){
+  Object.assign(repteWizard, { step:1, nom:'', participants:[], mode:null, freq:null, durada:1, min:null, rutines:[] });
+  const nomInp = $('#repteNomInput');
+  if(nomInp) nomInp.value = '';
+  const modeDesc = $('#repteModeDesc');
+  if(modeDesc){ modeDesc.style.display = 'none'; }
+  $$('#repteModeSeg .seg-btn').forEach(b=> b.classList.remove('active'));
+  $$('#repteFreqSeg .seg-btn').forEach(b=> b.classList.remove('active'));
+  $$('#repteMinSeg .seg-btn').forEach(b=> b.classList.remove('active'));
+  renderRepteWizardParticipants();
+  renderRepteWizardStep();
+  openModal('repteModal');
+}
+function openRepteWizard(){
+  if(!supabaseClient || !currentUser){ startLogin(); return; }
+  if(!config.repteExplicacioVist){ openRepteHelp(continueOpenRepteWizard); return; }
+  continueOpenRepteWizard();
+}
+function repteWizardNext(){
+  const nom = ($('#repteNomInput').value || '').trim();
+  if(nom.length < 3){ toast(t('El nom ha de tenir entre 3 i 12 caràcters')); return; }
+  if(repteWizard.participants.length === 0){ toast(t('Tria com a mínim 1 participant')); return; }
+  if(!repteWizard.mode){ toast(t('Tria el mode')); return; }
+  repteWizard.nom = nom;
+  repteWizard.step = 2;
+  renderRepteWizardStep();
+}
+function repteWizardBack(){ repteWizard.step = 1; renderRepteWizardStep(); }
+function openRepteRoutinesPicker(){
+  if(!repteWizard.min){ toast(t('Primer tria els exercicis mínims')); return; }
+  const list = $('#repteRoutinesList');
+  const req = $('#repteRoutinesReq');
+  if(req) req.textContent = t('Només rutines amb com a mínim {1} exercicis', repteWizard.min);
+  list.innerHTML = state.rutines.map(r=>{
+    const valid = (r.exercicis||[]).length >= repteWizard.min;
+    const sel = repteWizard.rutines.includes(r.id);
+    return `<div class="repte-opt ${sel?'selected':''} ${valid?'':'disabled'}" data-rid="${r.id}" ${valid?'':'title="'+t('Aquesta rutina només té {1} exercicis i el repte en demana com a mínim {2}', (r.exercicis||[]).length, repteWizard.min)+'"'}>
+      <div class="f-avatar">📋</div>
+      <div class="f-info"><b>${escapeHtml(r.nom)}</b><span>${t('{1} exercicis', (r.exercicis||[]).length)}</span></div>
+      <span class="repte-check">✓</span>
+    </div>`;
+  }).join('') || `<div class="empty" style="padding:16px 10px;">${t('Sense rutines')}</div>`;
+  const update = ()=>{
+    const count = $('#repteRoutinesCount');
+    if(count) count.textContent = t('Seleccionades: {1} de {2}', repteWizard.rutines.length, repteWizard.freq || 0);
+    $('#repteRoutinesConfirm').disabled = !repteWizard.freq || repteWizard.rutines.length !== repteWizard.freq;
+  };
+  $$('#repteRoutinesList .repte-opt').forEach(row=>{
+    row.addEventListener('click', ()=>{
+      if(row.classList.contains('disabled')) return;
+      const id = row.dataset.rid;
+      const i = repteWizard.rutines.indexOf(id);
+      if(i >= 0) repteWizard.rutines.splice(i, 1);
+      else {
+        if(repteWizard.freq && repteWizard.rutines.length >= repteWizard.freq){ toast(t('Selecciona exactament {1} rutines', repteWizard.freq)); return; }
+        repteWizard.rutines.push(id);
+      }
+      openRepteRoutinesPicker();
+    });
+  });
+  update();
+  openModal('repteRoutinesModal');
+}
+async function repteWizardCreate(){
+  if(!repteWizard.freq){ toast(t('Tria la freqüència')); return; }
+  if(!repteWizard.min){ toast(t('Tria els exercicis mínims')); return; }
+  if(repteWizard.mode === 'fixe' && repteWizard.rutines.length !== repteWizard.freq){ toast(t('Selecciona exactament {1} rutines', repteWizard.freq)); return; }
+  await createRepte();
+}
+async function createRepte(){
+  const nom = repteWizard.nom;
+  const dInici = dataIniciRepte();
+  const setmanes = repteWizard.durada * 4;
+  const dFi = new Date(dInici.getTime() + setmanes * 7 * 86400000);
+  const creatorAvatar = (config.profile && config.profile.avatar) || '';
+  const creatorAlias = (config.profile && config.profile.alias) || '';
+  const participants = [
+    { uid: currentUser.id, alias: creatorAlias, avatar: creatorAvatar, estat:'creador', dataAccept: new Date().toISOString() },
+    ...repteWizard.participants.map(uid=>{
+      const f = (friendsDataCache && friendsDataCache.friends) ? friendsDataCache.friends.find(x=> x.user_id === uid) : null;
+      return { uid, alias: (f && (f.alias || f.display_name)) || 'Amic', avatar: (f && f.avatar) || '', estat:'convidat', dataAccept: null };
+    })
+  ];
+  const row = {
+    creador: currentUser.id,
+    nom,
+    mode: repteWizard.mode,
+    frequencia: repteWizard.freq,
+    durada: repteWizard.durada,
+    setmanes,
+    min_exercicis: repteWizard.min,
+    data_inici: repteKeyDate(dInici),
+    data_fi: repteKeyDate(dFi),
+    estat: 'pendent',
+    participants,
+    rutines: repteWizard.mode === 'fixe'
+      ? repteWizard.rutines.map(id=>{
+          const r = state.rutines.find(x=> x.id === id);
+          return r ? buildRoutineSharePayload(r) : null;
+        }).filter(Boolean)
+      : null
+  };
+  try{
+    const { data, error } = await supabaseClient.from('reptes').insert(row).select().single();
+    if(error) throw error;
+    const repte = data;
+    await supabaseClient.from('repte_punts').insert({ repte_id: repte.id, uid: currentUser.id, punts_total:0, punts_setmana:0, max_setmana:0, setmana_idx:0 });
+    await Promise.all(repteWizard.participants.map(uid=>{
+      return supabaseClient.from('chat_messages').insert({ sender_id: currentUser.id, recipient_id: uid, message: REPTE_SHARE_PREFIX + repte.id });
+    }));
+    if(repteWizard.mode === 'fixe'){
+      repteWizard.rutines.forEach(id=>{
+        const r = state.rutines.find(x=> x.id === id);
+        if(r) r.repteId = repte.id;
+      });
+      saveLS(LS_KEYS.rutines, state.rutines);
+      renderRutines();
+    }
+    config.repteActiu = repte.id;
+    config.repteCreades = (config.repteCreades || 0) + 1;
+    saveConfig();
+    repteCache = { repte, me: participants[0], punts: { repte_id: repte.id, uid: currentUser.id, punts_total:0, punts_setmana:0, max_setmana:0, setmana_idx:0, updated_at: new Date().toISOString() }, cancelatVist:false };
+    repteCacheSave();
+    closeModal('repteModal');
+    toast(t('Repte creat!'));
+    renderRepteCard();
+    navigateToRepte(repte.id);
+  }catch(e){ console.error('FERRO: crear repte', e); toast(t('No s\u2019ha pogut crear el repte')); }
+}
+
+/* ---------- Invitació (prefix + acceptar/rebutjar) ---------- */
+function parseRepteShare(message){
+  if(typeof message !== 'string' || message.indexOf(REPTE_SHARE_PREFIX) !== 0) return null;
+  const id = message.slice(REPTE_SHARE_PREFIX.length).trim();
+  return id ? { repteId: id } : null;
+}
+async function acceptarRepte(repte){
+  const me = myRepteParticipant(repte);
+  if(!me) return;
+  try{
+    if(repte.mode === 'fixe'){
+      const slotsNeeded = (repte.rutines||[]).length;
+      const freeSlots = MAX_RUTINES - countRutines();
+      if(freeSlots < slotsNeeded){
+        const ok = await repteAlliberarEspais(repte, slotsNeeded - freeSlots);
+        if(!ok) return;
+      }
+    }
+    const participants = (repte.participants||[]).map(p=> p.uid === currentUser.id ? {...p, estat:'acceptat', dataAccept: new Date().toISOString()} : p);
+    await supabaseClient.from('reptes').update({ participants }).eq('id', repte.id);
+    await supabaseClient.from('repte_punts').upsert(
+      { repte_id: repte.id, uid: currentUser.id, punts_total:0, punts_setmana:0, max_setmana:0, setmana_idx:0 },
+      { onConflict:'repte_id,uid' }
+    );
+    if(repte.mode === 'fixe') repteClonaRutinesFixe(repte);
+    config.repteActiu = repte.id;
+    saveConfig();
+    repteCache = { repte: {...repte, participants}, me: {...me, estat:'acceptat'}, punts: { repte_id: repte.id, uid: currentUser.id, punts_total:0, punts_setmana:0, max_setmana:0, setmana_idx:0, updated_at:new Date().toISOString() }, cancelatVist:false };
+    repteCacheSave();
+    if(repte.mode === 'adaptatiu' && !repteTincRutinaValida(repte)){
+      toast(t('Ajusta una rutina perquè sigui vàlida per al repte'));
+    } else {
+      toast(t('Repte acceptat!'));
+    }
+    renderRepteCard();
+    renderRepteView();
+  }catch(e){ console.error('FERRO: acceptar repte', e); toast(t('No s\u2019ha pogut acceptar el repte')); }
+}
+async function rebutjarRepte(repte){
+  try{
+    const participants = (repte.participants||[]).map(p=> p.uid === currentUser.id ? {...p, estat:'rebutjat'} : p);
+    await supabaseClient.from('reptes').update({ participants }).eq('id', repte.id);
+    config.repteActiu = null;
+    saveConfig();
+    repteCache = null;
+    try{ localStorage.removeItem(LS_KEYS.repte); }catch(e){}
+    toast(t('Repte rebutjat'));
+    renderRepteCard();
+    goBackFromRepte();
+  }catch(e){ console.error('FERRO: rebutjar repte', e); toast(t('No s\u2019ha pogut rebutjar el repte')); }
+}
+function repteTincRutinaValida(repte){
+  return state.rutines.some(r=> routineValidaPerRepte(r, repte));
+}
+function repteAlliberarEspais(repte, quantes){
+  return new Promise(resolve=>{
+    const list = $('#repteSlotsList');
+    const msg = $('#repteSlotsMsg');
+    if(msg) msg.textContent = t('Has de deixar {1} espais lliures', quantes);
+    const st = { sel: new Set() };
+    function render(){
+      const freeNow = MAX_RUTINES - (countRutines() - st.sel.size);
+      const ok = freeNow >= quantes;
+      list.innerHTML = state.rutines.filter(r=> !r.repteId).map(r=>`
+        <div class="repte-opt ${st.sel.has(r.id)?'selected':''}" data-rid="${r.id}">
+          <div class="f-avatar">📋</div>
+          <div class="f-info"><b>${escapeHtml(r.nom)}</b><span>${t('{1} exercicis', (r.exercicis||[]).length)}</span></div>
+          <span class="repte-check">✓</span>
+        </div>`).join('') || `<div class="empty" style="padding:16px 10px;">${t('Sense rutines eliminables')}</div>`;
+      $$('#repteSlotsList .repte-opt').forEach(row=>{
+        row.addEventListener('click', ()=>{
+          const id = row.dataset.rid;
+          if(st.sel.has(id)) st.sel.delete(id); else st.sel.add(id);
+          render();
+        });
+      });
+      $('#repteSlotsConfirm').disabled = !ok;
+    }
+    const cleanup = ()=>{
+      $('#repteSlotsConfirm').removeEventListener('click', onOk);
+      $$('#repteSlotsModal [data-close="repteSlotsModal"]').forEach(b=> b.removeEventListener('click', onCancel));
+      const ov = $('#repteSlotsModal');
+      if(ov) ov.removeEventListener('click', onOverlayCancel);
+    };
+    const onOk = ()=>{
+      cleanup();
+      st.sel.forEach(id=>{ state.rutines = state.rutines.filter(x=> x.id !== id); });
+      saveLS(LS_KEYS.rutines, state.rutines);
+      renderRutines();
+      closeModal('repteSlotsModal');
+      resolve(true);
+    };
+    const onCancel = ()=>{ cleanup(); closeModal('repteSlotsModal'); resolve(false); };
+    const onOverlayCancel = e=>{ if(e.target === $('#repteSlotsModal')) onCancel(); };
+    $('#repteSlotsConfirm').addEventListener('click', onOk);
+    $$('#repteSlotsModal [data-close="repteSlotsModal"]').forEach(b=> b.addEventListener('click', onCancel));
+    $('#repteSlotsModal').addEventListener('click', onOverlayCancel);
+    render();
+    openModal('repteSlotsModal');
+  });
+}
+function repteClonaRutinesFixe(repte){
+  const payloads = repte.rutines || [];
+  let customAvail = MAX_EXERCICIS_PERSONALITZATS - countCustomExercises();
+  payloads.forEach(payload=>{
+    if(!payload || !Array.isArray(payload.exercicis)) return;
+    const idMap = {};
+    payload.exercicis.forEach(pe=>{
+      const existing = state.exercicis.find(e=> (e.nom||'').toLowerCase() === (pe.nom||'').toLowerCase());
+      if(existing){ idMap[pe.exerciciId] = existing.id; }
+      else if(customAvail > 0){
+        const neu = { id: uid(), personalitzat: true, nom: pe.nom, grupMuscular: pe.grupMuscular || 'altre', equipament: pe.equipament || 'altre', descripcio: '', preferit: false, dataCreacio: new Date().toISOString() };
+        state.exercicis.push(neu);
+        idMap[pe.exerciciId] = neu.id;
+        customAvail--;
+      }
+    });
+    const exercicis = payload.exercicis.map((pe,i)=>{
+      const cardio = pe.grupMuscular === 'cardio';
+      return {
+        exerciciId: idMap[pe.exerciciId], ordre: i,
+        ...(cardio ? { durada: pe.durada || DEFAULT_CARDIO_DURADA } : { series: pe.series, repeticions: pe.repeticions, descans: pe.descans, pes: pe.pes || 0 }),
+        ...(Array.isArray(pe.sets) && pe.sets.length ? { sets: pe.sets } : {})
+      };
+    });
+    state.rutines.push({ id: uid(), nom: payload.nom, tipus: payload.tipus || 'hipertrofia', descripcio: payload.descripcio || '', dies: payload.dies || [], hora: payload.hora || '', exercicis, activa: true, dataCreacio: new Date().toISOString(), origen: 'repte', repteId: repte.id });
+  });
+  saveLS(LS_KEYS.exercicis, state.exercicis);
+  saveLS(LS_KEYS.rutines, state.rutines);
+  renderRutines();
+}
+
+/* ---------- Navegació i vista del repte ---------- */
+function navigateToRepte(repteId){
+  if(!repteId) return;
+  if(currentViewName() !== 'repte'){
+    fullViewStack.push(currentViewName());
+    try{ history.pushState({ view: currentViewName() }, ''); }catch(e){}
+  }
+  repteViewId = repteId;
+  repteViewTab = 'resum';
+  renderView('repte');
+}
+function goBackFromRepte(){
+  stopRepteChatPoll();
+  stopReptePointsPoll();
+  activeRepteChat = null;
+  try{ history.back(); }catch(e){ navigateTo('entrenar'); }
+}
+function stopReptePointsPoll(){ if(reptePointsTimer){ clearInterval(reptePointsTimer); reptePointsTimer = null; } }
+function stopRepteChatPoll(){ if(repteChatInterval){ clearInterval(repteChatInterval); repteChatInterval = null; } }
+
+async function renderRepteView(){
+  if(!repteViewId){ navigateTo('entrenar'); return; }
+  stopRepteChatPoll();
+  if(!supabaseClient || !currentUser){ startLogin(); return; }
+  let repte = null;
+  try{
+    const { data, error } = await supabaseClient.from('reptes').select('*').eq('id', repteViewId).maybeSingle();
+    if(error || !data){ toast(t('Repte no trobat')); goBackFromRepte(); return; }
+    repte = data;
+  }catch(e){ toast(t('Repte no trobat')); goBackFromRepte(); return; }
+  repte = await maybeTransitionRepte(repte);
+  const title = $('#repteViewTitle');
+  if(title) title.textContent = t('Repte') + ': ' + repte.nom;
+  renderRepteTab(repteViewTab || 'resum', repte);
+  updateReptePoints();
+  stopReptePointsPoll();
+  reptePointsTimer = setInterval(()=>{ if(currentViewName() === 'repte') updateReptePoints(); }, 30000);
+}
+
+/* ---------- Transicions de cicle de vida ---------- */
+async function maybeTransitionRepte(repte){
+  if(!repte || !currentUser || !supabaseClient) return repte;
+  const now = Date.now();
+  const dInici = new Date(repte.data_inici + 'T00:00:00').getTime();
+  const dFi = new Date(repte.data_fi + 'T23:59:59').getTime();
+  let changed = false;
+  if(repte.estat === 'pendent' && now >= dInici){
+    const actius = (repte.participants||[]).filter(p=> p.estat === 'creador' || p.estat === 'acceptat');
+    if(actius.length >= 2){
+      const { error } = await supabaseClient.from('reptes').update({ estat:'actiu' }).eq('id', repte.id).eq('estat','pendent');
+      if(!error){ repte.estat = 'actiu'; changed = true; if(repte.creador === currentUser.id && !config.repteCreatComencat){ config.repteCreatComencat = true; } }
+    } else {
+      const { error } = await supabaseClient.from('reptes').update({ estat:'cancelat', cancelat_per:'participants' }).eq('id', repte.id).eq('estat','pendent');
+      if(!error){ repte.estat = 'cancelat'; repte.cancelat_per = 'participants'; changed = true; }
+    }
+  } else if(repte.estat === 'actiu'){
+    if(now >= dFi){
+      const { error } = await supabaseClient.from('reptes').update({ estat:'finalitzat' }).eq('id', repte.id).eq('estat','actiu');
+      if(!error){ repte.estat = 'finalitzat'; changed = true; }
+    } else {
+      const actius = (repte.participants||[]).filter(p=> p.estat === 'creador' || p.estat === 'acceptat');
+      if(actius.length < 2){
+        const { error } = await supabaseClient.from('reptes').update({ estat:'cancelat', cancelat_per:'sol' }).eq('id', repte.id).eq('estat','actiu');
+        if(!error){ repte.estat = 'cancelat'; repte.cancelat_per = 'sol'; changed = true; }
+      }
+    }
+  }
+  if(changed){
+    if(repte.estat === 'finalitzat') await aplicarResultatRepte(repte);
+    saveConfig();
+  }
+  return repte;
+}
+
+/* ---------- Motor de punts ---------- */
+function repteValidDays(repte){
+  const dInici = new Date(repte.data_inici + 'T00:00:00');
+  const dFi = new Date(repte.data_fi + 'T23:59:59');
+  const days = [];
+  const seen = new Set();
+  state.historial.forEach(h=>{
+    if(h.noCompta) return;
+    const hd = new Date(h.data);
+    if(hd < dInici || hd > dFi) return;
+    const r = state.rutines.find(x=> x.id === h.rutinaId);
+    if(!r) return;
+    if(repte.mode === 'fixe'){
+      if(!r.repteId) return;
+    } else {
+      if(!routineValidaPerRepte(r, repte)) return;
+    }
+    if((h.exercicis||[]).length < repte.min_exercicis) return;
+    const day = repteKeyDate(hd);
+    if(seen.has(day)) return;
+    seen.add(day);
+    days.push(day);
+  });
+  return days;
+}
+function repteCalcularPunts(repte, validDays){
+  const F = repte.frequencia;
+  const dInici = new Date(repte.data_inici + 'T00:00:00').getTime();
+  const totalWeeks = Math.max(1, repte.setmanes);
+  const setmanaActual = Math.max(0, Math.floor((Date.now() - dInici) / (7*86400000)));
+  const cap = Math.min(setmanaActual, totalWeeks - 1);
+  const validSet = new Set(validDays);
+  let P = 0;
+  let puntsSetmana = 0, maxSetmana = 0;
+  for(let w = 0; w <= cap; w++){
+    const ws = new Date(dInici + w*7*86400000);
+    let count = 0;
+    for(let i = 0; i < 7; i++){
+      const key = repteKeyDate(new Date(ws.getTime() + i*86400000));
+      if(validSet.has(key)) count++;
+    }
+    count = Math.min(count, 6);
+    const deficit = F * w - P;
+    const maxThisWeek = Math.min(6, F + deficit);
+    const gained = Math.min(count, maxThisWeek);
+    P += gained;
+    if(w === cap){ puntsSetmana = gained; maxSetmana = maxThisWeek; }
+  }
+  return { puntsTotal: P, puntsSetmana, maxSetmana, setmanaIdx: cap };
+}
+async function updateReptePoints(){
+  if(!supabaseClient || !currentUser) return;
+  const { repte } = await fetchRepteActiu();
+  if(!repte || !['pendent','actiu'].includes(repte.estat)) return;
+  const res = repteCalcularPunts(repte, repteValidDays(repte));
+  try{
+    await supabaseClient.from('repte_punts').upsert(
+      { repte_id: repte.id, uid: currentUser.id, punts_total: res.puntsTotal, punts_setmana: res.puntsSetmana, max_setmana: res.maxSetmana, setmana_idx: res.setmanaIdx, updated_at: new Date().toISOString() },
+      { onConflict: 'repte_id,uid' }
+    );
+    if(repteCache && repteCache.repte){
+      repteCache.punts = { repte_id: repte.id, uid: currentUser.id, punts_total: res.puntsTotal, punts_setmana: res.puntsSetmana, max_setmana: res.maxSetmana, setmana_idx: res.setmanaIdx, updated_at: new Date().toISOString() };
+      repteCacheSave();
+    }
+  }catch(e){ console.error('FERRO: punts repte', e); }
+}
+
+/* ---------- Render del resum ---------- */
+async function renderRepteResum(repte){
+  const panel = $('#repteResumPanel');
+  if(!panel || !repte) return;
+  let rows = [];
+  try{
+    const { data } = await supabaseClient.from('repte_punts').select('uid,punts_total,punts_setmana,max_setmana,updated_at').eq('repte_id', repte.id);
+    rows = data || [];
+  }catch(e){}
+  const w = repteSetmanaActual(repte);
+  const totalSetmanes = repte.setmanes;
+  const info = `
+    <div class="repte-info-block">
+      <div class="repte-info-row"><span>${t('Mode')}</span><b>${repteModeLabel(repte)}</b></div>
+      <div class="repte-info-row"><span>${t('Freqüència')}</span><b>${repte.frequencia} ${t('dies/setmana')}</b></div>
+      <div class="repte-info-row"><span>${t('Duració')}</span><b>${String(repte.durada).replace('.', ',')} ${repte.durada === 1 ? t('mes') : t('mesos')} · ${t('Setmana {1} de {2}', Math.min(w+1, totalSetmanes), totalSetmanes)}</b></div>
+      <div class="repte-info-row"><span>${t('Exercicis mínims per rutina')}</span><b>${repte.min_exercicis}</b></div>
+      <div class="repte-info-row"><span>${t('Data d\u2019inici')}</span><b>${fmtDate(repte.data_inici)}</b></div>
+      <div class="repte-info-row"><span>${t('Data de fi')}</span><b>${fmtDate(repte.data_fi)}</b></div>
+    </div>`;
+  const parts = (repte.participants||[]).filter(p=> p.estat !== 'rebutjat' && p.estat !== 'abandonat').map(p=>{
+    const icon = p.estat === 'creador' || p.estat === 'acceptat' ? '✅' : p.estat === 'convidat' ? '⏳' : p.estat === 'finalitzat' ? '🏁' : '';
+    return `<div class="repte-part"><span class="f-avatar" data-avatar-uid="${p.uid}">👤</span><b>${escapeHtml(p.alias || '?')}</b><span>${icon}</span></div>`;
+  }).join('');
+  const participantsHTML = `<div class="repte-info-block">${parts || `<div class="empty" style="padding:12px;">${t('Sense participants')}</div>`}</div>`;
+  const rewardHTML = `<div class="repte-reward"><b>${t('Recompensa')}</b><span>${t('Per determinar')}</span></div>`;
+  const actionsHTML = repteActionsHTML(repte, rows, w);
+  const fixeRutines = repte.mode === 'fixe' ? repteRutinesListHTML(repte) : '';
+  panel.innerHTML = `
+    <div class="repte-chart" id="repteChart">${renderRepteChart(repte, rows, repteChartMode)}</div>
+    <div class="seg seg-sm" id="repteChartSeg" style="margin:8px 0 4px;">
+      <button type="button" class="seg-btn ${repteChartMode === 'setmanal' ? 'active' : ''}" data-chart="setmanal">${t('Setmanal')}</button>
+      <button type="button" class="seg-btn ${repteChartMode === 'total' ? 'active' : ''}" data-chart="total">${t('Total')}</button>
+    </div>
+    <p class="repte-sub">${t('Setmana {1} de {2}', Math.min(w+1, totalSetmanes), totalSetmanes)}</p>
+    <div style="display:flex; flex-direction:column; gap:12px; margin-top:14px;">
+      ${info}
+      ${participantsHTML}
+      ${fixeRutines}
+      ${rewardHTML}
+      <div class="repte-actions">${actionsHTML}</div>
+    </div>`;
+  $$('#repteChartSeg .seg-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      repteChartMode = b.dataset.chart;
+      renderRepteResum(repte);
+    });
+  });
+  wireRepteActions(repte, rows, w);
+  renderFriendAvatars();
+}
+function renderRepteChart(repte, rows, mode){
+  const participants = (repte.participants||[]).filter(p=> p.estat === 'creador' || p.estat === 'acceptat');
+  const w = repteSetmanaActual(repte);
+  const F = repte.frequencia;
+  const html = participants.map(p=>{
+    const row = rows.find(r=> r.uid === p.uid);
+    const ptsSet = (row && row.punts_setmana) || 0;
+    const maxSet = (row && row.max_setmana) || F;
+    const ptsTot = (row && row.punts_total) || 0;
+    const denomTotal = F * w + (maxSet || F);
+    const pct = mode === 'setmanal'
+      ? (maxSet ? ptsSet / maxSet : 0)
+      : (denomTotal ? ptsTot / denomTotal : 0);
+    const pctPx = Math.max(0, Math.min(100, Math.round(pct * 100)));
+    const emptyCls = pctPx === 0 ? ' empty' : '';
+    let color = '#B388FF';
+    try{
+      const av = parseObAvatar(p.avatar || '');
+      color = obColorObj(av.color).bg;
+    }catch(e){}
+    return `<div class="rc-col" title="${escapeHtml(p.alias || '?')}: ${ptsSet}/${maxSet} · ${ptsTot} total">
+      <div class="rc-bar-wrap"><div class="rc-bar${emptyCls}" style="height:${Math.max(2, pctPx)}%"></div></div>
+      <div class="rc-avatar" style="background:${escapeHtml(color)};">${escapeHtml((p.alias || '?').slice(0,1).toUpperCase())}</div>
+      <div class="rc-name">${escapeHtml(p.alias || '?')}</div>
+      <div class="rc-num">${ptsTot}</div>
+    </div>`;
+  }).join('');
+  return html || `<div class="empty" style="padding:20px;">${t('Sense participants actius')}</div>`;
+}
+function repteRutinesListHTML(repte){
+  const rutines = repte.rutines || [];
+  if(!rutines.length) return '';
+  return `<div class="repte-info-block">
+    <div class="repte-info-row"><span>${t('Rutines del repte')}</span><b>${rutines.length}</b></div>
+    ${rutines.map(r=>`<div class="repte-part"><div class="f-avatar">📋</div><b>${escapeHtml(r.nom || '')}</b><span>${t('{1} exercicis', (r.exercicis||[]).length)}</span></div>`).join('')}
+  </div>`;
+}
+function repteResultatText(repte, rows){
+  const me = currentUser ? currentUser.id : '';
+  const myRow = rows.find(r=> r.uid === me);
+  const myPunts = (myRow && myRow.punts_total) || 0;
+  const maxPunts = repte.frequencia * repte.setmanes;
+  const pct = maxPunts ? Math.round(myPunts / maxPunts * 100) : 0;
+  const sorted = rows.map(r=> r.punts_total).sort((a,b)=> b - a);
+  const rank = sorted.indexOf(myPunts) + 1 || rows.length + 1;
+  return t('Resultat final: posició {1} amb {2}% de completament', rank, pct);
+}
+function repteActionsHTML(repte, rows, w){
+  const me = myRepteParticipant(repte);
+  if(!me) return t('No participes en aquest repte');
+  const parts = [];
+  if(repte.estat === 'pendent'){
+    if(me.estat === 'convidat'){
+      parts.push(`<div style="display:flex; gap:8px;"><button class="btn btn-primary" data-repteAct="accept">${t('Accepta')}</button><button class="btn" data-repteAct="reject">${t('Rebutja')}</button></div>`);
+    } else {
+      const espera = (repte.participants||[]).filter(p=> p.estat === 'convidat').length;
+      parts.push(`<p class="repte-sub">${t('Esperant {1} acceptacions…', espera)}</p>`);
+      if(me.estat === 'creador') parts.push(`<button class="btn btn-sm" data-repteAct="invite">${t('Convidar')}</button>`);
+    }
+  } else if(repte.estat === 'actiu'){
+    if(repteDinsPrimeraSetmana(repte)){
+      parts.push(`<button class="btn btn-sm btn-danger" data-repteAct="abandon">${t('Abandonar')}</button>`);
+    }
+    if(me.estat === 'creador' && (repte.participants||[]).length < REPTE_MAX_PARTICIPANTS){
+      parts.push(`<button class="btn btn-sm" data-repteAct="invite">${t('Convidar')}</button>`);
+    }
+  } else if(repte.estat === 'finalitzat'){
+    parts.push(`<p class="repte-sub">${repteResultatText(repte, rows)}</p>`);
+    parts.push(`<button class="btn btn-primary" data-repteAct="finish">${t('Finalitzar')}</button>`);
+  } else if(repte.estat === 'cancelat'){
+    parts.push(`<p class="repte-sub">${t('Repte cancel\u00b7lat: {1}', repteCancelMotiu(repte))}</p>`);
+    parts.push(`<button class="btn btn-primary" data-repteAct="finish">${t('Finalitzar')}</button>`);
+  }
+  return parts.join('');
+}
+function wireRepteActions(repte, rows, w){
+  $$('#repteResumPanel [data-repteAct]').forEach(b=>{
+    b.addEventListener('click', async ()=>{
+      const act = b.dataset.repteAct;
+      if(act === 'accept') await acceptarRepte(repte);
+      else if(act === 'reject') await rebutjarRepte(repte);
+      else if(act === 'invite') openRepteInviteModal(repte);
+      else if(act === 'abandon') await abandonarRepte(repte);
+      else if(act === 'finish') finalitzarRepte(repte);
+    });
+  });
+}
+async function abandonarRepte(repte){
+  const ok = await confirmDialog({ title: t('Abandonar repte'), message: t('Segur que vols abandonar el repte?'), okLabel: t('Abandonar') });
+  if(!ok) return;
+  try{
+    const participants = (repte.participants||[]).map(p=> p.uid === currentUser.id ? {...p, estat:'abandonat'} : p);
+    await supabaseClient.from('reptes').update({ participants }).eq('id', repte.id);
+    config.repteActiu = null;
+    saveConfig();
+    repteCache = null;
+    try{ localStorage.removeItem(LS_KEYS.repte); }catch(e){}
+    renderRepteCard();
+    goBackFromRepte();
+    toast(t('Repte abandonat'));
+  }catch(e){ console.error('FERRO: abandonar repte', e); toast(t('No s\u2019ha pogut abandonar el repte')); }
+}
+
+/* ---------- Finalitzar i destí de rutines ---------- */
+async function finalitzarRepte(repte){
+  try{
+    const participants = (repte.participants||[]).map(p=> p.uid === currentUser.id ? {...p, estat:'finalitzat'} : p);
+    await supabaseClient.from('reptes').update({ participants }).eq('id', repte.id);
+    if(repte.mode === 'fixe'){
+      const myRoutines = state.rutines.filter(r=> r.repteId === repte.id);
+      if(myRoutines.length && !config.repteRutinesResoltes[repte.id]){
+        $('#repteDestiMsg').textContent = t('Què vols fer amb les {1} rutines del repte?', myRoutines.length);
+        const onKeep = ()=>{
+          $('#repteDestiKeepBtn').removeEventListener('click', onKeep);
+          $('#repteDestiDeleteBtn').removeEventListener('click', onDelete);
+          myRoutines.forEach(r=>{ delete r.repteId; });
+          saveLS(LS_KEYS.rutines, state.rutines);
+          renderRutines();
+          repteResolt(repte.id);
+          closeModal('repteRoutinesDestiModal');
+        };
+        const onDelete = async ()=>{
+          $('#repteDestiKeepBtn').removeEventListener('click', onKeep);
+          $('#repteDestiDeleteBtn').removeEventListener('click', onDelete);
+          const ok = await confirmDialog({ title: t('Elimina rutines'), message: t('Segur que vols eliminar les rutines del repte?'), okLabel: t('Elimina') });
+          if(!ok) return;
+          myRoutines.forEach(r=>{ state.rutines = state.rutines.filter(x=> x.id !== r.id); });
+          saveLS(LS_KEYS.rutines, state.rutines);
+          renderRutines();
+          repteResolt(repte.id);
+          closeModal('repteRoutinesDestiModal');
+        };
+        $('#repteDestiKeepBtn').addEventListener('click', onKeep);
+        $('#repteDestiDeleteBtn').addEventListener('click', onDelete);
+        openModal('repteRoutinesDestiModal');
+        return;
+      }
+    }
+    repteResolt(repte.id);
+  }catch(e){ console.error('FERRO: finalitzar repte', e); toast(t('No s\u2019ha pogut finalitzar el repte')); }
+}
+function repteResolt(repteId){
+  if(!config.repteRutinesResoltes) config.repteRutinesResoltes = {};
+  config.repteRutinesResoltes[repteId] = true;
+  if(config.repteActiu === repteId) config.repteActiu = null;
+  repteCache = null;
+  try{ localStorage.removeItem(LS_KEYS.repte); }catch(e){}
+  saveConfig();
+  renderRepteCard();
+  renderRutines();
+  goBackFromRepte();
+  toast(t('Repte tancat'));
+}
+
+/* ---------- XP i medalles finals ---------- */
+function posFactorRepte(rows, me){
+  const my = (rows.find(r=> r.uid === me) || {}).punts_total || 0;
+  const distinct = [...new Set(rows.map(r=> r.punts_total))].sort((a,b)=> b - a);
+  const rank = distinct.indexOf(my) + 1;
+  return { 1:1.0, 2:0.8, 3:0.65 }[rank] || 0.5;
+}
+function guanyadorsRepte(rows){
+  const max = rows.reduce((m,r)=> Math.max(m, r.punts_total || 0), 0);
+  return rows.filter(r=> (r.punts_total||0) === max && max > 0).map(r=> r.uid);
+}
+async function aplicarResultatRepte(repte){
+  if(!config.repteXpAtorgat) config.repteXpAtorgat = {};
+  if(config.repteXpAtorgat[repte.id]) return;
+  let rows = [];
+  try{
+    const { data } = await supabaseClient.from('repte_punts').select('uid,punts_total').eq('repte_id', repte.id);
+    rows = data || [];
+  }catch(e){}
+  const me = currentUser.id;
+  const myRow = rows.find(r=> r.uid === me) || { uid: me, punts_total: 0 };
+  const maxPunts = repte.frequencia * repte.setmanes;
+  const pct = maxPunts > 0 ? Math.max(0, Math.min(1, myRow.punts_total / maxPunts)) : 0;
+  if(pct >= 0.5){
+    const factor = posFactorRepte(rows, me);
+    const xp = Math.floor(500 * pct * factor);
+    config.xp = (config.xp || 0) + xp;
+  }
+  const winners = guanyadorsRepte(rows);
+  config.repteCompletats = (config.repteCompletats || 0) + 1;
+  if(winners.includes(me)) config.repteGuanyats = (config.repteGuanyats || 0) + 1;
+  if(pct >= 1) config.reptePerfectes = (config.reptePerfectes || 0) + 1;
+  if(repte.creador === me && winners.includes(me)) config.repteAmfitrio = (config.repteAmfitrio || 0) + 1;
+  config.repteXpAtorgat[repte.id] = true;
+  if(!config.repteMedalsAtorgades) config.repteMedalsAtorgades = {};
+  config.repteMedalsAtorgades[repte.id] = true;
+  saveConfig();
+  checkNewMedals();
+}
+
+/* ---------- Xat de grup ---------- */
+function renderRepteTab(tab, repte){
+  repteViewTab = tab;
+  $$('#repteTabs .seg-btn').forEach(b=> b.classList.toggle('active', b.dataset.repteTab === tab));
+  const resum = $('#repteResumPanel');
+  const xat = $('#repteXatPanel');
+  if(!resum || !xat) return;
+  if(tab === 'xat'){
+    resum.style.display = 'none';
+    xat.style.display = '';
+    if(repte) openRepteChat(repte);
+  } else {
+    stopRepteChatPoll();
+    activeRepteChat = null;
+    xat.style.display = 'none';
+    resum.style.display = '';
+    if(repte) renderRepteResum(repte);
+  }
+}
+function openRepteChat(repte){
+  activeRepteChat = repte;
+  const panel = $('#repteXatPanel');
+  if(!panel) return;
+  const hasRoutines = state.rutines.length > 0;
+  const hasCustom = state.exercicis.some(ex=> ex.personalitzat);
+  const hasShareable = hasRoutines || hasCustom;
+  const shareBtnHtml = hasShareable ? `
+      <div class="f-drop chat-share-wrap" id="repteChatShareWrap">
+        <button class="icon-btn" id="repteChatShare" title="${t('Compartir')}" aria-label="${t('Compartir')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></button>
+        <div class="f-menu chat-share-menu" id="repteChatShareMenu" style="display:none;">
+          <div class="chat-share-menu-head">${t('Compartir')}</div>
+          <button type="button" class="f-menu-item" data-cshare="rutina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> ${t('Rutina')}</button>
+          <button type="button" class="f-menu-item" data-cshare="exercici"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6.5 6.5 17.5 17.5"/><path d="M9.5 9.5 6 13l5 5 3.5-3.5"/><path d="M17.5 6.5 21 3"/><path d="M14.5 14.5 18 18"/><path d="M3 21l3-3"/></svg> ${t('Exercici')}</button>
+        </div>
+      </div>`
+    : '';
+  panel.innerHTML = `
+    <div style="display:flex; flex-direction:column; height:calc(100vh - 220px); min-height:320px;">
+      <div class="chat-log" id="repteChatLog" style="flex:1;"></div>
+      <div class="chat-input">
+        <input type="text" id="repteChatMsg" placeholder="${t('Escriu un missatge...')}" autocomplete="off" maxlength="1000">
+        ${shareBtnHtml}
+        <button class="btn btn-primary" id="repteChatSend">${t('Envia')}</button>
+      </div>
+    </div>`;
+  repteChatMessages = [];
+  repteChatAllLoaded = false;
+  repteChatLoadingOlder = false;
+  loadRepteChatMessages(repte);
+  stopRepteChatPoll();
+  repteChatInterval = setInterval(()=> loadRepteChatMessages(repte), 4000);
+  const sendBtn = $('#repteChatSend');
+  if(sendBtn) sendBtn.addEventListener('click', ()=> repteChatSend(repte));
+  const inp = $('#repteChatMsg');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key === 'Enter') repteChatSend(repte); });
+  const shareBtn = $('#repteChatShare');
+  if(shareBtn) shareBtn.addEventListener('click', e=>{
+    e.stopPropagation();
+    if(hasRoutines && hasCustom){
+      const menu = $('#repteChatShareMenu');
+      if(menu) menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+    } else if(hasRoutines){
+      openChatRoutinePicker(null);
+    } else if(hasCustom){
+      openChatExercisePicker(null);
+    }
+  });
+  $$('#repteChatShareMenu [data-cshare]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const menu = $('#repteChatShareMenu');
+      if(menu) menu.style.display = 'none';
+      if(b.dataset.cshare === 'rutina') openChatRoutinePicker(null);
+      else openChatExercisePicker(null);
+    });
+  });
+  const shareWrap = $('#repteChatShareMenu');
+  if(shareWrap) shareWrap.addEventListener('click', e=> e.stopPropagation());
+  const logEl = $('#repteChatLog');
+  if(logEl) logEl.addEventListener('scroll', ()=>{
+    if(repteChatLoadingOlder || repteChatAllLoaded || !repteChatMessages.length) return;
+    if(logEl.scrollTop <= 50) loadOlderRepteChatMessages(repte);
+  });
+}
+async function repteChatSend(repte){
+  const inp = $('#repteChatMsg');
+  if(!inp) return;
+  const msg = (inp.value || '').trim();
+  if(!msg) return;
+  inp.value = '';
+  try{
+    await supabaseClient.from('repte_messages').insert({ repte_id: repte.id, sender_id: currentUser.id, message: msg });
+  }catch(e){ console.error('FERRO: repte xat enviar', e); toast(t('No s\u2019ha pogut enviar el missatge')); }
+  loadRepteChatMessages(repte);
+}
+async function loadRepteChatMessages(repte){
+  if(!supabaseClient || !currentUser) return;
+  const log = $('#repteChatLog');
+  if(!log) return;
+  const wasBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
+  try{
+    let data;
+    if(repteChatMessages.length){
+      const newestTs = repteChatMessages[repteChatMessages.length - 1].created_at;
+      const { data: nd, error } = await supabaseClient.from('repte_messages')
+        .select('id,sender_id,message,created_at')
+        .eq('repte_id', repte.id)
+        .gt('created_at', newestTs)
+        .order('created_at', { ascending: true })
+        .limit(CHAT_PAGE_SIZE);
+      if(error) throw error;
+      data = nd || [];
+    } else {
+      const { data: nd, error } = await supabaseClient.from('repte_messages')
+        .select('id,sender_id,message,created_at')
+        .eq('repte_id', repte.id)
+        .order('created_at', { ascending: false })
+        .limit(CHAT_PAGE_SIZE);
+      if(error) throw error;
+      data = (nd || []).reverse();
+      repteChatAllLoaded = data.length < CHAT_PAGE_SIZE;
+    }
+    if(data.length){
+      repteChatMessages = repteChatMessages.concat(data);
+      renderRepteChatLog(repte);
+      if(wasBottom) log.scrollTop = log.scrollHeight;
+    }
+  }catch(e){ console.error('FERRO: repte xat llegir', e); }
+}
+async function loadOlderRepteChatMessages(repte){
+  if(repteChatLoadingOlder || repteChatAllLoaded || !repteChatMessages.length) return;
+  repteChatLoadingOlder = true;
+  const log = $('#repteChatLog');
+  const beforeTs = repteChatMessages[0].created_at;
+  try{
+    const { data, error } = await supabaseClient.from('repte_messages')
+      .select('id,sender_id,message,created_at')
+      .eq('repte_id', repte.id)
+      .lt('created_at', beforeTs)
+      .order('created_at', { ascending: false })
+      .limit(CHAT_PAGE_SIZE);
+    if(error) throw error;
+    const older = (data || []).reverse();
+    const prevHeight = log ? log.scrollHeight : 0;
+    if(older.length){
+      repteChatMessages = older.concat(repteChatMessages);
+      renderRepteChatLog(repte);
+      if(log) log.scrollTop = log.scrollHeight - prevHeight;
+    }
+    if(older.length < CHAT_PAGE_SIZE) repteChatAllLoaded = true;
+  }catch(e){ console.error('FERRO: repte xat antics', e); }
+  repteChatLoadingOlder = false;
+}
+function renderRepteChatLog(repte){
+  const log = $('#repteChatLog');
+  if(!log) return;
+  const me = currentUser ? currentUser.id : '';
+  const aliasMap = {};
+  (repte.participants||[]).forEach(p=>{ aliasMap[p.uid] = p.alias || t('Amic'); });
+  const items = [];
+  let lastDayKey = null;
+  let lastAuthor = null;
+  repteChatMessages.forEach(m=>{
+    const date = new Date(m.created_at);
+    const dayKey = chatDayKey(date);
+    if(dayKey !== lastDayKey){
+      items.push(`<div class="chat-date">${escapeHtml(chatDateLabel(date))}</div>`);
+      lastDayKey = dayKey;
+    }
+    const showName = m.sender_id !== me && m.sender_id !== lastAuthor;
+    items.push(chatMsgHTMLBase(m, me, { mostrarNom: showName, alias: aliasMap[m.sender_id] || t('Amic') }));
+    lastAuthor = m.sender_id;
+  });
+  log.innerHTML = items.join('') || `<div class="empty" style="padding:30px 14px;"><div class="display" style="font-size:18px;">${t('Sense missatges')}</div><p>${t('Envieu el primer missatge!')}</p></div>`;
+  $$('#repteChatLog .cs-open').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      try{
+        if(b.dataset.repte){ navigateToRepte(b.dataset.repte); return; }
+        const isMine = b.dataset.mine === '1';
+        if(b.dataset.exshare) openReceivedExercise(JSON.parse(b.dataset.exshare), isMine);
+        else openReceivedRoutine(JSON.parse(b.dataset.share), isMine);
+      }catch(e){ console.error('FERRO: repte xat', e); }
+    });
+  });
+}
+
+/* ---------- Convidar a mig repte ---------- */
+async function openRepteInviteModal(repte){
+  if(!supabaseClient || !currentUser) return;
+  const friends = (friendsDataCache && friendsDataCache.friends) || (await refreshFriends()).friends || [];
+  const already = new Set((repte.participants||[]).map(p=> p.uid));
+  const w = repteSetmanaActual(repte);
+  const R = Math.max(0, repte.setmanes - w);
+  const F = repte.frequencia;
+  const eligible = f => R * 6 >= F * (w + R) * 0.5;
+  const hint = $('#repteInviteHint');
+  if(hint) hint.textContent = t('Es pot unir qui pugui arribar al 50% de completament amb les setmanes restants.');
+  const list = $('#repteInviteList');
+  list.innerHTML = friends.map(f=>{
+    const inRepte = already.has(f.user_id);
+    const ok = eligible(f);
+    const disabled = inRepte || !ok;
+    return `<div class="repte-opt ${disabled?'disabled':''}" data-uid="${f.user_id}" ${!ok && !inRepte ? 'title="'+t('Ja no pot unir-se: no li queda temps per compensar')+'"' : ''}>
+      <span class="f-avatar" data-avatar-uid="${f.user_id}">👤</span>
+      <div class="f-info"><b>${escapeHtml(friendName(f))}</b></div>
+      <span class="repte-check">✓</span>
+    </div>`;
+  }).join('') || `<div class="empty" style="padding:16px 10px;">${t('Sense amics')}</div>`;
+  renderFriendAvatars();
+  $$('#repteInviteList .repte-opt').forEach(row=>{
+    row.addEventListener('click', async ()=>{
+      if(row.classList.contains('disabled')) return;
+      const uid = row.dataset.uid;
+      const friend = friends.find(f=> f.user_id === uid);
+      const participants = [...(repte.participants||[]), { uid, alias: friendName(friend), avatar: (friend && friend.avatar) || '', estat:'convidat', dataAccept: null }];
+      try{
+        await supabaseClient.from('reptes').update({ participants }).eq('id', repte.id);
+        await supabaseClient.from('chat_messages').insert({ sender_id: currentUser.id, recipient_id: uid, message: REPTE_SHARE_PREFIX + repte.id });
+        closeModal('repteInviteModal');
+        toast(t('Invitació enviada'));
+        renderRepteView();
+      }catch(e){ console.error('FERRO: convidar', e); toast(t('No s\u2019ha pogut enviar la invitació')); }
+    });
+  });
+  openModal('repteInviteModal');
+}
+
+/* ---------- Inicialització ---------- */
+function initRepte(){
+  $$('#repteModeSeg .seg-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      $$('#repteModeSeg .seg-btn').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      repteWizard.mode = b.dataset.mode;
+      const desc = $('#repteModeDesc');
+      if(desc){
+        desc.style.display = '';
+        desc.textContent = repteWizard.mode === 'fixe'
+          ? t('Tots els participants reben les rutines que tu triïs; ningú les podrà modificar fins que acabi el repte.')
+          : t('Cada participant entrena amb les seves rutines, sempre que compleixin el mínim d\u2019exercicis i sèries del repte.');
+      }
+      renderRepteWizardStep();
+    });
+  });
+  $$('#repteFreqSeg .seg-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      $$('#repteFreqSeg .seg-btn').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      repteWizard.freq = parseInt(b.dataset.freq, 10);
+      if(repteWizard.rutines.length > repteWizard.freq) repteWizard.rutines = repteWizard.rutines.slice(0, repteWizard.freq);
+      renderRepteWizardStep();
+    });
+  });
+  $$('#repteMinSeg .seg-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      $$('#repteMinSeg .seg-btn').forEach(x=> x.classList.remove('active'));
+      b.classList.add('active');
+      repteWizard.min = parseInt(b.dataset.min, 10);
+    });
+  });
+  const durMinus = $('#repteDurMinus');
+  if(durMinus) durMinus.addEventListener('click', ()=>{
+    repteWizard.durada = Math.max(1, +(repteWizard.durada - 0.5).toFixed(1));
+    renderRepteWizardStep();
+  });
+  const durPlus = $('#repteDurPlus');
+  if(durPlus) durPlus.addEventListener('click', ()=>{
+    repteWizard.durada = Math.min(3, +(repteWizard.durada + 0.5).toFixed(1));
+    renderRepteWizardStep();
+  });
+  const nomInp = $('#repteNomInput');
+  if(nomInp) nomInp.addEventListener('input', ()=>{
+    const v = (nomInp.value || '').trim();
+    const hint = $('#repteNomHint');
+    if(hint) hint.textContent = v.length < 3 ? t('Entre 3 i 12 caràcters.') : (v.length + ' / 12');
+  });
+  const tria = $('#repteTriaRutinesBtn');
+  if(tria) tria.addEventListener('click', openRepteRoutinesPicker);
+  const wizNext = $('#repteWizNext');
+  if(wizNext) wizNext.addEventListener('click', repteWizardNext);
+  const wizBack = $('#repteWizBack');
+  if(wizBack) wizBack.addEventListener('click', repteWizardBack);
+  const wizCreate = $('#repteWizCreate');
+  if(wizCreate) wizCreate.addEventListener('click', repteWizardCreate);
+  const rutinesConfirm = $('#repteRoutinesConfirm');
+  if(rutinesConfirm) rutinesConfirm.addEventListener('click', ()=>{ closeModal('repteRoutinesModal'); renderRepteWizardStep(); });
+  const backBtn = $('#repteBackBtn');
+  if(backBtn) backBtn.addEventListener('click', goBackFromRepte);
+  const viewHelp = $('#repteViewHelp');
+  if(viewHelp) viewHelp.addEventListener('click', ()=> openRepteHelp());
+  const tabs = $('#repteTabs');
+  if(tabs) tabs.addEventListener('click', async e=>{
+    const btn = e.target.closest('.seg-btn');
+    if(!btn) return;
+    if(!repteViewId) return;
+    let repte = null;
+    try{
+      if(supabaseClient && currentUser){
+        const { data } = await supabaseClient.from('reptes').select('*').eq('id', repteViewId).maybeSingle();
+        repte = data;
+      }
+    }catch(err){}
+    if(repte) renderRepteTab(btn.dataset.repteTab, repte);
+  });
+}
+initRepte();
 assignStartingIcons();
 initMedalState();
 renderEquipChips();
