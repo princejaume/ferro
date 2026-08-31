@@ -528,6 +528,13 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .predef-prev-edit .pp-change{display:flex; flex-direction:column; gap:4px; font-size:11px; color:var(--text-dim); flex:1; min-width:150px;}
 .predef-prev-edit .pp-change select{padding:7px 8px; border-radius:8px; border:1px solid var(--line); background:var(--bg); color:var(--text); font-size:13px;}
 .predef-prev-edit .pp-edit-row .stp-unit{font-size:11px; color:var(--text-dim); white-space:nowrap;}
+.predef-prev-edit .pp-act{display:flex; align-items:center; gap:6px; flex-shrink:0;}
+.predef-prev-edit .pp-act .pp-del,
+.predef-prev-edit .pp-act .pp-gif{background:none; border:none; cursor:pointer; line-height:1; border-radius:8px; padding:6px 8px;}
+.predef-prev-edit .pp-act .pp-del{color:var(--ember); font-size:15px;}
+.predef-prev-edit .pp-act .pp-del:hover{opacity:.8;}
+.predef-prev-edit .pp-act .pp-gif{background:var(--accent); color:var(--accent-text); font-size:11px; font-weight:700; padding:6px 9px;}
+.predef-prev-edit .pp-act .pp-gif:hover{opacity:.85;}
 
 /* ============ MODAL IA ============ */
 .ia-explanation{background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:10px; padding:12px 14px; font-size:13px; margin-bottom:16px;}
@@ -582,7 +589,9 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .picked-item .pi-actions .pi-expand{color:var(--text-dim); font-size:14px; padding:4px 4px; transition:transform .2s ease;}
 .picked-item .pi-actions .pi-expand:hover{color:var(--text);}
 .picked-item .pi-actions .pi-expand.open{transform:rotate(90deg);}
-.picked-item .pi-actions .pi-remove{color:var(--ember); font-size:16px; padding:2px 6px;}
+.picked-item .pi-actions .pi-gif{background:var(--accent); color:var(--accent-text); font-size:10px; font-weight:700; letter-spacing:.02em; padding:3px 5px; border-radius:5px;}
+.picked-item .pi-actions .pi-gif:hover{opacity:.85;}
+.picked-item .pi-actions .pi-remove{color:var(--ember); font-size:12px; padding:1px 4px;}
 .picked-item .pi-actions .pi-remove:hover{opacity:.8;}
 .picked-item .pi-detail{margin-top:4px; padding-top:12px; border-top:1px dashed var(--line);}
 .picked-item .pi-detail .set-table{margin-bottom:10px; width:100%; table-layout:fixed; border-collapse:collapse;}
@@ -7052,6 +7061,8 @@ function applyScreenBack(root){
   if(id === 'finishModal') return;
   if(id === 'medalDescModal') return;
   if(id === 'expositorModal') return;
+  if(id === 'predefModal') return;
+  if(id === 'predefPreviewModal') return;
   if(root.querySelector('.modal-small')) return;
   const head = root.querySelector('.drawer-head, .notif-panel-head, .modal-head');
   if(!head || head.querySelector('.screen-back')) return;
@@ -7694,9 +7705,9 @@ $$('#entrenarTabs').forEach(tabsEl=> tabsEl.addEventListener('click', e=>{
    (principal, amics, perfil, ajustos) en mòbil */
 (function(){
   if(!window.matchMedia('(max-width:720px)').matches) return;
-  const TARGETS = ['view-entrenar', 'view-perfil', 'friendsDrawer', 'settingsDrawer']
-    .map(id=> document.getElementById(id)).filter(Boolean);
-  if(!TARGETS.length) return;
+  /* S'enganxa a tot el document (i no només a les vistes) perquè el gest
+     de lliscar funcione també quan es toca el fons buit de la pantalla i
+     no només damunt d'elements visibles. */
   const NAV = ['entrenar', 'amics', 'perfil', 'ajustos'];
   let navSwipe = null;
   const onStart = e=>{
@@ -7728,12 +7739,10 @@ $$('#entrenarTabs').forEach(tabsEl=> tabsEl.addEventListener('click', e=>{
       if(btn) btn.click();
     }
   };
-  TARGETS.forEach(el=>{
-    el.addEventListener('touchstart', onStart, { passive: true });
-    el.addEventListener('touchmove', onMove, { passive: false });
-    el.addEventListener('touchend', onEnd, { passive: true });
-    el.addEventListener('touchcancel', onEnd, { passive: true });
-  });
+  document.addEventListener('touchstart', onStart, { passive: true });
+  document.addEventListener('touchmove', onMove, { passive: false });
+  document.addEventListener('touchend', onEnd, { passive: true });
+  document.addEventListener('touchcancel', onEnd, { passive: true });
 })();
 $('#exercicisBtn').addEventListener('click', ()=> navigateTo('exercicis'));
 $('#veureTotesMedallesBtn').addEventListener('click', ()=> navigateTo('medalles'));
@@ -8017,6 +8026,7 @@ function renderPickedList(){
           <div class="pi-sub">${ex ? groupLabel(ex.grupMuscular) : ''}</div>
         </div>
         <div class="pi-actions">
+          ${ex && gifFor(ex) ? `<button type="button" class="pi-gif" title="${t('Vore GIF')}" aria-label="${t('Vore GIF')}">GIF</button>` : ''}
           ${cardio ? '' : `<button type="button" class="pi-expand${expanded?' open':''}" title="${expanded ? t('Amaga detall') : t('Desplega per sèries')}" aria-label="${expanded ? t('Amaga detall') : t('Desplega per sèries')}">▸</button>`}
           <button type="button" class="pi-remove" title="${t('Elimina')}" aria-label="${t('Elimina')}">✕</button>
         </div>
@@ -8068,6 +8078,8 @@ function renderPickedList(){
         renderPickedList();
       });
     }
+    const gifBtn = row.querySelector('.pi-gif');
+    if(gifBtn) gifBtn.addEventListener('click', e=>{ e.stopPropagation(); openGifModal(ex); });
     row.querySelector('.pi-remove').addEventListener('click', async ()=>{
       const ok = await confirmDialog({
         title: t('Elimina exercici'),
@@ -8833,6 +8845,17 @@ function renderWizardStep(){
 /* Rendeix els chips d'equipament del wizard amb el mateix estil que ajustos.
    L'equipament es sincronitza amb config.equipament (el compte), de manera que
    els canvis fets ací es desen i es reflecteixen als ajustos i viceversa. */
+function wizardSyncEquipConfig(){
+  predefState.equip = config.equipament.slice();
+  config.equipAll = config.equipament.length === EQUIPMENTS.length;
+  if(config.equipMode === 'gimnas' && !config.equipAll){
+    if(!config.equipament.includes('pes corporal')) config.equipament.push('pes corporal');
+    config.equipamentManual = config.equipament.slice();
+    config.equipMode = 'casa';
+  }
+  saveConfig();
+}
+
 function renderWizardEquipChips(){
   const box = $('#wizardEquipChips');
   if(!box) return;
@@ -8854,9 +8877,7 @@ function renderWizardEquipChips(){
       }
       if(hasSub && e.target.closest('.equip-chip-arrow')){
         openEquipSubModal(eq.id, ()=>{
-          predefState.equip = config.equipament.slice();
-          config.equipAll = config.equipament.length === EQUIPMENTS.length;
-          saveConfig();
+          wizardSyncEquipConfig();
           renderWizardEquipChips();
         });
         return;
@@ -8870,9 +8891,7 @@ function renderWizardEquipChips(){
           config.equipSub[eq.id] = ['gimnas'];
         }
       }
-      predefState.equip = config.equipament.slice();
-      config.equipAll = config.equipament.length === EQUIPMENTS.length;
-      saveConfig();
+      wizardSyncEquipConfig();
       renderWizardEquipChips();
     });
     box.appendChild(b);
@@ -8937,7 +8956,10 @@ function showPredefPreview(rutines){
             <span>${t('Canvia exercici')}</span>
             <select class="pp-ex-select"></select>
           </label>
-          <button class="btn btn-sm btn-danger pp-del">${t('Elimina')}</button>
+          <div class="pp-act">
+            ${ex && gifFor(ex) ? `<button type="button" class="pp-gif" title="${t('Vore GIF')}" aria-label="${t('Vore GIF')}">GIF</button>` : ''}
+            <button type="button" class="pp-del" title="${t('Elimina')}" aria-label="${t('Elimina')}">🗑️</button>
+          </div>
         </div>`;
       wrap.appendChild(row);
       wrap.appendChild(panel);
@@ -8985,6 +9007,11 @@ function showPredefPreview(rutines){
         row.querySelector('[data-meta]').textContent = meta;
         row.querySelector('.pp-name').textContent = en ? en.nom : t('Exercici eliminat');
         row.classList.toggle('missing', !en);
+        const gifBtn = panel.querySelector('.pp-gif');
+        if(gifBtn){
+          gifBtn.dataset.ex = e.exerciciId;
+          gifBtn.style.display = en && gifFor(en) ? '' : 'none';
+        }
         editRow.innerHTML = c
           ? `${stepperHTML(e.durada||e.repeticions||DEFAULT_CARDIO_DURADA, 'durada', 5, 1)}<span class="stp-unit">min</span>`
           : `${stepperHTML(e.series, 'series', 1, 1)}<span class="pi-sub">×</span>${stepperHTML(e.repeticions, 'repeticions', 1, 1)}${stepperHTML(e.pes || 0, 'pes', config.pesStep||0.5, 0)}<span class="stp-unit">kg</span>${stepperHTML(e.descans, 'descans', 5, 0)}<span class="stp-unit">s</span>`;
@@ -9011,6 +9038,13 @@ function showPredefPreview(rutines){
       panel.querySelector('.pp-del').addEventListener('click', ()=>{
         r.exercicis.splice(i,1);
         showPredefPreview(rutines);
+      });
+      // Vore el GIF de l'exercici
+      const gifBtn = panel.querySelector('.pp-gif');
+      if(gifBtn) gifBtn.addEventListener('click', e=>{
+        e.stopPropagation();
+        const en = exById(gifBtn.dataset.ex || e.exerciciId);
+        if(en && gifFor(en)) openGifModal(en);
       });
       // Obrir / tancar el panell d'edició
       row.addEventListener('click', ()=>{
@@ -13380,6 +13414,20 @@ window.addEventListener('popstate', (event)=>{
     }
     if(top.id === 'confirmModal' && confirmFinishRef){
       confirmFinishRef(false);
+    }else if(top.id === 'predefModal'){
+      /* A MESURA: amb el gest de tornar enrere del mòbil es navega entre
+         les pàgines del formulari; a la primera pàgina es tanca el modal. */
+      if(predefState.step > 1){
+        predefState.step--;
+        renderWizardProgress();
+        renderWizardStep();
+      }else{
+        closeModal(top.id);
+      }
+    }else if(top.id === 'predefPreviewModal'){
+      /* A MESURA: des de la llista de la rutina generada es torna al formulari */
+      closeModal('predefPreviewModal');
+      openModal('predefModal');
     }else{
       closeModal(top.id);
     }
