@@ -2368,6 +2368,9 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   /* en mòbil, la fila del logo FERRO només es mostra a la pantalla principal;
      a la resta de pantalles (exercicis, medalles, perfil, amics, ajustos...) s'amaga */
   body.header-mobile-hidden header.top{ transform:translateY(-100%) !important; }
+  /* en treure el logo de la fila (sticky), queda una franja buida a dalt:
+     s'elimina l'espai que ocupa el header perquè el contingut puge fins dalt */
+  body.header-mobile-hidden main{ margin-top:calc(-1 * var(--header-h, 62px)); }
   body.header-mobile-hidden header.top ~ .drawer{ top:0; }
 
   /* xat: el contenidor omple tota l'alçada perquè la barra d'escriure quedi fixada a baix */
@@ -3293,9 +3296,9 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
       </div>
     </div>
 
-    <!-- ===== SECCIÓ: NOTIFICACIONS ===== -->
+    <!-- ===== SECCIÓ: NOTIFICACIONS I SO ===== -->
     <div class="settings-section">
-      <div class="ss-head"><span class="ss-icon">🔔</span> <span data-i18n="Notificacions">Notificacions</span></div>
+      <div class="ss-head"><span class="ss-icon">🔔</span> <span data-i18n="Notificacions i so">Notificacions i so</span></div>
       <div class="settings-body">
         <div class="field switch-field" id="notifMainField">
           <div style="flex:1; min-width:0;">
@@ -3351,6 +3354,28 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
               <span class="slider"></span>
             </label>
           </div>
+          <div class="field switch-field" id="entrenamentGuiatField">
+            <div style="flex:1; min-width:0;">
+              <label data-i18n="Sons">Sons</label>
+              <p class="hint" data-i18n="Reprodueix sons per a guiar-te durant l'entrenament.">Reprodueix sons per a guiar-te durant l'entrenament.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="entrenamentGuiatToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div id="guiatOptions" style="display:none; padding-left:16px; border-left:2px solid var(--accent); margin-left:12px;">
+            <div class="field switch-field">
+              <div style="flex:1; min-width:0;">
+                <label data-i18n="So fi de descans">So fi de descans</label>
+                <p class="hint" data-i18n="Reprodueix un so quan acabe el temps de descans.">Reprodueix un so quan acabe el temps de descans.</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="soFiDescansToggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -3398,29 +3423,6 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
         </div>
         <div class="field" id="equipCasaField" style="display:none;">
           <div class="equip-chips" id="equipChips" style="margin-top:8px; display:none;"></div>
-        </div>
-        <div class="field switch-field" id="entrenamentGuiatField">
-          <div style="flex:1; min-width:0;">
-            <label data-i18n="Entrenament guiat">Entrenament guiat</label>
-            <p class="hint" data-i18n="Reprodueix sons per a guiar-te durant l'entrenament.">Reprodueix sons per a guiar-te durant l'entrenament.</p>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="entrenamentGuiatToggle">
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div id="guiatOptions" style="display:none; padding-left:16px; border-left:2px solid var(--accent); margin-left:12px;">
-          <div class="field switch-field">
-            <div style="flex:1; min-width:0;">
-              <label data-i18n="So fi de descans">So fi de descans</label>
-              <p class="hint" data-i18n="Reprodueix un so quan acabe el temps de descans.">Reprodueix un so quan acabe el temps de descans.</p>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="soFiDescansToggle">
-              <span class="slider"></span>
-            </label>
-          </div>
-
         </div>
       </div>
     </div>
@@ -4259,6 +4261,7 @@ const I18N = {
     "Clar":"Claro",
     "Fosc":"Oscuro",
     "Notificacions":"Notificaciones",
+    "Notificacions i so":"Notificaciones y sonido",
     "Activa-les per a rebre les notificacions individuals en una barra a la part de baix.":"Actívalas para recibir las notificaciones individuales en una barra en la parte de abajo.",
     "Recordatoris d'entrenament":"Recordatorios de entrenamiento",
     "Et permet configurar una hora d'entrenament a cada rutina.":"Te permite configurar una hora de entrenamiento en cada rutina.",
@@ -4278,7 +4281,7 @@ const I18N = {
     "Tria el teu equipament per fer millors rutines":"Elige tu equipamiento para hacer mejores rutinas",
     "Casa":"Casa",
     "Selecciona l'equipament disponible:":"Selecciona el equipamiento disponible:",
-    "Entrenament guiat":"Entrenamiento guiado",
+    "Sons":"Sonidos",
     "Reprodueix sons per a guiar-te durant l'entrenament.":"Reproduce sonidos para guiarte durante el entrenamiento.",
     "So fi de descans":"Sonido fin de descanso",
     "Reprodueix un so quan acabe el temps de descans.":"Reproduce un sonido cuando acabe el tiempo de descanso.",
@@ -7680,40 +7683,50 @@ $$('#entrenarTabs').forEach(tabsEl=> tabsEl.addEventListener('click', e=>{
   if(!btn) return;
   showEntrenarTab(btn.dataset.entrenarTab);
 }));
-/* Gest: lliscar entre les pestanyes Entrenar / Rutines / Seguiment en mòbil */
+/* Gest: lliscar per moure's entre les seccions de la barra de navegació inferior
+   (principal, amics, perfil, ajustos) en mòbil */
 (function(){
   if(!window.matchMedia('(max-width:720px)').matches) return;
-  const view = $('#view-entrenar');
-  if(!view) return;
-  const TABS = ['entrenar', 'rutines', 'seguiment'];
-  let tabSwipe = null;
+  const TARGETS = ['view-entrenar', 'view-perfil', 'friendsDrawer', 'settingsDrawer']
+    .map(id=> document.getElementById(id)).filter(Boolean);
+  if(!TARGETS.length) return;
+  const NAV = ['entrenar', 'amics', 'perfil', 'ajustos'];
+  let navSwipe = null;
   const onStart = e=>{
     if(activeSession || isRestActive()) return;
+    if(document.querySelector('.modal-overlay.open')) return;
+    if(e.target.closest('.rewc-track, .drawer.chat-open')) return;
     const t = e.touches[0];
-    tabSwipe = { x: t.clientX, y: t.clientY };
+    navSwipe = { x: t.clientX, y: t.clientY };
   };
   const onMove = e=>{
-    if(!tabSwipe) return;
-    const dx = e.touches[0].clientX - tabSwipe.x;
-    const dy = e.touches[0].clientY - tabSwipe.y;
+    if(!navSwipe) return;
+    const dx = e.touches[0].clientX - navSwipe.x;
+    const dy = e.touches[0].clientY - navSwipe.y;
     if(Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 12 && e.cancelable) e.preventDefault();
   };
   const onEnd = e=>{
-    if(!tabSwipe) return;
-    const dx = e.changedTouches[0].clientX - tabSwipe.x;
-    const dy = e.changedTouches[0].clientY - tabSwipe.y;
-    tabSwipe = null;
+    if(!navSwipe) return;
+    const dx = e.changedTouches[0].clientX - navSwipe.x;
+    const dy = e.changedTouches[0].clientY - navSwipe.y;
+    navSwipe = null;
     if(Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)){
-      const idx = TABS.indexOf(entrenarTab);
+      const active = $('#bottomNav .bn-btn.active');
+      if(!active) return;
+      const idx = NAV.indexOf(active.dataset.bn);
       if(idx === -1) return;
-      if(dx < 0 && idx < TABS.length - 1) setEntrenarTab(TABS[idx + 1], 1);
-      else if(dx > 0 && idx > 0) setEntrenarTab(TABS[idx - 1], -1);
+      const next = dx < 0 ? NAV[idx + 1] : NAV[idx - 1];
+      if(!next) return;
+      const btn = $('#bottomNav .bn-btn[data-bn="' + next + '"]');
+      if(btn) btn.click();
     }
   };
-  view.addEventListener('touchstart', onStart, { passive: true });
-  view.addEventListener('touchmove', onMove, { passive: false });
-  view.addEventListener('touchend', onEnd, { passive: true });
-  view.addEventListener('touchcancel', onEnd, { passive: true });
+  TARGETS.forEach(el=>{
+    el.addEventListener('touchstart', onStart, { passive: true });
+    el.addEventListener('touchmove', onMove, { passive: false });
+    el.addEventListener('touchend', onEnd, { passive: true });
+    el.addEventListener('touchcancel', onEnd, { passive: true });
+  });
 })();
 $('#exercicisBtn').addEventListener('click', ()=> navigateTo('exercicis'));
 $('#veureTotesMedallesBtn').addEventListener('click', ()=> navigateTo('medalles'));
@@ -11452,11 +11465,9 @@ $('#notifOverlay').addEventListener('click', closeNotifPanel);
 $('#notifPanelBody').addEventListener('click', e=>{
   const pendingBtn = e.target.closest('[data-pending]');
   if(pendingBtn){
-    const pend = pendingRewards();
-    if(pend.length){
+    if(pendingRewards().length){
       closeNotifPanel();
       openPerfil();
-      setTimeout(()=> claimRewardById(pend[0].id), 80);
     }
     return;
   }
