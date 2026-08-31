@@ -850,6 +850,9 @@ main{max-width:980px; margin:0 auto; padding:24px 20px 40px 20px;}
 .ob-install-hint{font-size:11.5px; color:var(--text-dim); text-align:center; line-height:1.4;}
 .ob-step3-hint{font-size:13.5px; color:var(--text-dim); line-height:1.5; margin-bottom:20px;}
 .ob-step3-actions{display:flex; flex-direction:column; gap:10px;}
+.ob-save-btn{margin-top:14px;}
+.ob-naix-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-top:4px;}
+.ob-naix-field label{display:block; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-dim); margin-bottom:6px; text-align:center;}
 #obNextBtn,#onboardingSaveBtn{flex:1;}
 .avatar-edit-preview{display:flex; justify-content:center; margin-bottom:14px;}
 .avatar-edit-preview .ob-avatar-main{width:72px; height:72px; border-radius:16px; cursor:default;}
@@ -2270,6 +2273,7 @@ button.f-info:hover b{color:var(--accent);}
 .bottom-nav{display:none;}
 
 /* ============ SESSION FULLSCREEN EN MÒBIL ============ */
+body.session-active{ overflow-x:hidden; }
 body.session-active .bottom-nav{ display:none !important; }
 body.session-active .entrenar-tabs-head{ display:none !important; }
 /* En el formulari inicial (registre) en mòbil s'amaga la barra inferior;
@@ -2361,6 +2365,11 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   /* quan el header s'amaga, el drawer puja fins a dalt i omple tota la pantalla */
   header.top.header-hidden ~ .drawer{ top:0; }
 
+  /* en mòbil, la fila del logo FERRO només es mostra a la pantalla principal;
+     a la resta de pantalles (exercicis, medalles, perfil, amics, ajustos...) s'amaga */
+  body.header-mobile-hidden header.top{ transform:translateY(-100%) !important; }
+  body.header-mobile-hidden header.top ~ .drawer{ top:0; }
+
   /* xat: el contenidor omple tota l'alçada perquè la barra d'escriure quedi fixada a baix */
   .drawer.chat-open{ display:flex; flex-direction:column; overflow:hidden; }
   .drawer.chat-open .drawer-body{ flex:1; min-height:0; overflow:hidden; }
@@ -2386,7 +2395,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 
   /* Finestres de diàleg (verificació) conserven fons fosc i espai */
   #confirmModal.modal-overlay,
-  #medalDescModal.modal-overlay{ padding:24px 16px; align-items:center; }
+  #medalDescModal.modal-overlay,
+  #obNaixModal.modal-overlay{ padding:24px 16px; align-items:center; }
 
   /* En el selector de l'expositor en mòbil no es mostra el peu (botó Cancel·la) */
   #expositorModal .expositor-picker-foot{ display:none; }
@@ -2832,8 +2842,11 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
           <input type="text" id="obAlias" placeholder="Ex. Ferro" data-i18n="Ex. Ferro">
         </div>
         <div class="field f-naix-col">
-          <label for="obNaix" data-i18n="Data de naixement">Data de naixement</label>
-          <input type="date" id="obNaix" data-i18n="dd/mm/aaaa">
+          <label for="obNaixBtn" data-i18n="Data de naixement">Data de naixement</label>
+          <button type="button" class="time-pick-field" id="obNaixBtn" aria-haspopup="dialog" aria-expanded="false" title="Tria la data de naixement" aria-label="Tria la data de naixement" data-i18n-title="Tria la data de naixement" data-i18n-aria="Tria la data de naixement">
+            <span class="tpf-value" id="obNaixVal">--/--/----</span>
+            <span class="tpf-caret" aria-hidden="true">▾</span>
+          </button>
         </div>
         <div class="field f-sexe-col">
           <label data-i18n="Sexe">Sexe</label>
@@ -2882,6 +2895,7 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
         <button type="button" class="btn" id="obInstallBtn" data-i18n="Instal·la l'app">Instal·la l'app</button>
         <span class="ob-install-hint" data-i18n="Recomanable per a utilitzar el programa a pantalla completa.">Recomanable per a utilitzar el programa a pantalla completa.</span>
       </div>
+      <button type="button" class="btn btn-primary btn-block ob-save-btn" id="obSaveInsideBtn" style="display:none;" data-i18n="Desar">Desar</button>
     </div>
     <div class="ob-step" id="obStep3" style="display:none;">
       <div class="ob-step-title" data-i18n="I ara què?">I ara què?</div>
@@ -2894,6 +2908,34 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
       <button class="btn" id="obPrevBtn" style="display:none;" data-i18n="Enrere">Enrere</button>
       <button class="btn btn-primary" id="obNextBtn" data-i18n="Continua">Continua</button>
       <button class="btn btn-primary" id="onboardingSaveBtn" style="display:none;" data-i18n="Desar">Desar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: DATA DE NAIXEMENT (selector del programa) ===================== -->
+<div class="modal-overlay" id="obNaixModal">
+  <div class="modal modal-small">
+    <div class="modal-head">
+      <h3 data-i18n="Data de naixement">Data de naixement</h3>
+      <button class="icon-btn" data-close="obNaixModal" title="Tanca" aria-label="Tanca" data-i18n-title="Tanca" data-i18n-aria="Tanca">✕</button>
+    </div>
+    <div class="ob-naix-grid">
+      <div class="ob-naix-field">
+        <label data-i18n="Dia">Dia</label>
+        <div class="stepper ob-stepper" id="obNaixDay"></div>
+      </div>
+      <div class="ob-naix-field">
+        <label data-i18n="Mes">Mes</label>
+        <div class="stepper ob-stepper" id="obNaixMonth"></div>
+      </div>
+      <div class="ob-naix-field">
+        <label data-i18n="Any">Any</label>
+        <div class="stepper ob-stepper" id="obNaixYear"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="obNaixModal" data-i18n="Cancel·la">Cancel·la</button>
+      <button class="btn btn-primary" id="obNaixOk" data-i18n="D'acord">D'acord</button>
     </div>
   </div>
 </div>
@@ -3947,6 +3989,7 @@ function updateSessionFullscreen(){
     document.body.classList.remove('session-active');
     document.body.classList.remove('session-last-ex');
   }
+  if(typeof syncMobileHeader === 'function') syncMobileHeader();
 }
 
 let state = {
@@ -5009,6 +5052,10 @@ const I18N = {
     "Dona":"Mujer",
     "Altre":"Otro",
     "Data de naixement":"Fecha de nacimiento",
+    "Tria la data de naixement":"Elige la fecha de nacimiento",
+    "Dia":"Día",
+    "Mes":"Mes",
+    "Any":"Año",
     "Desa les meues dades":"Guarda mis datos",
     "Desar":"Guardar",
     "Posa un alias":"Pon un alias",
@@ -5483,8 +5530,12 @@ function buildCloudPayload(){
 let cloudSyncTimer = null;
 let _cloudSyncRetryCount = 0;
 const _CLOUD_SYNC_MAX_RETRIES = 5;
+/* Fins que no s'hagi carregat el núvol inicialment (loadCloudData), no es puja res:
+   evita que un dispositiu amb dades locals antigues sobreescrigui el núvol. */
+let _cloudReady = false;
 function scheduleCloudSync(){
   if(!supabaseClient || !currentUser) return;
+  if(!_cloudReady) return;
   clearTimeout(cloudSyncTimer);
   cloudSyncTimer = setTimeout(syncCloud, 800);
 }
@@ -5603,12 +5654,13 @@ async function loadCloudData(){
         localStorage.removeItem(CLOUD_RESET_KEY);
       }catch(e){ console.error('FERRO: error reiniciant el núvol', e); }
     }
+    _cloudReady = true;
     maybeShowOnboarding();
     return;
   }
   try{
     const { data, error } = await supabaseClient.from('user_data').select('data').eq('user_id', currentUser.id).maybeSingle();
-    if(error){ console.error('FERRO: error llegint del núvol', error); return; }
+    if(error){ console.error('FERRO: error llegint del núvol', error); _cloudReady = true; return; }
     if(data && data.data && Object.keys(data.data).length){
       applyCloudData(data.data);
     }else{
@@ -5617,6 +5669,7 @@ async function loadCloudData(){
       toast(t('Sessió iniciada · dades pujades al núvol'));
     }
   }catch(e){ console.error('FERRO: error llegint del núvol', e); }
+  _cloudReady = true;
   assignStartingIcons();
   maybeShowOnboarding();
 }
@@ -6479,6 +6532,68 @@ function syncProfileAge(){
   }
 }
 
+/* ---------- DATA DE NAIXEMENT: selector propi del programa ---------- */
+function daysInMonth(m, y){ return new Date(y, m, 0).getDate(); }
+let _obNaix = { d: 15, m: 1, y: 2000 };
+function renderObNaixDisplay(){
+  const val = $('#obNaixVal');
+  if(val) val.textContent = obData.dataNaix || '--/--/----';
+}
+function rebuildObEdat(){
+  const a = obData.dataNaix ? ageFromBirth(obData.dataNaix) : 0;
+  if(a > 0) obData.edat = a;
+  buildObStepper('#obEdatStepper', obData.edat, 1, 13, v=> obData.edat = v, 99, true);
+}
+function openObNaix(){
+  if(!$('#obNaixModal')) return;
+  const cur = parseBirth(obData.dataNaix);
+  const now = new Date();
+  const yMax = now.getFullYear() - 13;
+  const yMin = now.getFullYear() - 100;
+  let d = cur ? cur.getDate() : 15;
+  let m = cur ? cur.getMonth()+1 : 1;
+  let y = cur ? cur.getFullYear() : 2000;
+  if(y < yMin) y = yMin;
+  if(y > yMax) y = yMax;
+  _obNaix = { d, m, y };
+  const bindDay = ()=>{
+    buildObStepper('#obNaixDay', _obNaix.d, 1, 1, v=> _obNaix.d = parseInt(v)||1, daysInMonth(_obNaix.m, _obNaix.y));
+  };
+  buildObStepper('#obNaixMonth', m, 1, 1, v=>{
+    _obNaix.m = parseInt(v)||1;
+    if(_obNaix.d > daysInMonth(_obNaix.m, _obNaix.y)) _obNaix.d = daysInMonth(_obNaix.m, _obNaix.y);
+    bindDay();
+  }, 12);
+  buildObStepper('#obNaixYear', y, 1, yMin, v=>{
+    _obNaix.y = parseInt(v)||yMin;
+    if(_obNaix.d > daysInMonth(_obNaix.m, _obNaix.y)) _obNaix.d = daysInMonth(_obNaix.m, _obNaix.y);
+    bindDay();
+  }, yMax);
+  bindDay();
+  openModal('obNaixModal');
+}
+$('#obNaixOk').addEventListener('click', ()=>{
+  let d = _obNaix.d, m = _obNaix.m, y = _obNaix.y;
+  const now = new Date();
+  const yMax = now.getFullYear() - 13;
+  const yMin = now.getFullYear() - 100;
+  if(y < yMin) y = yMin;
+  if(y > yMax) y = yMax;
+  if(d < 1) d = 1;
+  if(m < 1) m = 1;
+  if(m > 12) m = 12;
+  const dim = daysInMonth(m, y);
+  if(d > dim) d = dim;
+  const dd = String(d).padStart(2,'0');
+  const mm = String(m).padStart(2,'0');
+  obData.dataNaix = dd + '/' + mm + '/' + y;
+  const a = ageFromBirth(obData.dataNaix);
+  if(a > 0) obData.edat = a;
+  renderObNaixDisplay();
+  rebuildObEdat();
+  closeModal('obNaixModal');
+});
+
 
 function openOnboarding(){
   if(!currentUser) return;
@@ -6488,7 +6603,9 @@ function openOnboarding(){
   const closeBtn = $('#onboardingCloseBtn');
   if(closeBtn) closeBtn.style.display = obMandatoryOpen ? 'none' : '';
   const dot3 = $('#obDot3');
-  if(dot3) dot3.style.display = '';
+  if(dot3) dot3.style.display = obFirstTimeFlow ? '' : 'none';
+  const saveInside = $('#obSaveInsideBtn');
+  if(saveInside) saveInside.style.display = obFirstTimeFlow ? 'none' : '';
   if(config.profile) obData = Object.assign({}, config.profile);
   if(!obData.dies) obData.dies = parseInt(obData.diesSetmana)||0;
   const av = parseObAvatar(obData.avatar);
@@ -6507,18 +6624,13 @@ function openOnboarding(){
   }
   if(!obData.edat) obData.edat = 25;
   buildObStepper('#obEdatStepper', obData.edat, 1, 13, v=> obData.edat = v, 99, true);
-  const naixInput = $('#obNaix');
-  if(naixInput){
-    naixInput.max = new Date().toISOString().slice(0,10);
-    naixInput.value = ddmmyyyyToIso(obData.dataNaix || '') || '';
-    naixInput.addEventListener('input', ()=>{
-      obData.dataNaix = isoToDdmmyyyy(naixInput.value) || '';
-      const edat = ageFromBirth(obData.dataNaix);
-      if(edat > 0 && edat !== obData.edat){
-        obData.edat = edat;
-        buildObStepper('#obEdatStepper', obData.edat, 1, 13, v=> obData.edat = v, 99, true);
-      }
-    });
+  const naixBtn = $('#obNaixBtn');
+  if(naixBtn){
+    renderObNaixDisplay();
+    if(!naixBtn._obNaixBound){
+      naixBtn._obNaixBound = true;
+      naixBtn.addEventListener('click', ()=> openObNaix());
+    }
   }
   renderObAvatarBox($('#obAvatarMain'));
   if(!obData.dies) obData.dies = 3;
@@ -6583,11 +6695,21 @@ function obGoTo(step, dir){
   const prev = $('#obPrevBtn');
   if(prev) prev.style.display = step === 2 ? '' : 'none';
   const next = $('#obNextBtn');
-  if(next) next.style.display = step <= 2 ? '' : 'none';
+  const inUpdate = !obFirstTimeFlow;
+  if(next) next.style.display = (step <= 2 && !(step === 2 && inUpdate)) ? '' : 'none';
   const save = $('#onboardingSaveBtn');
-  if(save) save.style.display = step === 3 ? '' : 'none';
+  if(save) save.style.display = (step === 3 && obFirstTimeFlow) ? '' : 'none';
+  const saveInside = $('#obSaveInsideBtn');
+  if(saveInside) saveInside.style.display = (step === 2 && inUpdate) ? '' : 'none';
   const dots = $$('#onboardingModal .ob-dot');
   dots.forEach((d,i)=> d.classList.toggle('on', i < step));
+  /* El peu de botons s'anima juntament amb el canvi de pantalla */
+  const foot = $('#obFoot');
+  if(foot && dir){
+    foot.style.animation = 'none';
+    void foot.offsetWidth;
+    foot.style.animation = dir > 0 ? 'tabInRight .32s ease' : 'tabInLeft .32s ease';
+  }
 }
 function obStepNext(){
   if(obCurrentStep === 1){
@@ -6596,12 +6718,16 @@ function obStepNext(){
     if(alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
     if(alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
     if(!obData.sexe){ toast(t('Tria el sexe')); return; }
-    const naix = ($('#obNaix')?.value || '').trim();
-    if(!naix){ toast(t('Introdueix la data de naixement')); return; }
-    if(!parseBirth(isoToDdmmyyyy(naix))){ toast(t('Data de naixement no vàlida')); return; }
+    if(!obData.dataNaix){ toast(t('Introdueix la data de naixement')); return; }
+    if(!parseBirth(obData.dataNaix)){ toast(t('Data de naixement no vàlida')); return; }
     obGoTo(2, 1);
-  }else{
-    obGoTo(3, 1);
+  }else if(obCurrentStep === 2){
+    if(!obData.frequencia){ toast(t('Tria el teu nivell')); return; }
+    if(!obFirstTimeFlow){
+      saveOnboardingProfile().then(ok=>{ if(ok) closeOnboarding(); });
+    }else{
+      obGoTo(3, 1);
+    }
   }
 }
 $('#obNextBtn').addEventListener('click', obStepNext);
@@ -6721,8 +6847,7 @@ async function saveOnboardingProfile(){
   obData.alias = $('#obAlias').value.trim();
   obData.avatar = obColor + '|' + obSymbol + (obFrame ? '|' + obFrame : '');
   obData.equipMode = obMode || 'gimnas';
-  const naixInput = $('#obNaix');
-  if(naixInput) obData.dataNaix = naixInput.value ? (isoToDdmmyyyy(naixInput.value) || '') : '';
+  obData.dataNaix = obData.dataNaix || '';
   if(!obData.alias){ toast(t('Posa un alias')); return false; }
   if(obData.alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return false; }
   if(obData.alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return false; }
@@ -6746,6 +6871,7 @@ async function saveOnboardingProfile(){
   if(typeof renderEquipChips === 'function') renderEquipChips();
   if(typeof updateEquipModeUI === 'function') updateEquipModeUI();
   saveConfig();
+  syncCloud();
   renderHeaderAvatar();
   if(supabaseClient && currentUser){
     try{
@@ -6765,6 +6891,9 @@ async function saveOnboardingProfile(){
   return true;
 }
 $('#onboardingSaveBtn').addEventListener('click', async ()=>{
+  if(await saveOnboardingProfile()) closeOnboarding();
+});
+$('#obSaveInsideBtn').addEventListener('click', async ()=>{
   if(await saveOnboardingProfile()) closeOnboarding();
 });
 $('#obCreateRoutineBtn').addEventListener('click', async ()=>{
@@ -6876,6 +7005,20 @@ if(resetAllBtn){
 /* ---------- PANTALLES COMPLETES EN MÒBIL (sense aparença de finestra) ---------- */
 const MOBILE_MQ = window.matchMedia('(max-width:720px)');
 function isMobile(){ return MOBILE_MQ.matches; }
+/* En mòbil la fila del logo FERRO només es mostra a la pantalla principal
+   (view-entrenar sense cap finestra/drawer oberta ni entrenament actiu). */
+function syncMobileHeader(){
+  if(!isMobile()){ document.body.classList.remove('header-mobile-hidden'); return; }
+  const mainView = $('#view-entrenar') && $('#view-entrenar').classList.contains('active');
+  const overlayOpen = !!document.querySelector('.drawer.open, .modal-overlay.open, .notif-panel.open');
+  const hidden = !mainView || overlayOpen || !!activeSession;
+  if(hidden){
+    document.body.classList.add('header-mobile-hidden');
+  }else{
+    document.body.classList.remove('header-mobile-hidden');
+    headerForceShow();
+  }
+}
 let confirmFinishRef = null;
 function pushScreenState(key){
   try{ history.pushState({ screen: key }, ''); }catch(e){}
@@ -6917,6 +7060,7 @@ function applyScreenBack(root){
 }
 if(MOBILE_MQ.addEventListener){
   MOBILE_MQ.addEventListener('change', ()=>{
+    syncMobileHeader();
     if(MOBILE_MQ.matches){
       $$('.modal-overlay.open, .drawer.open, .notif-panel.open').forEach(el=> applyScreenBack(el));
     }
@@ -6931,6 +7075,7 @@ function openModal(id){
     try{ history.pushState({ modalOpen:true }, ''); }catch(e){}
     applyScreenBack(el);
   }
+  syncMobileHeader();
 }
 function closeModal(id){
   const el = $('#'+id);
@@ -6939,6 +7084,7 @@ function closeModal(id){
     document.body.classList.remove('modal-open-mobile');
     document.body.classList.remove('ob-first-time');
   }
+  syncMobileHeader();
 }
 $$('[data-close]').forEach(btn=>btn.addEventListener('click', ()=>closeModal(btn.dataset.close)));
 $$('.modal-overlay').forEach(ov=>ov.addEventListener('click', e=>{ if(e.target===ov){ if(ov.id === 'onboardingModal' && obMandatoryOpen) return; closeModal(ov.id); } }));
@@ -6983,11 +7129,13 @@ function openSettingsDrawer(){
   pushScreenState('settings');
   applyScreenBack($('#settingsDrawer'));
   updateNotifOptions();
+  syncMobileHeader();
 }
 function closeSettingsDrawer(){
   $('#settingsDrawer').classList.remove('open');
   $('#settingsOverlay').classList.remove('open');
   updateBottomNav();
+  syncMobileHeader();
 }
 $('#settingsCloseBtn').addEventListener('click', closeSettingsDrawer);
 $('#settingsOverlay').addEventListener('click', closeSettingsDrawer);
@@ -7448,6 +7596,7 @@ function showEntrenarTab(tab){
   $('#view-entrenar').classList.add('active');
   setEntrenarTab(tab);
   updateBottomNav();
+  syncMobileHeader();
 }
 function setEntrenarTab(tab, dir){
   entrenarTab = tab;
@@ -7514,6 +7663,7 @@ function renderView(view){
     }
   }
   updateBottomNav();
+  syncMobileHeader();
 }
 const fullViewStack = [];
 function navigateTo(view){
@@ -7596,6 +7746,7 @@ $$('#bottomNav .bn-btn').forEach(btn=>{
   });
 });
 updateBottomNav();
+syncMobileHeader();
 
 /* =========================================================================
    RUTINES
@@ -9522,24 +9673,49 @@ function renderSession(){
       saveSessionChangesToRoutine();
     });
   }
-  $('#prevExBtn').addEventListener('click', ()=>{
-    if(isRestActive()) return;
+  const SWIPE_OUT_MS = 200;
+  const SWIPE_IN_MS = 280;
+  /* Canvia d'exercici com les històries d'Instagram: la targeta actual llisca
+     del tot cap al costat (sense fundido) i la nova entra des del costat oposat,
+     seguint la direcció del lliscament. swipeBusy evita que les lliscades
+     ràpides solapen transicions i provoquen el salt visual de tota la pantalla. */
+  function slideToExercise(dir){
+    if(swipeBusy) return;
+    swipeBusy = true;
     stopCardioTimer();
     cardioRemaining = 0;
-    activeSession.currentIndex = Math.max(0, activeSession.currentIndex-1);
-    renderSession();
-    saveActiveSession();
+    const card = document.querySelector('.current-exercise');
+    if(card){
+      card.style.transition = `transform ${SWIPE_OUT_MS}ms cubic-bezier(.22,.61,.36,1)`;
+      card.style.transform = `translateX(${dir * -108}%)`;
+    }
+    setTimeout(()=>{
+      if(!activeSession){ swipeBusy = false; return; }
+      activeSession.currentIndex += dir;
+      renderSession();
+      saveActiveSession();
+      const newCard = document.querySelector('.current-exercise');
+      if(newCard){
+        newCard.style.transition = 'none';
+        newCard.style.transform = `translateX(${dir * 108}%)`;
+        void newCard.offsetWidth;
+        newCard.style.transition = `transform ${SWIPE_IN_MS}ms cubic-bezier(.22,.61,.36,1)`;
+        newCard.style.transform = 'translateX(0)';
+      }
+      setTimeout(()=>{ swipeBusy = false; }, SWIPE_IN_MS);
+    }, SWIPE_OUT_MS);
+  }
+  $('#prevExBtn').addEventListener('click', ()=>{
+    if(isRestActive()) return;
+    if(activeSession.currentIndex === 0) return;
+    slideToExercise(-1);
   });
   $('#nextExBtn').addEventListener('click', ()=>{
     if(isRestActive()) return;
-    stopCardioTimer();
-    cardioRemaining = 0;
     if(activeSession.currentIndex === activeSession.exercicis.length-1){
       openFinishModal();
     } else {
-      activeSession.currentIndex++;
-      renderSession();
-      saveActiveSession();
+      slideToExercise(1);
     }
   });
 
@@ -9550,39 +9726,6 @@ function renderSession(){
     let touchStartY = 0;
     let touchDragging = false;
     let touchIsHorizontal = null;
-    const SWIPE_OUT_MS = 200;
-    const SWIPE_IN_MS = 300;
-    /* Canvia d'exercici amb una animació suau: la targeta actual se'n va cap al
-       costat (lleugera translació + esvaeix) i la nova entra des del costat oposat.
-       swipeBusy evita que les lliscades ràpides solapen transicions i provoquen
-       el salt visual de tota la pantalla. */
-    function slideToExercise(dir){
-      if(swipeBusy) return;
-      swipeBusy = true;
-      const card = document.querySelector('.current-exercise');
-      if(card){
-        card.style.transition = `transform ${SWIPE_OUT_MS}ms ease, opacity ${SWIPE_OUT_MS}ms ease`;
-        card.style.transform = `translateX(${dir * -42}px) scale(.985)`;
-        card.style.opacity = '0';
-      }
-      setTimeout(()=>{
-        if(!activeSession){ swipeBusy = false; return; }
-        activeSession.currentIndex += dir;
-        renderSession();
-        saveActiveSession();
-        const newCard = document.querySelector('.current-exercise');
-        if(newCard){
-          newCard.style.transition = 'none';
-          newCard.style.opacity = '0';
-          newCard.style.transform = `translateX(${dir * 26}px)`;
-          void newCard.offsetWidth;
-          newCard.style.transition = `transform ${SWIPE_IN_MS}ms cubic-bezier(.22,.61,.36,1), opacity ${SWIPE_IN_MS}ms ease`;
-          newCard.style.transform = '';
-          newCard.style.opacity = '1';
-        }
-        setTimeout(()=>{ swipeBusy = false; }, SWIPE_IN_MS);
-      }, SWIPE_OUT_MS);
-    }
     exerciseCard.addEventListener('touchstart', (e)=>{
       if(swipeBusy) return;
       touchStartX = e.changedTouches[0].screenX;
@@ -9839,9 +9982,8 @@ function transitionToNextExercise(){
   hideRestOverlay();
   const ce = $('.current-exercise');
   if(ce){
-    ce.style.transition = 'transform 200ms ease, opacity 200ms ease';
-    ce.style.transform = 'translateX(-42px) scale(.985)';
-    ce.style.opacity = '0';
+    ce.style.transition = 'transform 200ms cubic-bezier(.22,.61,.36,1)';
+    ce.style.transform = 'translateX(-108%)';
   }
   stopCardioTimer();
   cardioRemaining = 0;
@@ -9852,12 +9994,10 @@ function transitionToNextExercise(){
     const newCe = $('.current-exercise');
     if(newCe){
       newCe.style.transition = 'none';
-      newCe.style.opacity = '0';
-      newCe.style.transform = 'translateX(26px)';
+      newCe.style.transform = 'translateX(108%)';
       void newCe.offsetWidth;
-      newCe.style.transition = 'transform 300ms cubic-bezier(.22,.61,.36,1), opacity 300ms ease';
-      newCe.style.transform = '';
-      newCe.style.opacity = '1';
+      newCe.style.transition = 'transform 280ms cubic-bezier(.22,.61,.36,1)';
+      newCe.style.transform = 'translateX(0)';
     }
   }, 200);
 }
@@ -11292,11 +11432,13 @@ function openNotifPanel(){
   pushScreenState('notif');
   applyScreenBack($('#notifPanel'));
   setBottomNavActive('');
+  syncMobileHeader();
 }
 function closeNotifPanel(){
   $('#notifOverlay').classList.remove('open');
   $('#notifPanel').classList.remove('open');
   updateBottomNav();
+  syncMobileHeader();
 }
 if($('#notifBtn')){
   $('#notifBtn').addEventListener('click', ()=>{
@@ -13088,6 +13230,7 @@ function openFriendsDrawer(){
   refreshFriendsBadge();
   drawerPushState('list');
   setBottomNavActive('amics');
+  syncMobileHeader();
 }
 function closeFriendsDrawer(){
   friendsDrawer.classList.remove('open');
@@ -13097,6 +13240,7 @@ function closeFriendsDrawer(){
   stopChatPoll();
   drawerNavLevel = null;
   updateBottomNav();
+  syncMobileHeader();
 }
 friendsBtn.addEventListener('click', openFriendsDrawer);
 $('#friendsCloseBtn').addEventListener('click', closeFriendsDrawer);
@@ -13156,6 +13300,7 @@ window.addEventListener('popstate', (event)=>{
     $('#rutinesPanel').style.display = 'none';
     $('#seguimentPanel').style.display = 'none';
     updateBottomNav();
+    syncMobileHeader();
     return;
   }
   /* Vistes completes: torna a la pantalla anterior (back en mòbil) */
