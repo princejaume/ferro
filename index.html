@@ -2204,6 +2204,7 @@ button.f-info:hover b{color:var(--accent);}
 .chat-msg.mine{align-self:flex-end; background:var(--accent); color:var(--accent-text); border-bottom-right-radius:4px;}
 .chat-msg.theirs{align-self:flex-start; background:var(--surface-2); border:1px solid var(--line); border-bottom-left-radius:4px;}
 .chat-msg .c-time{flex-shrink:0; font-size:9px; opacity:.65; line-height:1; padding-bottom:1px; font-family:'Space Mono',monospace; align-self:flex-end;}
+.chat-msg .chat-text .c-time{margin-left:8px;}
 .chat-date{align-self:center; font-size:11px; font-weight:600; color:var(--text-dim); background:var(--surface-2); border:1px solid var(--line); padding:4px 10px; border-radius:999px; margin:4px 0 2px; text-transform:capitalize;}
 .chat-input{display:flex; gap:8px; padding:12px 18px; border-top:1px solid var(--line); flex-shrink:0; background:var(--surface);}
 .chat-input input{
@@ -2531,6 +2532,7 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 .repte-opt.disabled{opacity:.45; cursor:not-allowed;}
 .repte-opt.disabled .repte-check{border-color:var(--line);}
 .repte-count{font-size:12px; color:var(--text-dim);}
+#repteInviteHint{margin-bottom:12px; line-height:1.5;}
 .repte-mode-desc{font-size:13px; color:var(--text-dim); line-height:1.5; margin-top:6px; border-left:3px solid var(--repte); padding-left:10px;}
 .repte-rutines-list{display:flex; flex-direction:column; gap:8px; max-height:300px; overflow-y:auto; margin-top:8px;}
 /* ---------- Vista del repte ---------- */
@@ -2538,9 +2540,9 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 .repte-chart .rc-item{display:flex; flex-direction:column; gap:3px;}
 .repte-chart .rc-name{font-size:10px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; color:var(--text-dim);}
 .repte-chart .rc-row{display:flex; align-items:center; gap:8px;}
-.repte-chart .rc-hbar-wrap{flex:1; min-width:0; height:14px; border-radius:999px; background:var(--surface-2); overflow:hidden;}
+.repte-chart .rc-hbar-wrap{flex:1; min-width:0; height:26px; border-radius:9px; background:var(--surface-2); overflow:hidden; cursor:pointer;}
 .repte-chart .rc-hbar{
-  height:100%; width:2px; min-width:2px; border-radius:999px; background:var(--repte);
+  height:100%; width:2px; min-width:2px; border-radius:9px; background:var(--repte);
   transition:width .4s ease;
 }
 .repte-chart .rc-hbar.empty{background:var(--surface-2);}
@@ -2548,7 +2550,15 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center;
   font-size:12px; flex-shrink:0; color:#14161A;
 }
-.repte-chart .rc-num{font-size:12px; font-weight:700; min-width:22px; text-align:right;}
+.repte-chart .rc-num{font-size:12px; font-weight:700; min-width:22px; text-align:right; color:var(--text-dim);}
+.repte-chart .rc-num b{color:var(--text);}
+.repte-chart .rc-pop{
+  display:none; margin-top:2px; background:var(--surface); border:1px solid var(--line);
+  border-radius:10px; padding:8px 10px; font-size:12px; color:var(--text-dim);
+  animation:tabInRight .18s ease;
+}
+.repte-chart .rc-pop.open{display:flex; flex-direction:column; gap:2px;}
+.repte-chart .rc-pop b{color:var(--text);}
 .repte-info-block{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px; display:flex; flex-direction:column; gap:8px;}
 .repte-info-row{display:flex; justify-content:space-between; gap:10px; font-size:13px; padding:6px 0; border-bottom:1px solid var(--line);}
 .repte-info-row:last-child{border-bottom:none;}
@@ -2583,6 +2593,12 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 .chat-msg{flex-direction:column; align-items:flex-start;}
 .chat-msg .chat-body{display:flex; align-items:flex-end; gap:6px; width:100%;}
 .chat-msg .c-time{flex-shrink:0; font-size:9px; opacity:.65; line-height:1; padding-bottom:1px; font-family:'Space Mono',monospace; align-self:flex-end;}
+/* ---------- Xat del repte: els missatges propis en lila (--repte) ---------- */
+#repteChatLog .chat-msg.mine{background:var(--repte); color:#14161A; border-bottom-right-radius:4px;}
+#repteChatLog .chat-msg.mine .c-time{color:#14161A; opacity:.7;}
+#repteChatLog .chat-msg.mine.chat-share .cs-body span{color:#14161A; opacity:.75;}
+/* ---------- Botó "Activa" lila quan la rutina és de repte i està activa ---------- */
+.routine-card.repte.activa .rc-activa{background:var(--repte); color:#14161A; border-color:var(--repte);}
 </style>
 </head>
 <body data-theme="dark">
@@ -4685,6 +4701,10 @@ const I18N = {
     "+ Afig sèrie":"+ Añadir serie",
     "Cal un nom per a la rutina":"Se necesita un nombre para la rutina",
     "Cal un nom per a l'exercici":"Se necesita un nombre para el ejercicio",
+    "L'\\alias conté paraules ofensives":"El alias contiene palabras ofensivas",
+    "El nom de la rutina conté paraules ofensives":"El nombre de la rutina contiene palabras ofensivas",
+    "El nom de l'exercici conté paraules ofensives":"El nombre del ejercicio contiene palabras ofensivas",
+    "El nom del repte conté paraules ofensives":"El nombre del reto contiene palabras ofensivas",
     "Afig almenys un exercici":"Añade al menos un ejercicio",
     "Rutina desada":"Rutina guardada",
     "Rutines i exercicis personalitzats exportats":"Rutinas y ejercicios personalizados exportados",
@@ -5692,6 +5712,8 @@ const I18N = {
     "Per determinar":"Por determinar",
     "Sense participants":"Sin participantes",
     "Sense participants actius":"Sin participantes activos",
+    "Sessions fetes":"Sesiones hechas",
+    "Aquesta setmana":"Esta semana",
     "No participes en aquest repte":"No participas en este reto",
     "Pendent d\u2019iniciar… Comença el {1}":"Pendiente de empezar… Empieza el {1}",
     "Acaba el {1}":"Termina el {1}",
@@ -7222,6 +7244,7 @@ function obStepNext(){
     if(!alias){ toast(t('Posa un alias')); return; }
     if(alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return; }
     if(alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return; }
+    if(teParaulesOfensives(alias)){ toast(t('L\'alias conté paraules ofensives')); return; }
     if(!obData.sexe){ toast(t('Tria el sexe')); return; }
     if(!obData.dataNaix){ toast(t('Introdueix la data de naixement')); return; }
     if(!parseBirth(obData.dataNaix)){ toast(t('Data de naixement no vàlida')); return; }
@@ -7356,6 +7379,7 @@ async function saveOnboardingProfile(){
   if(!obData.alias){ toast(t('Posa un alias')); return false; }
   if(obData.alias.length < 3){ toast(t('L\'alias ha de tindre almenys 3 caràcters')); return false; }
   if(obData.alias.length > 11){ toast(t('L\'alias no pot superar els 11 caràcters')); return false; }
+  if(teParaulesOfensives(obData.alias)){ toast(t('L\'alias conté paraules ofensives')); return false; }
   if(!(obData.altura>0)){ toast(t('Posa la teua altura')); return false; }
   if(!(obData.pes>0)){ toast(t('Posa el teu pes')); return false; }
   if(obData.dataNaix){
@@ -7553,6 +7577,7 @@ function applyScreenBack(root){
   if(id === 'expositorModal') return;
   if(id === 'predefModal') return;
   if(id === 'predefPreviewModal') return;
+  if(id === 'repteInviteModal') return;
   if(root.querySelector('.modal-small')) return;
   const head = root.querySelector('.drawer-head, .notif-panel-head, .modal-head');
   if(!head || head.querySelector('.screen-back')) return;
@@ -8381,6 +8406,28 @@ function escapeHtml(str){
   return d.innerHTML.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
+/* ---------- Filtre de paraules ofensives ---------- */
+const PARAULES_OFENSIVES = [
+  'puta','puto','putam','maricon','maricón','marica','polla','pene','verga','verga','pija','coño','cony','coñazo',
+  'gilipollas','gilipolla','capullo','cabron','cabrón','cabro','mierda','merda','joder','jodido','jódete','jódete',
+  'culo','culero','zorra','zorro','perra','hijo de puta','fill de puta','imbecil','imbécil','subnormal','mongolo',
+  'mongol','tonto del culo','pendejo','bollera','bollo','bujarra','soplapollas','soplapolla','chupapollas','chupapolla',
+  'lameculos','cabestron','cagón','cagon','caguen','cardos','enano','negrata','blanquito','sudaca','panchito',
+  'tarado','tarada','retrasado','retardado','gilipuertas','guarra','guarro','malparido','hijoputa','hijoeputa',
+  'sonsos','tontorrón','tontorron','baboso','babosa','pelotudo','boludo','boluda','idiota','idiotas','estupido',
+  'estúpido','cretino','cretina','payaso','payasa','mamón','mamon','mamona','chulo','chula','cornudo','cornuda',
+  'traficante','violador','pedófilo','pedofilo','nazi','putero','puta madre','cojones','collons','cagada','cagada'
+];
+const _normText = s => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+function teParaulesOfensives(str){
+  const s = ' ' + _normText(str) + ' ';
+  return PARAULES_OFENSIVES.some(p => {
+    const np = _normText(p).trim();
+    if(!np) return false;
+    return s.indexOf(np) !== -1;
+  });
+}
+
 function confirmDialog({ title, message, okLabel }){
   return new Promise(resolve=>{
     const ov = $('#confirmModal');
@@ -8824,6 +8871,7 @@ function getNextDefaultRoutineName(){
 $('#saveRoutineBtn').addEventListener('click', ()=>{
    let nom = $('#rName').value.trim();
    if(!nom) nom = getNextDefaultRoutineName();
+   if(teParaulesOfensives(nom)){ toast(t('El nom de la rutina conté paraules ofensives')); return; }
    if(pendingRoutineExercises.length===0){ toast(t('Afig almenys un exercici')); return; }
    if(!editingRoutineId && countRutines() >= MAX_RUTINES){ toast(t('Has arribat al límit de {1} rutines. Elimina’n alguna per a crear-ne de noves.', MAX_RUTINES)); return; }
    const locked = !!routineModalLocked;
@@ -10081,6 +10129,7 @@ $('#newExerciseBtn').addEventListener('click', ()=>{
 $('#saveExerciseBtn').addEventListener('click', ()=>{
   const nom = $('#eName').value.trim();
   if(!nom){ toast(t('Cal un nom per a l\'exercici')); return; }
+  if(teParaulesOfensives(nom)){ toast(t('El nom de l\'exercici conté paraules ofensives')); return; }
   if(countCustomExercises() >= MAX_EXERCICIS_PERSONALITZATS){ toast(t('Has arribat al límit de {1} exercicis personalitzats. Elimina’n algun per a crear-ne de nous.', MAX_EXERCICIS_PERSONALITZATS)); return; }
   state.exercicis.push({
     id: uid(), nom, grupMuscular: $('#eGroup').value, equipament: $('#eEquip').value,
@@ -14032,14 +14081,25 @@ window.addEventListener('popstate', (event)=>{
       showEntrenarTab('entrenar');
       return;
     }
+    const wasRepte = currentViewName() === 'repte';
     fullViewStack.pop();
     restoreView(s.view);
+    /* Si hem eixit d'un repte obert des d'amics, es torna a obrir la llista d'amics */
+    if(wasRepte && repteFromFriends){
+      repteFromFriends = false;
+      openFriendsDrawer();
+    }
   }else{
     /* L'estat pot ser un modal o pantalla deixat enrere sense consumir:
        es consumeix i es torna a la vista anterior registrada (per exemple,
        des de "TOTES" tornem al perfil personal i no a la pàgina principal). */
+    const wasRepte = currentViewName() === 'repte';
     const prev = fullViewStack.pop();
     if(prev && FULL_VIEWS.indexOf(prev) !== -1) restoreView(prev);
+    if(wasRepte && repteFromFriends){
+      repteFromFriends = false;
+      openFriendsDrawer();
+    }
   }
 });
 
@@ -14211,10 +14271,13 @@ async function renderFriendsList(){
   drawerTitle.textContent = t('Els teus');
   showDrawerBack(false);
   showChatSearchBtn(false);
-  /* En sortir d'un xat, neteja el contingut de seguida perquè no es veja
-     el "dalt de tot" del xat mentre carreguem la llista d'amics. */
-  if(leavingChat) drawerBody.innerHTML = `<div class="ds"><div class="empty"><div class="display">${t('Carregant...')}</div></div></div>`;
+  /* En sortir d'un xat, es mostra la llista des de la cache de seguida (sense el flaix "Carregant...") */
+  if(friendsDataCache && friendsDataCache.friends) renderFriendsListHTML(friendsDataCache);
+  else if(leavingChat) drawerBody.innerHTML = `<div class="ds"><div class="empty"><div class="display">${t('Carregant...')}</div></div></div>`;
   const data = await refreshFriends();
+  renderFriendsListHTML(data);
+}
+function renderFriendsListHTML(data){
   const requestsHTML = data.pendingIn.length ? `
     <h4 class="f-sec">${t('Sol·licituds rebudes')}</h4>
     <div class="f-list">${data.pendingIn.map(f=>`
@@ -14935,6 +14998,7 @@ function renderChatLog(){
           const id = b.dataset.repte;
           stopChatPoll();
           closeFriendsDrawer();
+          repteFromFriends = true;
           navigateToRepte(id);
           return;
         }
@@ -15668,6 +15732,7 @@ let repteCache = loadLS(LS_KEYS.repte, null);
 let repteViewId = null;
 let repteViewTab = 'resum';
 let repteChartMode = 'setmanal';
+let repteFromFriends = false;
 let repteChatMessages = [];
 let repteChatAllLoaded = false;
 let repteChatLoadingOlder = false;
@@ -15829,8 +15894,9 @@ function paintRepteCard(repte){
   </div>`;
   const openBtn = $('#repteOpenBtn');
   if(openBtn) openBtn.addEventListener('click', ()=>{
-    if(!config.repteExplicacioVist){ openRepteHelp(()=> { closeFriendsDrawer(); navigateToRepte(repte.id); }); return; }
+    if(!config.repteExplicacioVist){ openRepteHelp(()=> { closeFriendsDrawer(); repteFromFriends = true; navigateToRepte(repte.id); }); return; }
     closeFriendsDrawer();
+    repteFromFriends = true;
     navigateToRepte(repte.id);
   });
   const hb = $('#repteHelpBtn');
@@ -15944,6 +16010,7 @@ function openRepteWizard(){
 function repteWizardNext(){
   const nom = ($('#repteNomInput').value || '').trim();
   if(nom.length < 3){ toast(t('El nom ha de tenir entre 3 i 12 caràcters')); return; }
+  if(teParaulesOfensives(nom)){ toast(t('El nom del repte conté paraules ofensives')); return; }
   if(repteWizard.participants.length === 0){ toast(t('Tria com a mínim 1 participant')); return; }
   if(!repteWizard.mode){ toast(t('Tria el mode')); return; }
   repteWizard.nom = nom;
@@ -16049,6 +16116,8 @@ async function createRepte(){
     closeModal('repteModal');
     toast(t('Repte creat!'));
     renderRepteCard();
+    closeFriendsDrawer();
+    repteFromFriends = true;
     navigateToRepte(repte.id);
   }catch(e){ console.error('FERRO: crear repte', e); toast(t('No s\u2019ha pogut crear el repte')); }
 }
@@ -16382,6 +16451,7 @@ async function renderRepteResum(repte){
     });
   });
   wireRepteActions(repte, rows, w);
+  wireRepteChart();
   renderFriendAvatars();
 }
 function renderRepteChart(repte, rows, mode){
@@ -16394,6 +16464,7 @@ function renderRepteChart(repte, rows, mode){
     const maxSet = (row && row.max_setmana) || F;
     const ptsTot = (row && row.punts_total) || 0;
     const denomTotal = F * w + (maxSet || F);
+    const cap = mode === 'setmanal' ? maxSet : denomTotal;
     const pct = mode === 'setmanal'
       ? (maxSet ? ptsSet / maxSet : 0)
       : (denomTotal ? ptsTot / denomTotal : 0);
@@ -16404,16 +16475,37 @@ function renderRepteChart(repte, rows, mode){
       const av = parseObAvatar(p.avatar || '');
       color = obColorObj(av.color).bg;
     }catch(e){}
-    return `<div class="rc-item">
+    return `<div class="rc-item" data-rcuid="${escapeHtml(p.uid)}">
       <div class="rc-name">${escapeHtml(p.alias || '?')}</div>
-      <div class="rc-row" title="${escapeHtml(p.alias || '?')}: ${ptsSet}/${maxSet} · ${ptsTot} total">
+      <div class="rc-row">
         <span class="rc-avatar" style="background:${escapeHtml(color)};">${escapeHtml((p.alias || '?').slice(0,1).toUpperCase())}</span>
-        <div class="rc-hbar-wrap"><div class="rc-hbar${emptyCls}" style="width:${Math.max(2, pctPx)}%"></div></div>
-        <span class="rc-num">${ptsTot}</span>
+        <div class="rc-hbar-wrap" title="${t('Sessions fetes')}"><div class="rc-hbar${emptyCls}" style="width:${Math.max(2, pctPx)}%"></div></div>
+        <span class="rc-num"><b>${cap}</b></span>
+      </div>
+      <div class="rc-pop">
+        <span>${t('Sessions fetes')}: <b>${ptsTot}</b></span>
+        <span>${t('Aquesta setmana')}: <b>${ptsSet}/${maxSet}</b></span>
       </div>
     </div>`;
   }).join('');
   return html || `<div class="empty" style="padding:20px;">${t('Sense participants actius')}</div>`;
+}
+function wireRepteChart(){
+  const chart = $('#repteChart');
+  if(!chart) return;
+  const rows = Array.from(chart.querySelectorAll('.rc-item'));
+  rows.forEach(item=>{
+    const wrap = item.querySelector('.rc-hbar-wrap');
+    if(!wrap) return;
+    wrap.addEventListener('click', e=>{
+      e.stopPropagation();
+      const pop = item.querySelector('.rc-pop');
+      if(!pop) return;
+      const wasOpen = pop.classList.contains('open');
+      rows.forEach(x=>{ const p = x.querySelector('.rc-pop'); if(p) p.classList.remove('open'); });
+      if(!wasOpen) pop.classList.add('open');
+    });
+  });
 }
 function repteRutinesListHTML(repte){
   const rutines = repte.rutines || [];
