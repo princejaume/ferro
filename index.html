@@ -2603,8 +2603,15 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 .repte-rut-ex:last-child{border-bottom:none;}
 .repte-rut-ex-nom{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;}
 .repte-rut-ex-det{color:var(--text-dim); flex-shrink:0;}
-.repte-reward{background:var(--surface); border:1px dashed var(--line); border-radius:14px; padding:18px; text-align:center; color:var(--text-dim); font-size:13px; display:flex; flex-direction:column; gap:4px; align-items:center;}
-.repte-reward b{color:var(--text);}
+ .repte-reward{background:var(--surface); border:1px dashed var(--line); border-radius:14px; padding:18px; text-align:center; color:var(--text-dim); font-size:13px; display:flex; flex-direction:column; gap:10px; align-items:center;}
+ .repte-reward b{color:var(--text);}
+ .repte-reward-xp{display:flex; flex-direction:column; gap:4px; width:100%;}
+ .repte-reward-row{display:flex; justify-content:space-between; gap:10px; padding:4px 2px; font-size:13px; border-bottom:1px solid var(--line);}
+ .repte-reward-row:last-child{border-bottom:none;}
+ .repte-reward-row span{color:var(--text-dim);}
+ .repte-reward-row b{color:var(--text);}
+ .repte-reward-note{font-size:12px; color:var(--text-dim); line-height:1.4;}
+ .repte-reward-avatars{display:flex; flex-direction:column; gap:4px; width:100%; padding-top:2px;}
 .repte-actions{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
 .repte-sub{font-size:12px; color:var(--text-dim); margin-top:4px; line-height:1.4;}
 /* ---------- Vista del repte: tota la UI en violeta (--repte) ---------- */
@@ -2628,12 +2635,27 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   #repteXatPanel .chat-input #repteChatShare svg{ width:1.25em; height:1.25em; }
 }
 @media (min-width:721px){
-  /* En escriptori el xat del repte omple l'alçada visible amb la barra a baix */
-  #view-repte.active.repte-xat-open{ display:flex; flex-direction:column; height:calc(100vh - var(--header-h,62px) - 24px); }
-  #view-repte.active.repte-xat-open .view-head,
-  #view-repte.active.repte-xat-open #repteTabs{ flex-shrink:0; }
+  /* En escriptori la pantalla del repte s'obre com una finestra lateral (drawer),
+     igual que la pantalla d'amics: fixada a la dreta, amb ombra i fons atenuat. */
+  #view-repte{
+    position:fixed; top:0; right:0; bottom:0; width:min(480px, 94vw);
+    background:var(--surface); border-left:1px solid var(--line);
+    z-index:95; box-shadow:-12px 0 40px rgba(0,0,0,0.25);
+    transform:translateX(105%); transition:transform .28s ease;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  #view-repte.active{ transform:translateX(0); display:flex; flex-direction:column; }
+  #view-repte.active.repte-xat-open{ display:flex; }
+  #view-repte.active .view-head,
+  #view-repte.active #repteTabs{ flex-shrink:0; }
+  #view-repte.active #repteResumPanel{ flex:1; min-height:0; overflow-y:auto; }
   #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
   #repteXatPanel > div{ min-height:320px; }
+  /* La casella d'escriure del xat del repte s'estén fins a les vores de la finestra */
+  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; }
+  #repteXatPanel .chat-input #repteChatShare svg{ width:1.25em; height:1.25em; }
+  #repteOverlay{ z-index:94; }
+  #repteOverlay.open{ opacity:1; pointer-events:auto; }
 }
 /* ---------- Rutina de repte ---------- */
 .routine-card.repte{border-color:var(--repte);}
@@ -4009,6 +4031,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   <div class="drawer-body" id="drawerBody"></div>
 </aside>
 
+<div class="drawer-overlay" id="repteOverlay"></div>
+
 <div class="toast" id="toast"></div>
 <div class="rest-overlay" id="restOverlay" data-phase="count">
   <div class="rest-overlay-card">
@@ -4438,7 +4462,7 @@ let state = {
   weekDone: loadLS(LS_KEYS.weekDone, {}),
 };
 
-const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminderTimeout: 0, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, repteNotifs: false, repteChatNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [], repteExplicacioVist: false, repteActiu: null, repteCreades: 0, repteCompletats: 0, repteGuanyats: 0, reptePerfectes: 0, repteAmfitrio: 0, repteCreatComencat: false, repteXpAtorgat: {}, repteMedalsAtorgades: {}, repteRutinesResoltes: {}, repteNotifInici: {} };
+const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminderTimeout: 0, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, repteNotifs: false, repteChatNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [], repteExplicacioVist: false, repteActiu: null, repteCreades: 0, repteCompletats: 0, repteGuanyats: 0, reptePerfectes: 0, repteAmfitrio: 0, repteCreatComencat: false, repteXpAtorgat: {}, repteMedalsAtorgades: {}, repteRutinesResoltes: {}, repteNotifInici: {}, repteAvatarRewards: {}, repteAnimadors: 0 };
 let config = Object.assign({}, DEFAULT_CONFIG, loadLS(LS_KEYS.config, {}));
 function normalizeConfig(){
   if(config.lang !== 'ca' && config.lang !== 'es') config.lang = 'ca';
@@ -4490,6 +4514,8 @@ function normalizeConfig(){
   if(typeof config.repteCreatComencat !== 'boolean') config.repteCreatComencat = false;
   if(!config.repteXpAtorgat || typeof config.repteXpAtorgat !== 'object') config.repteXpAtorgat = {};
   if(!config.repteMedalsAtorgades || typeof config.repteMedalsAtorgades !== 'object') config.repteMedalsAtorgades = {};
+  if(!config.repteAvatarRewards || typeof config.repteAvatarRewards !== 'object') config.repteAvatarRewards = {};
+  if(typeof config.repteAnimadors !== 'number' || isNaN(config.repteAnimadors)) config.repteAnimadors = 0;
   if(!config.repteRutinesResoltes || typeof config.repteRutinesResoltes !== 'object') config.repteRutinesResoltes = {};
   if(!config.repteNotifInici || typeof config.repteNotifInici !== 'object') config.repteNotifInici = {};
 }
@@ -5652,8 +5678,18 @@ const I18N = {
     "Has desbloquejat {1} (nivell {2})!":"¡Has desbloquejado {1} (nivel {2})!",
     "Ja has desbloquejat totes les recompenses!":"¡Ya has desbloquejado todas las recompensas!",
     "Recompenses":"Recompensas",
-    "Recompensa oculta":"Recompensa oculta",
-    "Toca una recompensa per a desbloquejar-la.":"Toca una recompensa para desbloquearla.",
+    "Marc":"Marco",
+    "Color de fons":"Color de fondo",
+    "1r":"1º",
+    "2n":"2º",
+    "3r":"3º",
+    "4t":"4º",
+    "{1}è":"{1}º",
+    "Sense dades de punts":"Sin datos de puntos",
+    "Repte de menys d\u20191,5 mesos: sense recompensa d\u2019avatar, només XP.":"Reto de menos de 1,5 meses: sin recompensa de avatar, solo XP.",
+    "El guanyador rebrà {1} recompensa d\u2019avatar.":"El ganador recibirá {1} recompensa de avatar.",
+    "Has guanyat {1} recompensa d\u2019avatar!":"¡Has ganado {1} recompensa de avatar!",
+    "Recompensa oculta":"Recompensa oculta",    "Toca una recompensa per a desbloquejar-la.":"Toca una recompensa para desbloquearla.",
     "Medalles integrades al Diamant. Fes clic a la medalla de diamant per veure-les.":"Medallas integradas en el Diamante. Haz clic en la medalla de diamante para verlas.",
     "Verd fosc":"Verde oscuro",
     "Taronja":"Naranja",
@@ -6813,7 +6849,8 @@ function animadorIconHTML(){
 function animadorsEarned(){ return animadorClaimedLevels().length; }
 function availableAnimadors(){
   if(!Array.isArray(config.animadorUsed)) config.animadorUsed = [];
-  return Math.max(0, animadorsEarned() - config.animadorUsed.length);
+  const repteExtra = (typeof config.repteAnimadors === 'number' && !isNaN(config.repteAnimadors)) ? config.repteAnimadors : 0;
+  return Math.max(0, animadorsEarned() - config.animadorUsed.length + repteExtra);
 }
 function animateIcon(baseId){
   const unlocked = unlockedRewardIds();
@@ -8300,6 +8337,10 @@ function renderView(view){
   $$('.view').forEach(v=>v.classList.remove('active'));
   $('#view-'+view).classList.add('active');
   window.scrollTo(0,0);
+  /* En escriptori la pantalla del repte s'obre com a finestra lateral: mostra
+     el fons atenuat al darrere (com el drawer d'amics). */
+  const repteOv = $('#repteOverlay');
+  if(repteOv) repteOv.classList.toggle('open', view === 'repte' && !isMobile());
   if(view==='entrenar'){
     setEntrenarTab('entrenar');
   }else{
@@ -14125,7 +14166,12 @@ function closeFriendsDrawer(){
 friendsBtn.addEventListener('click', openFriendsDrawer);
 $('#friendsCloseBtn').addEventListener('click', closeFriendsDrawer);
 friendsOverlay.addEventListener('click', closeFriendsDrawer);
+const repteOverlay = $('#repteOverlay');
+if(repteOverlay) repteOverlay.addEventListener('click', ()=>{
+  if(currentViewName() === 'repte') goBackFromRepte();
+});
 document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeFriendsDrawer(); });
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && currentViewName() === 'repte') goBackFromRepte(); });
 document.addEventListener('click', e=>{
   if(!e.target.closest('.f-drop')) closeFriendMenus();
 });
@@ -14373,10 +14419,19 @@ async function removeFriend(uid){
   }catch(e){ console.error('FERRO: eliminar amic', e); toast(t('Error en eliminar l\u2019amic')); }
 }
 
-function renderFriendAvatars(){
+ function renderFriendAvatars(){
   $$('[data-avatar-uid]').forEach(el=>{
-    const f = friendsDataCache.friends.find(x=> x.user_id === el.dataset.avatarUid);
-    if(f) renderProfileAvatar(el, f.avatar || '');
+    const uid = el.dataset.avatarUid;
+    let av = '';
+    if(currentUser && uid === currentUser.id){
+      /* El propi avatar: es treu del perfil local, no de la llista d'amics
+         (no ets amic de tu mateix, per això abans no apareixia). */
+      av = (config.profile && config.profile.avatar) ? config.profile.avatar : '';
+    } else {
+      const f = friendsDataCache.friends.find(x=> x.user_id === uid);
+      if(f) av = f.avatar || '';
+    }
+    if(av) renderProfileAvatar(el, av);
   });
 }
 
@@ -16592,7 +16647,7 @@ async function renderRepteResum(repte){
     return `<div class="repte-part"><span class="f-avatar" data-avatar-uid="${p.uid}">👤</span><b>${escapeHtml(p.alias || '?')}</b><span>${icon}</span></div>`;
   }).join('');
   const participantsHTML = `<div class="repte-info-block">${parts || `<div class="empty" style="padding:12px;">${t('Sense participants')}</div>`}</div>`;
-  const rewardHTML = `<div class="repte-reward"><b>${t('Recompensa')}</b><span>${t('Per determinar')}</span></div>`;
+  const rewardHTML = repteRewardHTML(repte, rows);
   const actionsHTML = repteActionsHTML(repte, rows, w);
   const fixeRutines = repte.mode === 'fixe' ? repteRutinesListHTML(repte) : '';
   panel.innerHTML = `
@@ -16836,6 +16891,111 @@ function guanyadorsRepte(rows){
   const max = rows.reduce((m,r)=> Math.max(m, r.punts_total || 0), 0);
   return rows.filter(r=> (r.punts_total||0) === max && max > 0).map(r=> r.uid);
 }
+/* ---------- Recompenses del repte (XP + avatars) ---------- */
+/* Nombre de recompenses d'avatar segons la durada del repte (en mesos):
+   < 1,5 mesos -> cap (només XP); >= 1,5 -> 1; >= 3 -> 2. */
+function repteAvatarRewardCount(durada){
+  if(!(durada >= 1.5)) return 0;
+  if(durada >= 3) return 2;
+  return 1;
+}
+/* XP que rep cada participant segons la seva posició (primer, segon, tercer...).
+   Torna { uid: xp } i també el rànquing ordenat. */
+function repteXpPerPosicio(repte, rows){
+  const maxPunts = repte.frequencia * repte.setmanes;
+  const withPts = rows.map(r=>({ uid:r.uid, punts:(r.punts_total||0) }));
+  withPts.sort((a,b)=> b.punts - a.punts);
+  const distinct = [...new Set(withPts.map(r=> r.punts))].sort((a,b)=> b - a);
+  const xpMap = {};
+  const ranking = [];
+  withPts.forEach(r=>{
+    const rank = distinct.indexOf(r.punts) + 1;
+    const factor = { 1:1.0, 2:0.8, 3:0.65 }[rank] || 0.5;
+    const pct = maxPunts > 0 ? Math.min(1, r.punts / maxPunts) : 0;
+    const xp = pct >= 0.5 ? Math.floor(500 * pct * factor) : 0;
+    xpMap[r.uid] = xp;
+    ranking.push({ uid:r.uid, punts:r.punts, rank, xp });
+  });
+  return { xpMap, ranking };
+}
+/* Llista de recompenses d'avatar disponibles (que encara no té l'usuari),
+   per a repartir-les a l'atzar: marcs, colors de fons, símbols i animadors. */
+function repteAvatarRewardPool(){
+  const unlocked = unlockedRewardIds();
+  const pool = [];
+  FRAMES.forEach(f=>{ if(!unlocked.has(f.rewardId)) pool.push({ type:'frame', id:f.rewardId, frameId:f.id, label:f.label }); });
+  REWARD_COLORS.forEach(c=>{ if(!unlocked.has('color-' + c.colorId)) pool.push({ type:'color', id:'color-' + c.colorId, colorId:c.colorId, label:c.name }); });
+  REWARD_ICONS.forEach(i=>{ if(!unlocked.has(i.rid)) pool.push({ type:'icon', id:i.rid, iconId:i.iconId, label:i.name }); });
+  /* L'animador és un recurs (no un objecte únic), per tant sempre està disponible. */
+  pool.push({ type:'animador', id:'animador', label:t('Animador') });
+  return pool;
+}
+function repteAvatarRewardLabel(r){
+  if(!r) return t('Recompensa');
+  const typeLabel = { frame:t('Marc'), color:t('Color de fons'), icon:t('Símbol'), animador:t('Animador') }[r.type] || t('Recompensa');
+  return `${typeLabel}: ${r.label}`;
+}
+/* Atorga N recompenses d'avatar aleatòries (mai una que ja es tingui) i les guarda. */
+function grantRepteAvatarRewards(repte, count){
+  if(!config.repteAvatarRewards) config.repteAvatarRewards = {};
+  if(!config.repteAvatarRewards[repte.id]) config.repteAvatarRewards[repte.id] = [];
+  const granted = [];
+  for(let i = 0; i < count; i++){
+    const pool = repteAvatarRewardPool();
+    if(!pool.length) break;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    granted.push(pick);
+    if(pick.type === 'frame' || pick.type === 'color' || pick.type === 'icon'){
+      if(!Array.isArray(config.rewardsClaimed)) config.rewardsClaimed = [];
+      if(!config.rewardsClaimed.includes(pick.id)) config.rewardsClaimed.push(pick.id);
+    } else if(pick.type === 'animador'){
+      config.repteAnimadors = (typeof config.repteAnimadors === 'number' && !isNaN(config.repteAnimadors)) ? config.repteAnimadors + 1 : 1;
+    }
+  }
+  config.repteAvatarRewards[repte.id] = config.repteAvatarRewards[repte.id].concat(granted);
+  saveConfig();
+  return granted;
+}
+/* Etiqueta de posició (1r, 2n, 3r, 4t...) per a la taula de recompenses. */
+function reptePosLabel(rank){
+  const ord = { 1:t('1r'), 2:t('2n'), 3:t('3r'), 4:t('4t') };
+  if(ord[rank]) return ord[rank];
+  return t('{1}è', rank);
+}
+/* Contenidor de recompenses del repte: mostra l'XP per posició i les
+   recompenses d'avatar (segons la durada i qui guanya). */
+function repteRewardHTML(repte, rows){
+  const { ranking } = repteXpPerPosicio(repte, rows);
+  const me = currentUser ? currentUser.id : '';
+  const nameMap = {};
+  (repte.participants||[]).forEach(p=>{ nameMap[p.uid] = p.alias || t('Participant'); });
+  const avatarCount = repteAvatarRewardCount(repte.durada);
+  const isFinalitzat = repte.estat === 'finalitzat';
+  const meWins = guanyadorsRepte(rows).includes(me);
+  const xpLines = ranking.map(r=> `
+    <div class="repte-reward-row"><span>${escapeHtml(reptePosLabel(r.rank))} · ${escapeHtml(nameMap[r.uid] || '')}</span><b>${r.xp} XP</b></div>
+  `).join('');
+  let avatarHTML = '';
+  if(avatarCount === 0){
+    avatarHTML = `<div class="repte-reward-note">${t('Repte de menys d\u20191,5 mesos: sense recompensa d\u2019avatar, només XP.')}</div>`;
+  } else if(isFinalitzat && meWins){
+    const granted = (config.repteAvatarRewards && config.repteAvatarRewards[repte.id]) || [];
+    if(granted.length){
+      avatarHTML = `<div class="repte-reward-avatars">${granted.map(r=> `
+        <div class="repte-reward-row"><span>${escapeHtml(repteAvatarRewardLabel(r))}</span><b>✓</b></div>
+      `).join('')}</div>`;
+    } else {
+      avatarHTML = `<div class="repte-reward-note">${t('Has guanyat {1} recompensa d\u2019avatar!', avatarCount)}</div>`;
+    }
+  } else {
+    avatarHTML = `<div class="repte-reward-note">${t('El guanyador rebrà {1} recompensa d\u2019avatar.', avatarCount)}</div>`;
+  }
+  return `<div class="repte-reward">
+    <b>${t('Recompenses')}</b>
+    <div class="repte-reward-xp">${xpLines || `<div class="repte-reward-note">${t('Sense dades de punts')}</div>`}</div>
+    ${avatarHTML}
+  </div>`;
+}
 async function aplicarResultatRepte(repte){
   if(!config.repteXpAtorgat) config.repteXpAtorgat = {};
   if(config.repteXpAtorgat[repte.id]) return;
@@ -16859,6 +17019,17 @@ async function aplicarResultatRepte(repte){
   if(pct >= 1) config.reptePerfectes = (config.reptePerfectes || 0) + 1;
   if(repte.creador === me && winners.includes(me)) config.repteAmfitrio = (config.repteAmfitrio || 0) + 1;
   config.repteXpAtorgat[repte.id] = true;
+  /* Recompenses d'avatar per al guanyador (aleatòries, mai repetides). */
+  if(winners.includes(me)){
+    if(!config.repteAvatarRewards) config.repteAvatarRewards = {};
+    if(!config.repteAvatarRewards[repte.id]){
+      const count = repteAvatarRewardCount(repte.durada);
+      if(count > 0) grantRepteAvatarRewards(repte, count);
+    }
+  } else {
+    if(!config.repteAvatarRewards) config.repteAvatarRewards = {};
+    if(!config.repteAvatarRewards[repte.id]) config.repteAvatarRewards[repte.id] = [];
+  }
   recordRepteNotif(t('Repte finalitzat'), t('El repte "{1}" ha acabat. {2}', repte.nom, repteResultatText(repte, rows)));
   if(config.notifications && config.repteNotifs){
     pushBrowserNotif(t('🏁 Repte finalitzat'), repteResultatText(repte, rows));
