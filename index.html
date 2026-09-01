@@ -2612,6 +2612,16 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
  .repte-reward-row b{color:var(--text);}
  .repte-reward-note{font-size:12px; color:var(--text-dim); line-height:1.4;}
  .repte-reward-avatars{display:flex; flex-direction:column; gap:4px; width:100%; padding-top:2px;}
+ /* Pòdium de recompenses del repte */
+ .repte-podium{display:flex; align-items:flex-end; justify-content:center; gap:6px; padding:16px 0 0; width:100%;}
+ .repte-podium-place{display:flex; flex-direction:column; align-items:center; gap:4px; flex:1; max-width:100px;}
+ .repte-podium-xp{background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-size:12px; font-weight:700; color:var(--text); min-width:50px; text-align:center;}
+ .repte-podium-name{font-size:11px; color:var(--text-dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; width:100%;}
+ .repte-podium-block{width:100%; border-radius:8px 8px 0 0; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:700; color:#14161A;}
+ .repte-podium-block.first{height:60px; background:linear-gradient(135deg, #FFD700, #FFA000);}
+ .repte-podium-block.second{height:45px; background:linear-gradient(135deg, #C0C0C0, #9E9E9E);}
+ .repte-podium-block.third{height:35px; background:linear-gradient(135deg, #CD7F32, #A0522D);}
+ .repte-podium-reward{margin-top:6px; width:28px; height:28px; border-radius:50%; background:var(--surface-2); border:1px dashed var(--line); display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-dim);}
 .repte-actions{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
 .repte-sub{font-size:12px; color:var(--text-dim); margin-top:4px; line-height:1.4;}
 /* ---------- Vista del repte: tota la UI en violeta (--repte) ---------- */
@@ -2629,9 +2639,9 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   #view-repte.active.repte-xat-open{ display:flex; flex-direction:column; height:calc(100dvh - 70px); padding-bottom:0; }
   #view-repte.active.repte-xat-open .view-head,
   #view-repte.active.repte-xat-open #repteTabs{ flex-shrink:0; }
-  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:visible; display:flex; flex-direction:column; }
   /* La casella d'escriure del xat del repte s'estén fins a les vores de la pantalla */
-  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; }
+  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; border-bottom:none; }
   #repteXatPanel .chat-input #repteChatShare svg{ width:1.25em; height:1.25em; }
 }
 @media (min-width:721px){
@@ -2649,10 +2659,10 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   #view-repte.active .view-head,
   #view-repte.active #repteTabs{ flex-shrink:0; }
   #view-repte.active #repteResumPanel{ flex:1; min-height:0; overflow-y:auto; }
-  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:visible; display:flex; flex-direction:column; }
   #repteXatPanel > div{ min-height:320px; }
   /* La casella d'escriure del xat del repte s'estén fins a les vores de la finestra */
-  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; }
+  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; border-bottom:none; }
   #repteXatPanel .chat-input #repteChatShare svg{ width:1.25em; height:1.25em; }
   #repteOverlay{ z-index:94; }
   #repteOverlay.open{ opacity:1; pointer-events:auto; }
@@ -5835,6 +5845,11 @@ const I18N = {
     "Ja no pot unir-se: no li queda temps per compensar":"Ya no puede unirse: no le queda tiempo para compensar",
     "Repte cancel·lat":"Reto cancelado",
     "Cancel·lat: {1}":"Cancelado: {1}",
+    "Cancel·lar repte":"Cancelar reto",
+    "Segur que vols cancel·lar el repte? Cap participant s\u2019hi ha unit encara.":"¿Seguro que quieres cancelar el reto? Ningún participante se ha unido aún.",
+    "Cancel·lar":"Cancelar",
+    "cancel·lat pel creador":"cancelado por el creador",
+    "L\u2019XP es calcula en temps real segons els punts actuals.":"La XP se calcula en tiempo real según los puntos actuales.",
     "Recompensa":"Recompensa",
     "Resum":"Resumen",
     "Xat":"Chat",
@@ -15997,6 +16012,7 @@ function myRepteParticipant(repte){
 }
 function repteCancelMotiu(repte){
   if(repte.cancelat_per === 'sol') return t('solament un membre');
+  if(repte.cancelat_per === 'creador') return t('cancel·lat pel creador');
   return t('falta de participants');
 }
 function repteModeLabel(repte){
@@ -16781,9 +16797,13 @@ function repteActionsHTML(repte, rows, w){
     if(me.estat === 'convidat'){
       parts.push(`<div style="display:flex; gap:8px;"><button class="btn btn-primary" data-repte-act="accept">${t('Accepta')}</button><button class="btn" data-repte-act="reject">${t('Rebutja')}</button></div>`);
     } else {
+      const acceptats = (repte.participants||[]).filter(p=> p.estat === 'acceptat' && p.uid !== currentUser.id).length;
       const espera = (repte.participants||[]).filter(p=> p.estat === 'convidat').length;
       parts.push(`<p class="repte-sub">${t('Esperant {1} acceptacions…', espera)}</p>`);
-      if(me.estat === 'creador') parts.push(`<button class="btn btn-sm" data-repte-act="invite">${t('Convidar')}</button>`);
+      if(me.estat === 'creador'){
+        parts.push(`<button class="btn btn-sm" data-repte-act="invite">${t('Convidar')}</button>`);
+        if(acceptats === 0) parts.push(`<button class="btn btn-sm btn-danger" data-repte-act="cancel">${t('Cancel·lar')}</button>`);
+      }
     }
   } else if(repte.estat === 'actiu'){
     if(repteDinsPrimeraSetmana(repte)){
@@ -16809,6 +16829,7 @@ function wireRepteActions(repte, rows, w){
       else if(act === 'reject') await rebutjarRepte(repte);
       else if(act === 'invite') openRepteInviteModal(repte);
       else if(act === 'abandon') await abandonarRepte(repte);
+      else if(act === 'cancel') await cancelarRepte(repte);
       else if(act === 'finish') finalitzarRepte(repte);
     });
   });
@@ -16827,6 +16848,20 @@ async function abandonarRepte(repte){
     goBackFromRepte();
     toast(t('Repte abandonat'));
   }catch(e){ console.error('FERRO: abandonar repte', e); toast(t('No s\u2019ha pogut abandonar el repte')); }
+}
+async function cancelarRepte(repte){
+  const ok = await confirmDialog({ title: t('Cancel·lar repte'), message: t('Segur que vols cancel·lar el repte? Cap participant s\u2019hi ha unit encara.'), okLabel: t('Cancel·lar') });
+  if(!ok) return;
+  try{
+    await supabaseClient.from('reptes').update({ estat:'cancelat', cancelat_per:'creador' }).eq('id', repte.id).eq('estat','pendent');
+    config.repteActiu = null;
+    saveConfig();
+    repteCache = null;
+    try{ localStorage.removeItem(LS_KEYS.repte); }catch(e){}
+    renderRepteCard();
+    goBackFromRepte();
+    toast(t('Repte cancel·lat'));
+  }catch(e){ console.error('FERRO: cancel·lar repte', e); toast(t('No s\u2019ha pogut cancel·lar el repte')); }
 }
 
 /* ---------- Finalitzar i destí de rutines ---------- */
@@ -16972,9 +17007,35 @@ function repteRewardHTML(repte, rows){
   const avatarCount = repteAvatarRewardCount(repte.durada);
   const isFinalitzat = repte.estat === 'finalitzat';
   const meWins = guanyadorsRepte(rows).includes(me);
-  const xpLines = ranking.map(r=> `
+  
+  // Pòdium visual
+  const podiumPlaces = ranking.slice(0, 3);
+  let podiumHTML = '';
+  if(podiumPlaces.length > 0){
+    // Ordenar per posició: 2n, 1r, 3r (per al pòdium visual)
+    const order = [];
+    if(podiumPlaces.find(r=> r.rank === 2)) order.push(podiumPlaces.find(r=> r.rank === 2));
+    if(podiumPlaces.find(r=> r.rank === 1)) order.push(podiumPlaces.find(r=> r.rank === 1));
+    if(podiumPlaces.find(r=> r.rank === 3)) order.push(podiumPlaces.find(r=> r.rank === 3));
+    
+    podiumHTML = `<div class="repte-podium">${order.map(r=>{
+      const blockClass = r.rank === 1 ? 'first' : r.rank === 2 ? 'second' : 'third';
+      const rewardIcon = isFinalitzat && r.uid === me && meWins ? '✓' : '?';
+      return `<div class="repte-podium-place">
+        <div class="repte-podium-xp">${r.xp} XP</div>
+        <div class="repte-podium-name">${escapeHtml(nameMap[r.uid] || t('Participant'))}</div>
+        <div class="repte-podium-block ${blockClass}">${reptePosLabel(r.rank)}</div>
+        ${avatarCount > 0 ? `<div class="repte-podium-reward">${rewardIcon}</div>` : ''}
+      </div>`;
+    }).join('')}</div>`;
+  }
+  
+  // Línies XP per a les posicions restants (4t, 5t...)
+  const restRanking = ranking.slice(3);
+  const xpLines = restRanking.map(r=> `
     <div class="repte-reward-row"><span>${escapeHtml(reptePosLabel(r.rank))} · ${escapeHtml(nameMap[r.uid] || '')}</span><b>${r.xp} XP</b></div>
   `).join('');
+  
   let avatarHTML = '';
   if(avatarCount === 0){
     avatarHTML = `<div class="repte-reward-note">${t('Repte de menys d\u20191,5 mesos: sense recompensa d\u2019avatar, només XP.')}</div>`;
@@ -16990,9 +17051,12 @@ function repteRewardHTML(repte, rows){
   } else {
     avatarHTML = `<div class="repte-reward-note">${t('El guanyador rebrà {1} recompensa d\u2019avatar.', avatarCount)}</div>`;
   }
+  
   return `<div class="repte-reward">
     <b>${t('Recompenses')}</b>
-    <div class="repte-reward-xp">${xpLines || `<div class="repte-reward-note">${t('Sense dades de punts')}</div>`}</div>
+    ${podiumHTML}
+    ${xpLines ? `<div class="repte-reward-xp">${xpLines}</div>` : ''}
+    ${!isFinalitzat ? `<div class="repte-reward-note">${t('L\u2019XP es calcula en temps real segons els punts actuals.')}</div>` : ''}
     ${avatarHTML}
   </div>`;
 }
