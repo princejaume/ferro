@@ -2216,8 +2216,15 @@ button.f-info:hover b{color:var(--accent);}
    position:relative; display:flex; flex-shrink:0;
    transition:width .2s ease, margin .2s ease, padding .2s ease, opacity .2s ease, border-width .2s ease;
  }
+ .chat-input #repteChatShareWrap{
+   position:relative; display:flex; flex-shrink:0;
+   transition:width .2s ease, margin .2s ease, padding .2s ease, opacity .2s ease, border-width .2s ease;
+ }
  .chat-input #chatShareRoutine svg{width:1.25em; height:1.25em;}
  .chat-input #chatShareMenu{
+   right:0; left:auto; top:auto; bottom:calc(100% + 8px); min-width:170px; z-index:80;
+ }
+ .chat-input #repteChatShareMenu{
    right:0; left:auto; top:auto; bottom:calc(100% + 8px); min-width:170px; z-index:80;
  }
  .chat-input .chat-share-menu-head{
@@ -2229,19 +2236,37 @@ button.f-info:hover b{color:var(--accent);}
    flex-shrink:0; min-width:0;
    transition:width .2s ease, padding .2s ease, border-radius .2s ease, font-size .2s ease;
  }
+ .chat-input #repteChatSend{
+   flex-shrink:0; min-width:0;
+   transition:width .2s ease, padding .2s ease, border-radius .2s ease, font-size .2s ease;
+ }
  .chat-input input:not(:placeholder-shown) ~ #chatShareWrap{
    width:0; padding:0; margin-right:-8px; border-width:0; opacity:0; pointer-events:none; overflow:hidden;
  }
  .chat-input input:not(:placeholder-shown) ~ #chatSend{
    width:42px; height:42px; padding:0; border-radius:10px; font-size:0;
  }
- .chat-input input:not(:placeholder-shown) ~ #chatSend::after{
-   content:''; width:0; height:0;
-   border-top:7px solid transparent;
-   border-bottom:7px solid transparent;
-   border-left:12px solid var(--accent-text);
- }
- .chat-msg.chat-share{display:flex; align-items:center; gap:10px; max-width:92%; cursor:pointer; transition:opacity .15s;}
+  .chat-input input:not(:placeholder-shown) ~ #chatSend::after{
+    content:''; width:0; height:0;
+    border-top:7px solid transparent;
+    border-bottom:7px solid transparent;
+    border-left:12px solid var(--accent-text);
+  }
+  /* El mateix comportament per al xat del repte: en escriure s'amaga adjuntar
+     i el botó d'enviar es converteix en la fletxa. */
+  .chat-input input:not(:placeholder-shown) ~ #repteChatShareWrap{
+    width:0; padding:0; margin-right:-8px; border-width:0; opacity:0; pointer-events:none; overflow:hidden;
+  }
+  .chat-input input:not(:placeholder-shown) ~ #repteChatSend{
+    width:42px; height:42px; padding:0; border-radius:10px; font-size:0;
+  }
+  .chat-input input:not(:placeholder-shown) ~ #repteChatSend::after{
+    content:''; width:0; height:0;
+    border-top:7px solid transparent;
+    border-bottom:7px solid transparent;
+    border-left:12px solid var(--accent-text);
+  }
+  .chat-msg.chat-share{display:flex; align-items:center; gap:10px; max-width:92%; cursor:pointer; transition:opacity .15s;}
  .chat-msg.chat-share:active{opacity:.7;}
  .chat-msg.chat-share .cs-icon{font-size:20px; flex-shrink:0;}
  .chat-msg.chat-share .cs-icon svg{width:1.1em; height:1.1em;}
@@ -2500,6 +2525,8 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   transition:border-color .15s ease, background .15s ease;
 }
 .repte-card .repte-card-btn:hover{background:var(--repte); color:#14161A;}
+.repte-card .repte-card-btn:hover .repte-info span{color:rgba(20,22,26,.78);}
+.repte-card .repte-card-btn:hover .repte-ico{background:rgba(255,255,255,.22);}
 .repte-card .repte-help{margin-left:auto; flex-shrink:0;}
 .repte-help-btn{
   width:30px; height:30px; border-radius:8px; border:1px solid var(--line);
@@ -2568,6 +2595,14 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 .repte-part:last-child{border-bottom:none;}
 .repte-part .f-avatar{width:32px; height:32px; font-size:14px; border-radius:8px;}
 .repte-part b{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.repte-rut-btn{width:100%; background:none; border:none; border-bottom:1px solid var(--line); font:inherit; color:var(--text); text-align:left; cursor:pointer; padding:6px 0; display:flex; align-items:center; gap:8px; border-radius:6px; transition:background .12s ease;}
+.repte-rut-btn:last-child{border-bottom:none;}
+.repte-rut-btn:hover{background:rgba(179,136,255,0.08);}
+.repte-rut-btn:hover b{color:var(--repte);}
+.repte-rut-ex{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13px;}
+.repte-rut-ex:last-child{border-bottom:none;}
+.repte-rut-ex-nom{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:600;}
+.repte-rut-ex-det{color:var(--text-dim); flex-shrink:0;}
 .repte-reward{background:var(--surface); border:1px dashed var(--line); border-radius:14px; padding:18px; text-align:center; color:var(--text-dim); font-size:13px; display:flex; flex-direction:column; gap:4px; align-items:center;}
 .repte-reward b{color:var(--text);}
 .repte-actions{display:flex; flex-direction:column; gap:8px; margin-top:4px;}
@@ -2583,6 +2618,19 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
 @media (max-width:720px){
   #view-repte{padding-bottom:calc(46px + 24px);}
   #repteBackBtn{display:none !important;}
+  /* El xat del repte omple l'alçada i fixa la barra d'escriure a baix */
+  #view-repte.active.repte-xat-open{ display:flex; flex-direction:column; height:calc(100dvh - 70px); padding-bottom:0; }
+  #view-repte.active.repte-xat-open .view-head,
+  #view-repte.active.repte-xat-open #repteTabs{ flex-shrink:0; }
+  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+}
+@media (min-width:721px){
+  /* En escriptori el xat del repte omple l'alçada visible amb la barra a baix */
+  #view-repte.active.repte-xat-open{ display:flex; flex-direction:column; height:calc(100vh - var(--header-h,62px) - 24px); }
+  #view-repte.active.repte-xat-open .view-head,
+  #view-repte.active.repte-xat-open #repteTabs{ flex-shrink:0; }
+  #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+  #repteXatPanel > div{ min-height:320px; }
 }
 /* ---------- Rutina de repte ---------- */
 .routine-card.repte{border-color:var(--repte);}
@@ -3863,6 +3911,22 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
     </div>
     <div class="modal-foot">
       <button class="btn" data-close="repteRoutinesDestiModal" data-i18n="Cancel·la">Cancel·la</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL: VEURE RUTINA DEL REPTE (FIXE) ===================== -->
+<div class="modal-overlay" id="repteRutModal">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <h3 id="repteRutModalTitle"></h3>
+      <button class="icon-btn" data-close="repteRutModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="repteRutModalBody"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" data-close="repteRutModal" data-i18n="Tanca">Tanca</button>
     </div>
   </div>
 </div>
@@ -5735,6 +5799,14 @@ const I18N = {
     "👊 El repte ha començat!":"👊 ¡El reto ha empezado!",
     "El repte \"{1}\" ja està en marxa. Molta sort!":"El reto \"{1}\" ya está en marcha. ¡Mucha suerte!",
     "🏁 Repte finalitzat":"🏁 Reto finalizado",
+    "El repte ha començat!":"¡El reto ha empezado!",
+    "Repte finalitzat":"Reto finalizado",
+    "El repte \"{1}\" ha acabat. {2}":"El reto \"{1}\" ha terminado. {2}",
+    "{1} min":"{1} min",
+    "{1} × {2}":"{1} × {2}",
+    "{1} kg":"{1} kg",
+    "Sense exercicis":"Sin ejercicios",
+    "Tanca":"Cerrar",
     "El nom ha de tenir entre 3 i 12 caràcters":"El nombre debe tener entre 3 y 12 caracteres",
     "Entre 3 i 12 caràcters.":"Entre 3 y 12 caracteres.",
     "Tria com a mínim 1 participant":"Elige al menos 1 participante",
@@ -12161,6 +12233,17 @@ function renderNotifPanel(){
         <button class="nph-del" title="${escapeHtml(t('Elimina'))}" aria-label="${escapeHtml(t('Elimina'))}">✕</button>
       </div>`;
     }
+    if(h.kind === 'repte'){
+      return `<div class="nph-item" data-i="${idx}">
+        <div class="nph-icon" style="color:var(--repte)">${REPTE_ICON.replace('<svg','<svg width="18" height="18"')}</div>
+        <div class="nph-body">
+          <b>${escapeHtml(h.title || t('Repte'))}</b>
+          <span>${escapeHtml(h.body || '')}</span>
+          <small>${escapeHtml(formatNotifDate(h.ts))}</small>
+        </div>
+        <button class="nph-del" title="${escapeHtml(t('Elimina'))}" aria-label="${escapeHtml(t('Elimina'))}">✕</button>
+      </div>`;
+    }
     const m = findMedal(h.medalId);
     const icon = m ? m.icon : '';
     const rang = h.rang || (m && m.rang);
@@ -12240,6 +12323,8 @@ $('#notifPanelBody').addEventListener('click', e=>{
     }, 80);
   }else if(h && (h.kind === 'medal' || h.kind === 'legend')){
     navigateTo('medalles');
+  }else if(h && h.kind === 'repte'){
+    navigateTo('amics');
   }
 });
 const notifPanelClear = $('#notifPanelClear');
@@ -14959,7 +15044,7 @@ function chatMsgHTMLBase(m, me, opts){
   if(repteInv){
     return `<div class="chat-msg ${mine ? 'mine' : 'theirs'} chat-share cs-open" data-mid="${escapeHtml(m.id || '')}" data-repte="${escapeHtml(repteInv.repteId)}" ${mine ? 'data-mine="1"' : ''}>
       <div class="chat-body">
-        <div class="cs-icon" style="background:var(--repte); color:#14161A;">👊</div>
+        <div class="cs-icon" style="background:var(--repte); color:#14161A;">${REPTE_ICON.replace('<svg','<svg width="20" height="20" style="display:block;"')}</div>
         <div class="cs-body">
           <b>${t('Repte')}</b>
           <span>${mine ? t('Has enviat una invitació a un repte') : t('{1} et convida a un repte', opts.alias || t('Un amic'))}</span>
@@ -15725,9 +15810,18 @@ checkSocialNotifs();
 /* =========================================================================
    REPTES — Sistema de reptes entre amics
    ========================================================================= */
-const REPTE_SHARE_PREFIX = 'FERRO_REPTE::';
-const REPTE_MAX_PARTICIPANTS = 6;
-
+ const REPTE_SHARE_PREFIX = 'FERRO_REPTE::';
+ const REPTE_MAX_PARTICIPANTS = 6;
+ const REPTE_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>';
+ function recordRepteNotif(title, body){
+   if(!config.achHistory || !Array.isArray(config.achHistory)) config.achHistory = [];
+   config.achHistory.unshift({ ts: Date.now(), kind: 'repte', title: title, body: body });
+   if(config.achHistory.length > 50) config.achHistory.length = 50;
+   config.achUnread = (typeof config.achUnread === 'number' ? config.achUnread : 0) + 1;
+   saveConfig();
+   updateNotifBadge();
+ }
+ 
 let repteCache = loadLS(LS_KEYS.repte, null);
 let repteViewId = null;
 let repteViewTab = 'resum';
@@ -15871,7 +15965,7 @@ function paintRepteCard(repte){
   if(!box) return;
   if(!supabaseClient || !currentUser || !repte){
     box.innerHTML = `<div class="repte-row">
-      <button type="button" class="repte-card-btn" id="repteCreateBtn" style="flex:1;">👊 ${t('Crear repte')}</button>
+      <button type="button" class="repte-card-btn" id="repteCreateBtn" style="flex:1;"><span class="repte-ico" style="font-size:0;">${REPTE_ICON.replace('<svg', '<svg width="22" height="22"')}</span> ${t('Crear repte')}</button>
       <button type="button" class="repte-help-btn" id="repteHelpBtn" title="${t('Què és un repte?')}" aria-label="${t('Què és un repte?')}">?</button>
     </div>`;
     const cb = $('#repteCreateBtn');
@@ -15887,7 +15981,7 @@ function paintRepteCard(repte){
   else if(repte.estat === 'finalitzat') sub = t('Finalitzat');
   box.innerHTML = `<div class="repte-row">
     <button type="button" class="repte-card-btn" id="repteOpenBtn" style="flex:1;">
-      <span class="repte-ico">👊</span>
+      <span class="repte-ico" style="font-size:0;">${REPTE_ICON.replace('<svg', '<svg width="22" height="22"')}</span>
       <span class="repte-info"><b>${t('Repte: {1}', escapeHtml(repte.nom))}</b><span>${escapeHtml(sub)}</span></span>
     </button>
     <button type="button" class="repte-help-btn" id="repteHelpBtn" title="${t('Què és un repte?')}" aria-label="${t('Què és un repte?')}">?</button>
@@ -16286,7 +16380,7 @@ async function renderRepteView(){
   }catch(e){ toast(t('Repte no trobat')); goBackFromRepte(); return; }
   repte = await maybeTransitionRepte(repte);
   const title = $('#repteViewTitle');
-  if(title) title.textContent = t('Repte') + ': ' + repte.nom;
+  if(title) title.innerHTML = `${REPTE_ICON.replace('<svg', '<svg width="26" height="26" style="vertical-align:-4px; margin-right:8px; color:var(--repte);"')}${escapeHtml(t('Repte') + ': ' + repte.nom)}`;
   renderRepteTab(repteViewTab || 'resum', repte);
   updateReptePoints();
   stopReptePointsPoll();
@@ -16327,6 +16421,7 @@ async function maybeTransitionRepte(repte){
       if(!config.repteNotifInici) config.repteNotifInici = {};
       if(!config.repteNotifInici[repte.id]){
         config.repteNotifInici[repte.id] = true;
+        recordRepteNotif(t('El repte ha començat!'), t('El repte "{1}" ja està en marxa. Molta sort!', repte.nom));
         if(config.notifications) pushBrowserNotif(t('👊 El repte ha començat!'), t('El repte "{1}" ja està en marxa. Molta sort!', repte.nom));
       }
     }
@@ -16452,6 +16547,7 @@ async function renderRepteResum(repte){
   });
   wireRepteActions(repte, rows, w);
   wireRepteChart();
+  wireRepteRutines(repte);
   renderFriendAvatars();
 }
 function renderRepteChart(repte, rows, mode){
@@ -16507,15 +16603,42 @@ function wireRepteChart(){
     });
   });
 }
-function repteRutinesListHTML(repte){
-  const rutines = repte.rutines || [];
-  if(!rutines.length) return '';
-  return `<div class="repte-info-block">
-    <div class="repte-info-row"><span>${t('Rutines del repte')}</span><b>${rutines.length}</b></div>
-    ${rutines.map(r=>`<div class="repte-part"><div class="f-avatar">📋</div><b>${escapeHtml(r.nom || '')}</b><span>${t('{1} exercicis', (r.exercicis||[]).length)}</span></div>`).join('')}
-  </div>`;
-}
-function repteResultatText(repte, rows){
+ function repteRutinesListHTML(repte){
+   const rutines = repte.rutines || [];
+   if(!rutines.length) return '';
+   return `<div class="repte-info-block">
+     <div class="repte-info-row"><span>${t('Rutines del repte')}</span><b>${rutines.length}</b></div>
+     ${rutines.map((r,i)=>`<button type="button" class="repte-part repte-rut-btn" data-repte-rut="${i}"><div class="f-avatar">📋</div><b>${escapeHtml(r.nom || '')}</b><span>${t('{1} exercicis', (r.exercicis||[]).length)}</span></button>`).join('')}
+   </div>`;
+ }
+ function openRepteRoutineModal(routine){
+   if(!routine) return;
+   const exs = (routine.exercicis||[]).slice().sort((a,b)=> (a.ordre||0)-(b.ordre||0));
+   const rows = exs.map(pe=>{
+     const ex = exerciseById(pe.exerciciId);
+     const cardio = !!(ex && ex.grupMuscular === 'cardio');
+     const detall = cardio
+       ? t('{1} min', pe.durada || pe.repeticions || 10)
+       : t('{1} × {2}', pe.series || 0, pe.repeticions || 0) + (pe.pes ? ' · ' + t('{1} kg', pe.pes) : '');
+     return `<div class="repte-rut-ex"><span class="repte-rut-ex-nom">${escapeHtml((ex && ex.nom) || t('Exercici'))}</span><span class="repte-rut-ex-det">${escapeHtml(detall)}</span></div>`;
+   }).join('');
+   const body = $('#repteRutModalBody');
+   const title = $('#repteRutModalTitle');
+   if(!body) return;
+   title.innerHTML = REPTE_ICON.replace('<svg','<svg width="20" height="20" style="vertical-align:-4px; margin-right:8px; color:var(--repte);"') + escapeHtml(routine.nom || '');
+   body.innerHTML = rows || `<p class="hint">${escapeHtml(t('Sense exercicis'))}</p>`;
+   openModal('repteRutModal');
+ }
+ function wireRepteRutines(repte){
+   $$('#repteResumPanel [data-repte-rut]').forEach(btn=>{
+     btn.addEventListener('click', ()=>{
+       const i = Number(btn.dataset.repteRut);
+       const rut = (repte.rutines||[])[i];
+       if(rut) openRepteRoutineModal(rut);
+     });
+   });
+ }
+ function repteResultatText(repte, rows){
   const me = currentUser ? currentUser.id : '';
   const myRow = rows.find(r=> r.uid === me);
   const myPunts = (myRow && myRow.punts_total) || 0;
@@ -16666,6 +16789,7 @@ async function aplicarResultatRepte(repte){
   if(pct >= 1) config.reptePerfectes = (config.reptePerfectes || 0) + 1;
   if(repte.creador === me && winners.includes(me)) config.repteAmfitrio = (config.repteAmfitrio || 0) + 1;
   config.repteXpAtorgat[repte.id] = true;
+  recordRepteNotif(t('Repte finalitzat'), t('El repte "{1}" ha acabat. {2}', repte.nom, repteResultatText(repte, rows)));
   if(config.notifications){
     pushBrowserNotif(t('🏁 Repte finalitzat'), repteResultatText(repte, rows));
   }
@@ -16679,6 +16803,8 @@ async function aplicarResultatRepte(repte){
 function renderRepteTab(tab, repte){
   repteViewTab = tab;
   $$('#repteTabs .seg-btn').forEach(b=> b.classList.toggle('active', b.dataset.repteTab === tab));
+  const view = $('#view-repte');
+  if(view) view.classList.toggle('repte-xat-open', tab === 'xat');
   const resum = $('#repteResumPanel');
   const xat = $('#repteXatPanel');
   if(!resum || !xat) return;
@@ -16712,7 +16838,7 @@ function openRepteChat(repte){
       </div>`
     : '';
   panel.innerHTML = `
-    <div style="display:flex; flex-direction:column; height:calc(100vh - 220px); min-height:320px;">
+    <div style="display:flex; flex-direction:column; flex:1; min-height:0;">
       <div class="chat-log" id="repteChatLog" style="flex:1;"></div>
       <div class="chat-input">
         <input type="text" id="repteChatMsg" placeholder="${t('Escriu un missatge...')}" autocomplete="off" maxlength="1000">
