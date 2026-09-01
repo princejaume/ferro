@@ -2623,6 +2623,9 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
   #view-repte.active.repte-xat-open .view-head,
   #view-repte.active.repte-xat-open #repteTabs{ flex-shrink:0; }
   #view-repte.active.repte-xat-open #repteXatPanel{ flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; }
+  /* La casella d'escriure del xat del repte s'estén fins a les vores de la pantalla */
+  #repteXatPanel .chat-input{ margin-left:-20px; margin-right:-20px; border-radius:0; padding-left:18px; padding-right:18px; }
+  #repteXatPanel .chat-input #repteChatShare svg{ width:1.25em; height:1.25em; }
 }
 @media (min-width:721px){
   /* En escriptori el xat del repte omple l'alçada visible amb la barra a baix */
@@ -3557,27 +3560,47 @@ body.modal-open-mobile:not(.ob-first-time) .modal:not(.modal-small){ padding-bot
               <span class="slider"></span>
             </label>
           </div>
-          <div class="field switch-field" id="entrenamentGuiatField">
+          <div class="field switch-field">
             <div style="flex:1; min-width:0;">
-              <label data-i18n="Sons">Sons</label>
-              <p class="hint" data-i18n="Reprodueix sons per a guiar-te durant l'entrenament.">Reprodueix sons per a guiar-te durant l'entrenament.</p>
+              <label data-i18n="Reptes">Reptes</label>
+              <p class="hint" data-i18n="Quan un repte comença o s'acaba.">Quan un repte comença o s'acaba.</p>
             </div>
             <label class="switch">
-              <input type="checkbox" id="entrenamentGuiatToggle">
+              <input type="checkbox" id="repteNotifsToggle">
               <span class="slider"></span>
             </label>
           </div>
-          <div id="guiatOptions" style="display:none; padding-left:16px; border-left:2px solid var(--accent); margin-left:12px;">
-            <div class="field switch-field">
-              <div style="flex:1; min-width:0;">
-                <label data-i18n="So fi de descans">So fi de descans</label>
-                <p class="hint" data-i18n="Reprodueix un so quan acabe el temps de descans.">Reprodueix un so quan acabe el temps de descans.</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox" id="soFiDescansToggle">
-                <span class="slider"></span>
-              </label>
+          <div class="field switch-field">
+            <div style="flex:1; min-width:0;">
+              <label data-i18n="Xat de reptes">Xat de reptes</label>
+              <p class="hint" data-i18n="Quan reps un missatge al xat d'un repte.">Quan reps un missatge al xat d'un repte.</p>
             </div>
+            <label class="switch">
+              <input type="checkbox" id="repteChatNotifsToggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="field switch-field" id="entrenamentGuiatField">
+          <div style="flex:1; min-width:0;">
+            <label data-i18n="Sons">Sons</label>
+            <p class="hint" data-i18n="Reprodueix sons per a guiar-te durant l'entrenament.">Reprodueix sons per a guiar-te durant l'entrenament.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="entrenamentGuiatToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div id="guiatOptions" style="display:none; padding-left:16px; border-left:2px solid var(--accent); margin-left:12px;">
+          <div class="field switch-field">
+            <div style="flex:1; min-width:0;">
+              <label data-i18n="So fi de descans">So fi de descans</label>
+              <p class="hint" data-i18n="Reprodueix un so quan acabe el temps de descans.">Reprodueix un so quan acabe el temps de descans.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="soFiDescansToggle">
+              <span class="slider"></span>
+            </label>
           </div>
         </div>
       </div>
@@ -4415,7 +4438,7 @@ let state = {
   weekDone: loadLS(LS_KEYS.weekDone, {}),
 };
 
-const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [], repteExplicacioVist: false, repteActiu: null, repteCreades: 0, repteCompletats: 0, repteGuanyats: 0, reptePerfectes: 0, repteAmfitrio: 0, repteCreatComencat: false, repteXpAtorgat: {}, repteMedalsAtorgades: {}, repteRutinesResoltes: {}, repteNotifInici: {} };
+const DEFAULT_CONFIG = { lang:'ca', restDefault: 60, perSetRest: false, autoDark: false, notifications: false, reminderTimeout: 0, reminders: false, medalNotifs: false, acceptedNotifs: false, messageNotifs: false, repteNotifs: false, repteChatNotifs: false, notifDefaultsDone: false, notified: [], medals: [], medalsYear: 0, platinumYears: [], compteMedals: [], comptePlatinum: false, medalDates: {}, pendingMedals: {}, equipament: null, equipAll: true, equipMode: 'gimnas', pesStep: 0.5, entrenamentGuiat: false, soFiDescans: false, profile: null, perfilVis: null, onboardingDismissed: false, xp: 0, achHistory: [], achUnread: 0, rewardsClaimed: [], rewardNotifShown: false, legendRevealNotified: [], starterIconsDone: false, iconGrants: {}, animadorUsed: [], animadorClaimed: [], expositor: [], histConsultes: 0, seguimentTabs: [], friendsEver: [], repteExplicacioVist: false, repteActiu: null, repteCreades: 0, repteCompletats: 0, repteGuanyats: 0, reptePerfectes: 0, repteAmfitrio: 0, repteCreatComencat: false, repteXpAtorgat: {}, repteMedalsAtorgades: {}, repteRutinesResoltes: {}, repteNotifInici: {} };
 let config = Object.assign({}, DEFAULT_CONFIG, loadLS(LS_KEYS.config, {}));
 function normalizeConfig(){
   if(config.lang !== 'ca' && config.lang !== 'es') config.lang = 'ca';
@@ -4425,6 +4448,8 @@ function normalizeConfig(){
   if(typeof config.notifications !== 'boolean') config.notifications = !!config.reminders;
   if(typeof config.acceptedNotifs !== 'boolean') config.acceptedNotifs = false;
   if(typeof config.messageNotifs !== 'boolean') config.messageNotifs = false;
+  if(typeof config.repteNotifs !== 'boolean') config.repteNotifs = false;
+  if(typeof config.repteChatNotifs !== 'boolean') config.repteChatNotifs = false;
   if(typeof config.notifDefaultsDone !== 'boolean') config.notifDefaultsDone = false;
   if(!Array.isArray(config.notified)) config.notified = [];
   if(!Array.isArray(config.medals)) config.medals = [];
@@ -4698,6 +4723,10 @@ const I18N = {
     "Quan algú t'envia una petició d'amistat.":"Cuando alguien te envía una solicitud de amistad.",
     "Nou missatge":"Nuevo mensaje",
     "Quan reps un missatge d'un amic.":"Cuando recibes un mensaje de un amigo.",
+    "Reptes":"Retos",
+    "Quan un repte comença o s'acaba.":"Cuando un reto empieza o termina.",
+    "Xat de reptes":"Chat de retos",
+    "Quan reps un missatge al xat d'un repte.":"Cuando recibes un mensaje en el chat de un reto.",
     "⚠️ El navegador encara no ha concedit el permís de notificacions. En activar qualsevol opció, se't demanarà automàticament.":"⚠️ El navegador aún no ha concedido el permiso de notificaciones. Al activar cualquier opción, se te pedirá automáticamente.",
     "Entrenament":"Entrenamiento",
     "Descans predeterminat":"Descanso predeterminado",
@@ -4973,6 +5002,10 @@ const I18N = {
     "Notificacions de peticions d'amistat desactivades":"Notificaciones de solicitudes de amistad desactivadas",
     "Notificacions de missatges activades":"Notificaciones de mensajes activadas",
     "Notificacions de missatges desactivades":"Notificaciones de mensajes desactivadas",
+    "Notificacions de reptes activades":"Notificaciones de retos activadas",
+    "Notificacions de reptes desactivades":"Notificaciones de retos desactivadas",
+    "Notificacions de xat de reptes activades":"Notificaciones de chat de retos activadas",
+    "Notificacions de xat de reptes desactivades":"Notificaciones de chat de retos desactivadas",
     "Sessió iniciada · dades pujades al núvol":"Sesión iniciada · datos subidos a la nube",
     "Configuració de login pendent":"Configuración de login pendiente",
     "Error en iniciar sessió":"Error al iniciar sesión",
@@ -5802,6 +5835,9 @@ const I18N = {
     "El repte ha començat!":"¡El reto ha empezado!",
     "Repte finalitzat":"Reto finalizado",
     "El repte \"{1}\" ha acabat. {2}":"El reto \"{1}\" ha terminado. {2}",
+    "💬 Xat de reptes":"💬 Chat de retos",
+    "Nou missatge a \"{1}\".":"Nuevo mensaje en \"{1}\".",
+    "Nou missatge al xat d'un repte.":"Nuevo mensaje en el chat de un reto.",
     "{1} min":"{1} min",
     "{1} × {2}":"{1} × {2}",
     "{1} kg":"{1} kg",
@@ -6231,6 +6267,8 @@ function applyDefaultNotifs(){
   config.reminders = true;
   config.acceptedNotifs = true;
   config.messageNotifs = true;
+  config.repteNotifs = true;
+  config.repteChatNotifs = true;
   config.notifDefaultsDone = true;
   saveConfig();
   updateNotifOptions();
@@ -7718,6 +7756,8 @@ function syncSettingsControls(){
   $('#medalNotifsToggle').checked = config.medalNotifs;
   $('#acceptedNotifsToggle').checked = config.acceptedNotifs;
   $('#messageNotifsToggle').checked = config.messageNotifs;
+  $('#repteNotifsToggle').checked = config.repteNotifs;
+  $('#repteChatNotifsToggle').checked = config.repteChatNotifs;
   $('#autoDarkToggle').checked = !!config.autoDark;
   $('#pesStepVal').value = String(config.pesStep);
   $('#entrenamentGuiatToggle').checked = config.entrenamentGuiat;
@@ -8186,7 +8226,7 @@ async function setNotifPreference(prop, checked, onMsg, offMsg){
     updateNotifOptions();
     return;
   }
-  if(prop === 'notifications' || prop === 'reminders' || prop === 'medalNotifs' || prop === 'acceptedNotifs' || prop === 'messageNotifs') ensureNotifPermission();
+  if(prop === 'notifications' || prop === 'reminders' || prop === 'medalNotifs' || prop === 'acceptedNotifs' || prop === 'messageNotifs' || prop === 'repteNotifs' || prop === 'repteChatNotifs') ensureNotifPermission();
   config[prop] = true;
   saveConfig();
   toast(onMsg);
@@ -8196,6 +8236,8 @@ $('#trainingReminders').addEventListener('change', e=> setNotifPreference('remin
 $('#medalNotifsToggle').addEventListener('change', e=> setNotifPreference('medalNotifs', e.target.checked, t('Notificacions de recompenses activades'), t('Notificacions de recompenses desactivades')));
 $('#acceptedNotifsToggle').addEventListener('change', e=> setNotifPreference('acceptedNotifs', e.target.checked, t("Notificacions de peticions d'amistat activades"), t("Notificacions de peticions d'amistat desactivades")));
 $('#messageNotifsToggle').addEventListener('change', e=> setNotifPreference('messageNotifs', e.target.checked, t('Notificacions de missatges activades'), t('Notificacions de missatges desactivades')));
+$('#repteNotifsToggle').addEventListener('change', e=> setNotifPreference('repteNotifs', e.target.checked, t('Notificacions de reptes activades'), t('Notificacions de reptes desactivades')));
+$('#repteChatNotifsToggle').addEventListener('change', e=> setNotifPreference('repteChatNotifs', e.target.checked, t('Notificacions de xat de reptes activades'), t('Notificacions de xat de reptes desactivades')));
 
 /* ---------- NAVEGACIÓ ---------- */
 let entrenarTab = 'entrenar';
@@ -15742,6 +15784,7 @@ refreshFriendsBadge();
 let notifState = loadLS(LS_KEYS.notifState, { requestNotified: [], lastMsgTs: {} });
 if(!Array.isArray(notifState.requestNotified)) notifState.requestNotified = [];
 if(!notifState.lastMsgTs || typeof notifState.lastMsgTs !== 'object') notifState.lastMsgTs = {};
+if(!notifState.repteChatTs || typeof notifState.repteChatTs !== 'object') notifState.repteChatTs = {};
 function saveNotifState(){ saveLS(LS_KEYS.notifState, notifState); }
 function pushBrowserNotif(title, body){
   if(!config.notifications) return;
@@ -15801,6 +15844,33 @@ async function checkSocialNotifs(){
       if(m.created_at > (notifState.lastMsgTs[m.sender_id] || '')) notifState.lastMsgTs[m.sender_id] = m.created_at;
     });
   }catch(e){ console.error('FERRO: notif missatges', e); }
+
+  try{
+    if(config.repteActiu){
+      const { data: rData } = await supabaseClient.from('reptes').select('nom').eq('id', config.repteActiu).maybeSingle();
+      const { data } = await supabaseClient.from('repte_messages')
+        .select('sender_id,created_at')
+        .eq('repte_id', config.repteActiu)
+        .order('created_at', { ascending: false })
+        .limit(50);
+      if(data){
+        data.forEach(m=>{
+          if(m.sender_id === me) return;
+          const ts = notifState.repteChatTs[config.repteActiu] || '';
+          if(ts && m.created_at <= ts) return;
+          if(!ts){ notifState.repteChatTs[config.repteActiu] = m.created_at; return; }
+          if(config.repteChatNotifs){
+            const isActiveChat = !!document.querySelector('#view-repte.active.repte-xat-open');
+            if(!isActiveChat){
+              const nom = (rData && rData.nom) || '';
+              pushBrowserNotif(t('💬 Xat de reptes'), nom ? t('Nou missatge a "{1}".', nom) : t('Nou missatge al xat d\'un repte.'));
+            }
+          }
+          if(m.created_at > (notifState.repteChatTs[config.repteActiu] || '')) notifState.repteChatTs[config.repteActiu] = m.created_at;
+        });
+      }
+    }
+  }catch(e){ console.error('FERRO: notif xat repte', e); }
   saveNotifState();
 }
 setInterval(checkSocialNotifs, 25000);
@@ -16422,7 +16492,7 @@ async function maybeTransitionRepte(repte){
       if(!config.repteNotifInici[repte.id]){
         config.repteNotifInici[repte.id] = true;
         recordRepteNotif(t('El repte ha començat!'), t('El repte "{1}" ja està en marxa. Molta sort!', repte.nom));
-        if(config.notifications) pushBrowserNotif(t('👊 El repte ha començat!'), t('El repte "{1}" ja està en marxa. Molta sort!', repte.nom));
+        if(config.notifications && config.repteNotifs) pushBrowserNotif(t('👊 El repte ha començat!'), t('El repte "{1}" ja està en marxa. Molta sort!', repte.nom));
       }
     }
     saveConfig();
@@ -16790,7 +16860,7 @@ async function aplicarResultatRepte(repte){
   if(repte.creador === me && winners.includes(me)) config.repteAmfitrio = (config.repteAmfitrio || 0) + 1;
   config.repteXpAtorgat[repte.id] = true;
   recordRepteNotif(t('Repte finalitzat'), t('El repte "{1}" ha acabat. {2}', repte.nom, repteResultatText(repte, rows)));
-  if(config.notifications){
+  if(config.notifications && config.repteNotifs){
     pushBrowserNotif(t('🏁 Repte finalitzat'), repteResultatText(repte, rows));
   }
   if(!config.repteMedalsAtorgades) config.repteMedalsAtorgades = {};
@@ -16926,6 +16996,10 @@ async function loadRepteChatMessages(repte){
       repteChatMessages = repteChatMessages.concat(data);
       renderRepteChatLog(repte);
       if(wasBottom) log.scrollTop = log.scrollHeight;
+      const newest = repteChatMessages[repteChatMessages.length - 1];
+      if(!notifState.repteChatTs || typeof notifState.repteChatTs !== 'object') notifState.repteChatTs = {};
+      if(newest && newest.created_at > (notifState.repteChatTs[repte.id] || '')) notifState.repteChatTs[repte.id] = newest.created_at;
+      saveNotifState();
     }
   }catch(e){ console.error('FERRO: repte xat llegir', e); }
 }
